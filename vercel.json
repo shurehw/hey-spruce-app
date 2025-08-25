@@ -1,0 +1,119 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "index.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "*.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "public/**",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/index.js"
+    },
+    {
+      "src": "/analytics-dashboard.html",
+      "dest": "/analytics-dashboard.html"
+    },
+    {
+      "src": "/analytics",
+      "dest": "/analytics-dashboard.html"
+    },
+    {
+      "src": "/proposal-builder.html",
+      "dest": "/proposal-builder.html"
+    },
+    {
+      "src": "/proposals",
+      "dest": "/proposal-builder.html"
+    },
+    {
+      "src": "/proposal-dashboard.html",
+      "dest": "/proposal-dashboard.html"
+    },
+    {
+      "src": "/proposal-dashboard",
+      "dest": "/proposal-dashboard.html"
+    },
+    {
+      "src": "/proposal-pricing.html",
+      "dest": "/proposal-pricing.html"
+    },
+    {
+      "src": "/proposal-pricing",
+      "dest": "/proposal-pricing.html"
+    },
+    {
+      "src": "/dashboard.html",
+      "dest": "/dashboard.html"
+    },
+    {
+      "src": "/dashboard-branded.html",
+      "dest": "/dashboard-branded.html"
+    },
+    {
+      "src": "/connect.html",
+      "dest": "/connect.html"
+    },
+    {
+      "src": "/supplier-portal.html",
+      "dest": "/supplier-portal.html"
+    },
+    {
+      "src": "/supplier-portal",
+      "dest": "/supplier-portal.html"
+    },
+    {
+      "src": "/proposal-response.html",
+      "dest": "/proposal-response.html"
+    },
+    {
+      "src": "/proposal-response",
+      "dest": "/proposal-response.html"
+    },
+    {
+      "src": "/client-portal.html",
+      "dest": "/client-portal.html"
+    },
+    {
+      "src": "/client-portal",
+      "dest": "/client-portal.html"
+    },
+    {
+      "src": "/work-orders-advanced.html",
+      "dest": "/work-orders-advanced.html"
+    },
+    {
+      "src": "/work-orders-advanced",
+      "dest": "/work-orders-advanced.html"
+    },
+    {
+      "src": "/work-order-detail.html",
+      "dest": "/work-order-detail.html"
+    },
+    {
+      "src": "/work-order-detail",
+      "dest": "/work-order-detail.html"
+    },
+    {
+      "src": "/supplier-app/(.*)",
+      "dest": "/supplier-portal/$1"
+    },
+    {
+      "src": "/",
+      "dest": "/dashboard.html"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.js"
+    }
+  ]
+}

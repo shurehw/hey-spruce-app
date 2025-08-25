@@ -1,0 +1,30 @@
+{
+  "name": "openwrench-stripe",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "deploy": "vercel",
+    "deploy:prod": "vercel --prod",
+    "test": "node test-all-features.js",
+    "test:connect": "node test-connect.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@sendgrid/mail": "^8.1.5",
+    "@shure/shared-utils": "file:../shared-utils",
+    "axios": "^1.11.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "multer": "^2.0.2",
+    "nodemailer": "^7.0.5",
+    "pdfkit": "^0.17.1",
+    "stripe": "^18.4.0"
+  }
+}

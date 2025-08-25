@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hey Spruce - Payment Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --primary-blue: #1e3a5f;
+            --secondary-blue: #2c5282;
+            --light-blue: #4a7c9e;
+            --accent-blue: #e6f2ff;
+            --text-dark: #1a202c;
+            --text-gray: #4a5568;
+            --bg-light: #f7fafc;
+            --white: #ffffff;
+            --success: #48bb78;
+            --warning: #ed8936;
+            --danger: #f56565;
+        }
+        
+        body { 
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+        
+        /* Header */
+        .header {
+            background: var(--white);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo h1 {
+            font-size: 1.8rem;
+            color: var(--primary-blue);
+            font-weight: 600;
+        }
+        
+        .logo span {
+            font-style: italic;
+            font-weight: 400;
+        }
+        
+        .contact-info {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            color: var(--text-gray);
+        }
+        
+        .phone {
+            font-weight: 600;
+            color: var(--primary-blue);
+            font-size: 1.1rem;
+        }
+        
+        /* Navigation */
+        .nav-container {
+            background: var(--primary-blue);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .tabs {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            padding: 0 2rem;
+        }
+        
+        .tab {
+            padding: 1rem 1.5rem;
+            background: none;
+            border: none;
+            color: var(--white);
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+            opacity: 0.8;
+        }
+        
+        .tab:hover {
+            opacity: 1;
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .tab.active {
+            opacity: 1;
+            border-bottom-color: var(--white);
+            background: rgba(255,255,255,0.1);
+        }
+        
+        /* Main Content */
+        .container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+        
+        .content {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Page Headers */
+        .page-header {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--accent-blue);
+        }
+        
+        .page-header h2 {
+            color: var(--primary-blue);
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .page-header p {
+            color: var(--text-gray);
+        }
+        
+        /* Forms */
+        .form-section {
+            background: var(--bg-light);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        label {
+            color: var(--text-dark);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        input, select, textarea {
+            padding: 0.75rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--light-blue);
+            box-shadow: 0 0 0 3px rgba(74, 124, 158, 0.1);
+        }
+        
+        /* Buttons */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: var(--primary-blue);
+            color: var(--white);
+        }
+        
+        .btn-primary:hover {
+            background: var(--secondary-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(30, 58, 95, 0.3);
+        }
+        
+        .btn-secondary {
+            background: var(--light-blue);
+            color: var(--white);
+        }
+        
+        .btn-success {
+            background: var(--success);
+            color: var(--white);
+        }
+        
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: var(--white);
+            border: 2px solid var(--accent-blue);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .stat-card:hover {
+            border-color: var(--light-blue);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+        
+        .stat-card h3 {
+            color: var(--text-gray);
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-card .value {
+            color: var(--primary-blue);
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        
+        /* Lists */
+        .list-container {
+            margin-top: 2rem;
+        }
+        
+        .list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .list-header h3 {
+            color: var(--primary-blue);
+            font-size: 1.2rem;
+        }
+        
+        .list-item {
+            background: var(--white);
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+        }
+        
+        .list-item:hover {
+            border-color: var(--light-blue);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .list-item-info h4 {
+            color: var(--text-dark);
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .list-item-info p {
+            color: var(--text-gray);
+            font-size: 0.85rem;
+        }
+        
+        /* Status Badges */
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .status-active {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+        
+        .status-pending {
+            background: #feebc8;
+            color: #744210;
+        }
+        
+        .status-inactive {
+            background: #fed7d7;
+            color: #742a2a;
+        }
+        
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .action-card {
+            background: var(--white);
+            border: 2px solid var(--accent-blue);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .action-card:hover {
+            border-color: var(--light-blue);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+        
+        .action-card .icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .action-card h3 {
+            color: var(--primary-blue);
+            margin-bottom: 0.5rem;
+        }
+        
+        .action-card p {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+        
+        /* Messages */
+        .message {
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1.5rem;
+            display: none;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .message.success {
+            background: #c6f6d5;
+            color: #22543d;
+            border: 1px solid #9ae6b4;
+            display: flex;
+        }
+        
+        .message.error {
+            background: #fed7d7;
+            color: #742a2a;
+            border: 1px solid #fc8181;
+            display: flex;
+        }
+        
+        /* Footer */
+        .footer {
+            background: var(--primary-blue);
+            color: var(--white);
+            text-align: center;
+            padding: 2rem;
+            margin-top: 4rem;
+        }
+        
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .footer p {
+            margin-bottom: 0.5rem;
+            opacity: 0.9;
+        }
+        
+        .footer a {
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <h1><span>Hey</span> Spruce</h1>
+            </div>
+            <div class="contact-info">
+                <span>Restaurant Cleaning & Maintenance</span>
+                <span class="phone">📞 877-253-2646</span>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Navigation -->
+    <nav class="nav-container">
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('overview')">Dashboard</button>
+            <button class="tab" onclick="switchTab('invoices')">Invoices</button>
+            <button class="tab" onclick="switchTab('payments')">Payment Links</button>
+            <button class="tab" onclick="switchTab('vendors')">Vendors</button>
+            <button class="tab" onclick="switchTab('connect')">Connect Accounts</button>
+            <a href="analytics-dashboard.html" class="tab" style="text-decoration: none; display: inline-block;">Analytics</a>
+        </div>
+    </nav>
+    
+    <!-- Main Content -->
+    <div class="container">
+        <div id="message" class="message"></div>
+        
+        <div class="content">
+            <!-- Overview Tab -->
+            <div id="overview" class="tab-content active">
+                <div class="page-header">
+                    <h2>Payment Dashboard</h2>
+                    <p>Manage all your payment operations in one place</p>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>Total Invoices</h3>
+                        <div class="value" id="totalInvoices">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Active Payments</h3>
+                        <div class="value" id="activePayments">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Connected Vendors</h3>
+                        <div class="value" id="connectedVendors">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Total Revenue</h3>
+                        <div class="value" id="totalRevenue">$0</div>
+                    </div>
+                </div>
+                
+                <h3 style="color: var(--primary-blue); margin-bottom: 1rem;">Quick Actions</h3>
+                <div class="quick-actions">
+                    <div class="action-card">
+                        <div class="icon">📄</div>
+                        <h3>Create Invoice</h3>
+                        <p>Generate professional invoices for your cleaning services</p>
+                        <button class="btn btn-primary" onclick="switchTab('invoices')">Create Invoice</button>
+                    </div>
+                    <div class="action-card">
+                        <div class="icon">💳</div>
+                        <h3>Payment Link</h3>
+                        <p>Create instant payment links for customers</p>
+                        <button class="btn btn-primary" onclick="switchTab('payments')">Generate Link</button>
+                    </div>
+                    <div class="action-card">
+                        <div class="icon">👥</div>
+                        <h3>Add Vendor</h3>
+                        <p>Onboard new vendors and partners</p>
+                        <button class="btn btn-primary" onclick="switchTab('vendors')">Add Vendor</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Invoices Tab -->
+            <div id="invoices" class="tab-content">
+                <div class="page-header">
+                    <h2>Invoice Management</h2>
+                    <p>Create and manage invoices for your services</p>
+                </div>
+                
+                <div class="form-section">
+                    <h3 style="color: var(--primary-blue); margin-bottom: 1rem;">Create New Invoice</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Invoice Number</label>
+                            <input type="text" id="invoiceNumber" placeholder="INV-001">
+                        </div>
+                        <div class="form-group">
+                            <label>Customer Name</label>
+                            <input type="text" id="customerName" placeholder="Restaurant Name">
+                        </div>
+                        <div class="form-group">
+                            <label>Customer Email</label>
+                            <input type="email" id="customerEmail" placeholder="customer@restaurant.com">
+                        </div>
+                        <div class="form-group">
+                            <label>Service Amount</label>
+                            <input type="number" id="invoiceAmount" placeholder="0.00" step="0.01">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Service Description</label>
+                        <textarea id="invoiceDescription" rows="3" placeholder="Restaurant cleaning services, kitchen maintenance, etc..."></textarea>
+                    </div>
+                    
+                    <button class="btn btn-primary" onclick="createInvoice()">
+                        Create Invoice
+                    </button>
+                </div>
+                
+                <div class="list-container">
+                    <div class="list-header">
+                        <h3>Recent Invoices</h3>
+                        <button class="btn btn-secondary" onclick="loadInvoices()">Refresh</button>
+                    </div>
+                    <div id="invoicesList"></div>
+                </div>
+            </div>
+            
+            <!-- Payment Links Tab -->
+            <div id="payments" class="tab-content">
+                <div class="page-header">
+                    <h2>Payment Links</h2>
+                    <p>Generate secure payment links for quick transactions</p>
+                </div>
+                
+                <div class="form-section">
+                    <h3 style="color: var(--primary-blue); margin-bottom: 1rem;">Create Payment Link</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Amount</label>
+                            <input type="number" id="paymentAmount" placeholder="0.00" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <input type="text" id="paymentDescription" placeholder="Cleaning service payment">
+                        </div>
+                        <div class="form-group">
+                            <label>Customer Email (optional)</label>
+                            <input type="email" id="paymentEmail" placeholder="customer@restaurant.com">
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-primary" onclick="createPaymentLink()">
+                        Generate Payment Link
+                    </button>
+                </div>
+                
+                <div class="list-container">
+                    <div class="list-header">
+                        <h3>Generated Links</h3>
+                    </div>
+                    <div id="paymentLinksList"></div>
+                </div>
+            </div>
+            
+            <!-- Vendors Tab -->
+            <div id="vendors" class="tab-content">
+                <div class="page-header">
+                    <h2>Vendor Management</h2>
+                    <p>Manage your service providers and partners</p>
+                </div>
+                
+                <div class="form-section">
+                    <h3 style="color: var(--primary-blue); margin-bottom: 1rem;">Add New Vendor</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Company Name</label>
+                            <input type="text" id="vendorName" placeholder="Vendor Company">
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" id="vendorEmail" placeholder="vendor@company.com">
+                        </div>
+                        <div class="form-group">
+                            <label>Phone</label>
+                            <input type="tel" id="vendorPhone" placeholder="(555) 123-4567">
+                        </div>
+                        <div class="form-group">
+                            <label>Address</label>
+                            <input type="text" id="vendorAddress" placeholder="123 Business St">
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-primary" onclick="createVendor()">
+                        Add Vendor
+                    </button>
+                </div>
+                
+                <div class="list-container">
+                    <div class="list-header">
+                        <h3>Vendor Directory</h3>
+                        <button class="btn btn-secondary" onclick="loadVendors()">Refresh</button>
+                    </div>
+                    <div id="vendorsList"></div>
+                </div>
+            </div>
+            
+            <!-- Connect Accounts Tab -->
+            <div id="connect" class="tab-content">
+                <div class="page-header">
+                    <h2>Stripe Connect Accounts</h2>
+                    <p>Onboard vendors to receive direct payments</p>
+                </div>
+                
+                <div class="form-section">
+                    <h3 style="color: var(--primary-blue); margin-bottom: 1rem;">Create Connect Account</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Email Address</label>
+                            <input type="email" id="connectEmail" placeholder="vendor@company.com">
+                        </div>
+                        <div class="form-group">
+                            <label>Business Type</label>
+                            <select id="connectType">
+                                <option value="individual">Individual</option>
+                                <option value="company">Company</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Country</label>
+                            <select id="connectCountry">
+                                <option value="US">United States</option>
+                                <option value="CA">Canada</option>
+                                <option value="GB">United Kingdom</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-primary" onclick="createConnectAccount()">
+                        Create Account
+                    </button>
+                    <a href="/connect.html" class="btn btn-secondary" style="text-decoration: none; margin-left: 10px;">
+                        Advanced Management
+                    </a>
+                </div>
+                
+                <div class="list-container">
+                    <div class="list-header">
+                        <h3>Connected Accounts</h3>
+                        <button class="btn btn-secondary" onclick="loadConnectAccounts()">Refresh</button>
+                    </div>
+                    <div id="connectList"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p><strong>Hey Spruce</strong> - Professional Restaurant Cleaning & Maintenance</p>
+            <p>Licensed, Insured, and Reliable</p>
+            <p>Powered by <a href="https://stripe.com" target="_blank">Stripe</a> | © 2025 Hey Spruce</p>
+        </div>
+    </footer>
+    
+    <script>
+        function switchTab(tabName) {
+            // Update tabs
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            
+            // Set active tab
+            event.target.classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+            
+            // Load data
+            if (tabName === 'overview') loadOverview();
+            if (tabName === 'invoices') loadInvoices();
+            if (tabName === 'vendors') loadVendors();
+            if (tabName === 'connect') loadConnectAccounts();
+        }
+        
+        function showMessage(text, type) {
+            const msg = document.getElementById('message');
+            msg.className = 'message ' + type;
+            msg.innerHTML = `<span>✓</span> ${text}`;
+            msg.style.display = 'flex';
+            setTimeout(() => msg.style.display = 'none', 5000);
+        }
+        
+        async function createInvoice() {
+            try {
+                const response = await fetch('/api/invoices', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        invoice_number: document.getElementById('invoiceNumber').value,
+                        customer: {
+                            name: document.getElementById('customerName').value,
+                            email: document.getElementById('customerEmail').value
+                        },
+                        vendor: {
+                            name: 'Hey Spruce',
+                            email: 'billing@heyspruce.com'
+                        },
+                        items: [{
+                            description: document.getElementById('invoiceDescription').value || 'Cleaning Services',
+                            quantity: 1,
+                            price: parseFloat(document.getElementById('invoiceAmount').value)
+                        }],
+                        tax_rate: 0.08
+                    })
+                });
+                
+                if (response.ok) {
+                    showMessage('Invoice created successfully!', 'success');
+                    loadInvoices();
+                    // Clear form
+                    document.querySelectorAll('#invoices input, #invoices textarea').forEach(el => el.value = '');
+                }
+            } catch (error) {
+                showMessage('Error creating invoice: ' + error.message, 'error');
+            }
+        }
+        
+        async function createPaymentLink() {
+            try {
+                const amount = parseFloat(document.getElementById('paymentAmount').value);
+                const response = await fetch('/api/payment/create-intent', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        amount: amount,
+                        customer_email: document.getElementById('paymentEmail').value,
+                        metadata: {
+                            description: document.getElementById('paymentDescription').value
+                        }
+                    })
+                });
+                
+                const data = await response.json();
+                if (response.ok) {
+                    showMessage('Payment link created successfully!', 'success');
+                    
+                    const linkHtml = `
+                        <div class="list-item">
+                            <div class="list-item-info">
+                                <h4>${document.getElementById('paymentDescription').value}</h4>
+                                <p>Amount: $${amount.toFixed(2)}</p>
+                                <p style="font-size: 0.8rem; color: #888;">ID: ${data.paymentIntentId}</p>
+                            </div>
+                            <span class="status-badge status-pending">Active</span>
+                        </div>
+                    `;
+                    document.getElementById('paymentLinksList').innerHTML = linkHtml + document.getElementById('paymentLinksList').innerHTML;
+                }
+            } catch (error) {
+                showMessage('Error creating payment link: ' + error.message, 'error');
+            }
+        }
+        
+        async function createVendor() {
+            try {
+                const response = await fetch('/api/vendors', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: document.getElementById('vendorName').value,
+                        email: document.getElementById('vendorEmail').value,
+                        phone: document.getElementById('vendorPhone').value,
+                        address: document.getElementById('vendorAddress').value
+                    })
+                });
+                
+                if (response.ok) {
+                    showMessage('Vendor added successfully!', 'success');
+                    loadVendors();
+                    document.querySelectorAll('#vendors input').forEach(el => el.value = '');
+                }
+            } catch (error) {
+                showMessage('Error adding vendor: ' + error.message, 'error');
+            }
+        }
+        
+        async function createConnectAccount() {
+            try {
+                const response = await fetch('/api/connect/create-account', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: document.getElementById('connectEmail').value,
+                        business_type: document.getElementById('connectType').value,
+                        country: document.getElementById('connectCountry').value
+                    })
+                });
+                
+                const account = await response.json();
+                if (response.ok) {
+                    showMessage('Connect account created! Opening onboarding...', 'success');
+                    
+                    const linkResponse = await fetch('/api/connect/onboarding-link', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ account_id: account.account_id })
+                    });
+                    
+                    const link = await linkResponse.json();
+                    window.open(link.url, '_blank');
+                    
+                    setTimeout(loadConnectAccounts, 2000);
+                }
+            } catch (error) {
+                showMessage('Error creating account: ' + error.message, 'error');
+            }
+        }
+        
+        async function loadOverview() {
+            try {
+                const [invoicesRes, vendorsRes, connectRes] = await Promise.all([
+                    fetch('/api/invoices'),
+                    fetch('/api/vendors'),
+                    fetch('/api/connect/accounts')
+                ]);
+                
+                const invoices = await invoicesRes.json();
+                const vendors = await vendorsRes.json();
+                const connectData = await connectRes.json();
+                
+                document.getElementById('totalInvoices').textContent = invoices.length;
+                document.getElementById('connectedVendors').textContent = vendors.length;
+                document.getElementById('activePayments').textContent = connectData.accounts.length;
+                
+                const total = invoices.reduce((sum, inv) => sum + (inv.total || 0), 0);
+                document.getElementById('totalRevenue').textContent = '$' + total.toFixed(2);
+            } catch (error) {
+                console.error('Error loading overview:', error);
+            }
+        }
+        
+        async function loadInvoices() {
+            try {
+                const response = await fetch('/api/invoices');
+                const invoices = await response.json();
+                
+                const listHtml = invoices.length ? invoices.map(inv => `
+                    <div class="list-item">
+                        <div class="list-item-info">
+                            <h4>Invoice #${inv.invoice_number}</h4>
+                            <p>${inv.customer?.name || 'N/A'} • $${(inv.total || 0).toFixed(2)}</p>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <span class="status-badge status-${inv.status === 'paid' ? 'active' : 'pending'}">
+                                ${inv.status || 'Pending'}
+                            </span>
+                            <a href="/api/invoices/${inv.id}/pdf" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
+                                Download PDF
+                            </a>
+                        </div>
+                    </div>
+                `).join('') : '<p style="text-align: center; color: #888;">No invoices yet</p>';
+                
+                document.getElementById('invoicesList').innerHTML = listHtml;
+            } catch (error) {
+                console.error('Error loading invoices:', error);
+            }
+        }
+        
+        async function loadVendors() {
+            try {
+                const response = await fetch('/api/vendors');
+                const vendors = await response.json();
+                
+                const listHtml = vendors.length ? vendors.map(v => `
+                    <div class="list-item">
+                        <div class="list-item-info">
+                            <h4>${v.name}</h4>
+                            <p>${v.email} • ${v.phone || 'No phone'}</p>
+                        </div>
+                        <span class="status-badge status-active">Active</span>
+                    </div>
+                `).join('') : '<p style="text-align: center; color: #888;">No vendors yet</p>';
+                
+                document.getElementById('vendorsList').innerHTML = listHtml;
+            } catch (error) {
+                console.error('Error loading vendors:', error);
+            }
+        }
+        
+        async function loadConnectAccounts() {
+            try {
+                const response = await fetch('/api/connect/accounts');
+                const data = await response.json();
+                
+                const listHtml = data.accounts.length ? data.accounts.map(a => `
+                    <div class="list-item">
+                        <div class="list-item-info">
+                            <h4>${a.email || 'No email'}</h4>
+                            <p>ID: ${a.id} • ${a.country}</p>
+                        </div>
+                        <span class="status-badge status-${a.charges_enabled ? 'active' : 'pending'}">
+                            ${a.charges_enabled ? 'Active' : 'Pending'}
+                        </span>
+                    </div>
+                `).join('') : '<p style="text-align: center; color: #888;">No connected accounts yet</p>';
+                
+                document.getElementById('connectList').innerHTML = listHtml;
+            } catch (error) {
+                console.error('Error loading accounts:', error);
+            }
+        }
+        
+        // Load overview on page load
+        loadOverview();
+    </script>
+</body>
+</html>

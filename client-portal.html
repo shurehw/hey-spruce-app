@@ -41,15 +41,18 @@
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: var(--gray-50);
+            background: white;
             color: var(--gray-900);
             line-height: 1.6;
+            margin: 0;
+            padding: 0;
         }
         
         /* Layout */
         .app-container {
             display: flex;
             min-height: 100vh;
+            background: white;
         }
         
         /* Sidebar */
@@ -59,15 +62,13 @@
             border-right: 1px solid var(--gray-200);
             display: flex;
             flex-direction: column;
+            position: fixed;
+            left: 0;
+            top: 60px;
+            height: calc(100vh - 60px);
+            z-index: 50;
         }
         
-        .sidebar-header {
-            padding: 1.5rem;
-            border-bottom: 1px solid var(--gray-200);
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
         
         .logo {
             display: flex;
@@ -160,19 +161,22 @@
         /* Main Content */
         .main-content {
             flex: 1;
-            padding: 2rem;
+            margin-left: var(--sidebar-width);
+            margin-top: 60px;
+            padding: 0.25rem 2rem;
             overflow-y: auto;
+            min-height: calc(100vh - 60px);
+            background: white;
         }
         
         /* Header Bar */
         .header-bar {
             background: white;
-            padding: 1rem 2rem;
-            border-bottom: 1px solid var(--gray-200);
+            padding: 0.25rem 0;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin: -2rem -2rem 2rem -2rem;
+            margin-bottom: 0.5rem;
         }
         
         .header-title {
@@ -378,7 +382,7 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 1.5rem;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
         }
         
         .stat-card {
@@ -746,19 +750,25 @@
             border-left: 4px solid var(--info);
         }
     </style>
+    <script src="/common-header.js"></script>
 </head>
 <body>
+    <!-- Common Header -->
+    <div id="common-header-container"></div>
+    <script>
+        // Initialize common header for client portal
+        window.addEventListener('DOMContentLoaded', function() {
+            if (typeof insertCommonHeader === 'function') {
+                insertCommonHeader('client');
+            } else {
+                console.error('insertCommonHeader function not found');
+            }
+        });
+    </script>
+    
     <div class="app-container">
         <!-- Sidebar -->
         <nav class="sidebar">
-            <div class="sidebar-header">
-                <a href="#" class="logo" onclick="loadSection('dashboard'); return false;">
-                    <img src="/public/hey-spruce-logo.png" alt="Hey Spruce">
-                    <span class="logo-text">Hey Spruce</span>
-                </a>
-                <span class="portal-badge">Client</span>
-            </div>
-            
             <div class="sidebar-nav">
                 <div class="sidebar-section">
                     <div class="sidebar-title">Main</div>
@@ -902,93 +912,9 @@
         
         function getDashboardContent() {
             return `
-                <div class="header-bar">
-                    <h1 class="header-title">Welcome back, McDonald's Corporation</h1>
-                    <div class="header-actions" style="display: flex; gap: 1rem; align-items: center;">
-                        <!-- Location Selector (only shown for multi-location users) -->
-                        <div class="location-selector multi-location-only" onclick="toggleLocationDropdown(event)">
-                            <span class="location-icon">📍</span>
-                            <div>
-                                <div class="location-name">All Locations</div>
-                                <div class="location-type">Corporate View</div>
-                            </div>
-                            <span style="font-size: 0.75rem;">▼</span>
-                            <div class="location-dropdown" id="locationDropdown">
-                                <div class="location-group">
-                                    <div class="location-group-title">Parent Organization</div>
-                                    <div class="location-item selected" onclick="selectLocation('all', 'All Locations', 'Corporate View')">
-                                        <div class="location-details">
-                                            <div class="location-name">All Locations</div>
-                                            <div class="location-address">Corporate View - 127 locations</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="location-group">
-                                    <div class="location-group-title">Regions</div>
-                                    <div class="location-item" onclick="selectLocation('midwest', 'Midwest Region', '45 locations')">
-                                        <div class="location-details">
-                                            <div class="location-name">Midwest Region</div>
-                                            <div class="location-address">IL, IN, MI, OH, WI - 45 locations</div>
-                                        </div>
-                                    </div>
-                                    <div class="location-item" onclick="selectLocation('northeast', 'Northeast Region', '38 locations')">
-                                        <div class="location-details">
-                                            <div class="location-name">Northeast Region</div>
-                                            <div class="location-address">NY, NJ, PA, MA, CT - 38 locations</div>
-                                        </div>
-                                    </div>
-                                    <div class="location-item" onclick="selectLocation('west', 'West Region', '44 locations')">
-                                        <div class="location-details">
-                                            <div class="location-name">West Region</div>
-                                            <div class="location-address">CA, OR, WA, NV, AZ - 44 locations</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="location-group">
-                                    <div class="location-group-title">Individual Locations</div>
-                                    <div class="location-item" onclick="selectLocation('chi-001', 'Chicago - State St', 'Store #001')">
-                                        <div class="location-details">
-                                            <div class="location-name">Chicago - State St</div>
-                                            <div class="location-address">123 N State St, Chicago, IL 60602</div>
-                                        </div>
-                                    </div>
-                                    <div class="location-item" onclick="selectLocation('chi-002', 'Chicago - Michigan Ave', 'Store #002')">
-                                        <div class="location-details">
-                                            <div class="location-name">Chicago - Michigan Ave</div>
-                                            <div class="location-address">600 N Michigan Ave, Chicago, IL 60611</div>
-                                        </div>
-                                    </div>
-                                    <div class="location-item" onclick="selectLocation('nyc-001', 'Times Square', 'Store #045')">
-                                        <div class="location-details">
-                                            <div class="location-name">Times Square</div>
-                                            <div class="location-address">1560 Broadway, New York, NY 10036</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <button class="notification-btn" onclick="loadSection('notifications')">
-                            🔔
-                            <span class="notification-badge">3</span>
-                        </button>
-                        <div class="user-menu" onclick="toggleUserDropdown(event)">
-                            <div class="user-avatar">JD</div>
-                            <div>
-                                <div style="font-weight: 500; font-size: 0.875rem;">John Doe</div>
-                                <div style="font-size: 0.75rem; color: var(--gray-500);">Corporate Admin</div>
-                            </div>
-                            <div class="user-dropdown" id="userDropdown">
-                                <a href="#" class="dropdown-item" onclick="loadSection('profile'); hideUserDropdown();">Profile Settings</a>
-                                <div class="dropdown-divider"></div>
-                                <a href="#" class="dropdown-item admin-only" onclick="loadSection('user-admin'); hideUserDropdown();">User Administration</a>
-                                <div class="dropdown-divider admin-only"></div>
-                                <a href="#" class="dropdown-item" onclick="loadSection('notifications'); hideUserDropdown();">Notifications</a>
-                                <a href="#" class="dropdown-item" onclick="loadSection('billing'); hideUserDropdown();">Billing & Subscriptions</a>
-                                <div class="dropdown-divider"></div>
-                                <a href="#" class="dropdown-item" onclick="logout();">Sign Out</a>
-                            </div>
-                        </div>
-                    </div>
+                <!-- Dashboard Content without duplicate header -->
+                <div style="padding: 0 2rem;">
+                    <h1 class="header-title" style="font-size: 1.5rem; margin-bottom: 1rem; margin-top: 0;">Welcome back, McDonald's Corporation</h1>
                 </div>
                 
                 <!-- Stats Overview -->
@@ -1020,21 +946,21 @@
                 <div class="quick-actions">
                     <div class="action-card" onclick="showCreateWorkOrderModal()">
                         <div class="action-icon">➕</div>
-                        <div class="action-title">Create Work Order</div>
+                        <div class="action-title">New Service Request</div>
                         <div class="action-description">Submit a new service request</div>
                     </div>
                     <div class="action-card" onclick="loadSection('quotes')">
-                        <div class="action-icon">✅</div>
+                        <div class="action-icon" style="font-weight: bold;">OK</div>
                         <div class="action-title">Review Quotes</div>
                         <div class="action-description">5 pending approval</div>
                     </div>
                     <div class="action-card" onclick="loadSection('invoices')">
-                        <div class="action-icon">💳</div>
+                        <div class="action-icon" style="font-weight: bold;">$</div>
                         <div class="action-title">Pay Invoices</div>
                         <div class="action-description">3 outstanding</div>
                     </div>
                     <div class="action-card" onclick="loadSection('reports')">
-                        <div class="action-icon">📈</div>
+                        <div class="action-icon" style="font-weight: bold;">R</div>
                         <div class="action-title">View Reports</div>
                         <div class="action-description">Analytics & insights</div>
                     </div>
@@ -1104,46 +1030,39 @@
                     <h1 class="header-title">Service Calendar</h1>
                     <div class="header-actions">
                         <button class="btn btn-secondary" onclick="loadSection('work-orders')">List View</button>
+                        <button class="btn btn-secondary" onclick="showPreventativeMaintenanceModal()">+ Preventative Maintenance</button>
                         <button class="btn btn-primary" onclick="showCreateWorkOrderModal()">+ Request Service</button>
                     </div>
                 </div>
 
-                <!-- Client Service Info -->
-                <div class="stat-cards" style="margin-bottom: 2rem;">
-                    <div class="stat-card">
-                        <div class="stat-header">
-                            <div>
-                                <div class="stat-value" id="nextServiceDate">Aug 28</div>
-                                <div class="stat-label">Next Service</div>
-                            </div>
-                            <div class="stat-icon">📅</div>
+                <!-- Client Service Info - Compact Horizontal Tiles -->
+                <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+                    <div style="flex: 1; min-width: 150px; background: white; border: 1px solid var(--gray-200); border-radius: 8px; padding: 0.75rem 1rem; display: flex; align-items: center; gap: 0.75rem;">
+                        <div style="font-size: 1.25rem; font-weight: bold;">S</div>
+                        <div>
+                            <div style="font-size: 1rem; font-weight: 600; color: var(--gray-900);" id="nextServiceDate">Aug 28</div>
+                            <div style="font-size: 0.75rem; color: var(--gray-500);">Next Service</div>
                         </div>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-header">
-                            <div>
-                                <div class="stat-value">Monthly</div>
-                                <div class="stat-label">Service Type</div>
-                            </div>
-                            <div class="stat-icon">🔄</div>
+                    <div style="flex: 1; min-width: 150px; background: white; border: 1px solid var(--gray-200); border-radius: 8px; padding: 0.75rem 1rem; display: flex; align-items: center; gap: 0.75rem;">
+                        <div style="font-size: 1.25rem; font-weight: bold;">R</div>
+                        <div>
+                            <div style="font-size: 1rem; font-weight: 600; color: var(--gray-900);">Monthly</div>
+                            <div style="font-size: 0.75rem; color: var(--gray-500);">Service Type</div>
                         </div>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-header">
-                            <div>
-                                <div class="stat-value">3</div>
-                                <div class="stat-label">Completed This Month</div>
-                            </div>
-                            <div class="stat-icon success">✅</div>
+                    <div style="flex: 1; min-width: 150px; background: white; border: 1px solid var(--gray-200); border-radius: 8px; padding: 0.75rem 1rem; display: flex; align-items: center; gap: 0.75rem;">
+                        <div style="font-size: 1.25rem; font-weight: bold;">C</div>
+                        <div>
+                            <div style="font-size: 1rem; font-weight: 600; color: var(--gray-900);">3</div>
+                            <div style="font-size: 0.75rem; color: var(--gray-500);">Completed This Month</div>
                         </div>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-header">
-                            <div>
-                                <div class="stat-value">2</div>
-                                <div class="stat-label">Upcoming Services</div>
-                            </div>
-                            <div class="stat-icon">⏰</div>
+                    <div style="flex: 1; min-width: 150px; background: white; border: 1px solid var(--gray-200); border-radius: 8px; padding: 0.75rem 1rem; display: flex; align-items: center; gap: 0.75rem;">
+                        <div style="font-size: 1.25rem; font-weight: bold;">P</div>
+                        <div>
+                            <div style="font-size: 1rem; font-weight: 600; color: var(--gray-900);">2</div>
+                            <div style="font-size: 0.75rem; color: var(--gray-500);">Upcoming Services</div>
                         </div>
                     </div>
                 </div>
@@ -1210,7 +1129,7 @@
                     <h1 class="header-title">Work Orders</h1>
                     <div class="header-actions">
                         <button class="btn btn-primary" onclick="showCreateWorkOrderModal()">
-                            + Create Work Order
+                            + New Service Request
                         </button>
                     </div>
                 </div>
@@ -1293,6 +1212,12 @@
         }
         
         function getQuotesContent() {
+            // Get quotes from localStorage (created by supplier portal)
+            const quotes = JSON.parse(localStorage.getItem('clientQuotes') || '[]');
+            const pendingQuotes = quotes.filter(q => q.status === 'pending');
+            const approvedQuotes = quotes.filter(q => q.status === 'approved');
+            const totalValue = quotes.reduce((sum, q) => sum + q.totalAmount, 0);
+            
             return `
                 <div class="header-bar">
                     <h1 class="header-title">Quotes</h1>
@@ -1301,15 +1226,15 @@
                 <div class="dashboard-grid">
                     <div class="stat-card">
                         <div class="stat-label">Pending Approval</div>
-                        <div class="stat-value">5</div>
+                        <div class="stat-value">${pendingQuotes.length}</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-label">Approved This Month</div>
-                        <div class="stat-value">12</div>
+                        <div class="stat-value">${approvedQuotes.length}</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-label">Total Quote Value</div>
-                        <div class="stat-value">$45,680</div>
+                        <div class="stat-value">$${totalValue.toFixed(2)}</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-label">Avg Approval Time</div>
@@ -1325,28 +1250,71 @@
                         <thead>
                             <tr>
                                 <th>Quote #</th>
-                                <th>Work Order</th>
-                                <th>Vendor</th>
-                                <th>Amount</th>
+                                <th>Service</th>
+                                <th>Client</th>
+                                <th>Bid Amount</th>
+                                <th>Platform Fee</th>
+                                <th>Total Amount</th>
                                 <th>Valid Until</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td><strong>#Q-2024-015</strong></td>
-                                <td>WO-2024-001</td>
-                                <td>ABC Maintenance</td>
-                                <td><strong>$1,250.00</strong></td>
-                                <td>Oct 25, 2024</td>
-                                <td>
-                                    <button class="btn btn-sm btn-success" onclick="approveQuote('Q-2024-015')">Approve</button>
-                                    <button class="btn btn-sm btn-danger" onclick="rejectQuote('Q-2024-015')">Reject</button>
-                                </td>
-                            </tr>
+                            ${pendingQuotes.length > 0 ? pendingQuotes.map(quote => `
+                                <tr>
+                                    <td><strong>#${quote.id}</strong></td>
+                                    <td>${quote.service}</td>
+                                    <td>${quote.clientName}</td>
+                                    <td>$${quote.bidAmount.toFixed(2)}</td>
+                                    <td>$${quote.platformFee.toFixed(2)}</td>
+                                    <td><strong>$${quote.totalAmount.toFixed(2)}</strong></td>
+                                    <td>${new Date(quote.expiresAt).toLocaleDateString()}</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-success" onclick="approveQuote('${quote.id}')">Approve</button>
+                                        <button class="btn btn-sm btn-secondary" onclick="viewQuoteDetails('${quote.id}')">View</button>
+                                        <button class="btn btn-sm btn-danger" onclick="rejectQuote('${quote.id}')">Reject</button>
+                                    </td>
+                                </tr>
+                            `).join('') : `
+                                <tr>
+                                    <td colspan="8" style="text-align: center; padding: 2rem; color: var(--gray-500);">
+                                        No pending quotes at this time
+                                    </td>
+                                </tr>
+                            `}
                         </tbody>
                     </table>
                 </div>
+                
+                ${approvedQuotes.length > 0 ? `
+                <div class="table-container" style="margin-top: 2rem;">
+                    <div class="table-header">
+                        <h3 class="table-title">Approved Quotes</h3>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Quote #</th>
+                                <th>Service</th>
+                                <th>Total Amount</th>
+                                <th>Approved Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${approvedQuotes.map(quote => `
+                                <tr>
+                                    <td><strong>#${quote.id}</strong></td>
+                                    <td>${quote.service}</td>
+                                    <td><strong>$${quote.totalAmount.toFixed(2)}</strong></td>
+                                    <td>${new Date(quote.approvedAt || quote.createdAt).toLocaleDateString()}</td>
+                                    <td><span class="status-badge approved">Approved</span></td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+                ` : ''}
             `;
         }
         
@@ -2024,7 +1992,7 @@
                             <tr>
                                 <td><strong>ABC Maintenance</strong></td>
                                 <td>HVAC, Electrical</td>
-                                <td>⭐ 4.8</td>
+                                <td>4.8 Rating</td>
                                 <td>87</td>
                                 <td>2.3 hours</td>
                                 <td>$145,280</td>
@@ -2033,7 +2001,7 @@
                             <tr>
                                 <td><strong>XYZ Plumbing</strong></td>
                                 <td>Plumbing</td>
-                                <td>⭐ 4.6</td>
+                                <td>4.6 Rating</td>
                                 <td>52</td>
                                 <td>3.1 hours</td>
                                 <td>$87,432</td>
@@ -2053,22 +2021,22 @@
                 
                 <div class="quick-actions">
                     <div class="action-card" onclick="generateReport('monthly')">
-                        <div class="action-icon">📊</div>
+                        <div class="action-icon" style="font-weight: bold;">A</div>
                         <div class="action-title">Monthly Summary</div>
                         <div class="action-description">October 2024</div>
                     </div>
                     <div class="action-card" onclick="generateReport('vendor')">
-                        <div class="action-icon">👥</div>
+                        <div class="action-icon" style="font-weight: bold;">T</div>
                         <div class="action-title">Vendor Performance</div>
                         <div class="action-description">All vendors</div>
                     </div>
                     <div class="action-card" onclick="generateReport('location')">
-                        <div class="action-icon">📍</div>
+                        <div class="action-icon" style="font-weight: bold;">L</div>
                         <div class="action-title">Location Analysis</div>
                         <div class="action-description">All locations</div>
                     </div>
                     <div class="action-card" onclick="generateReport('custom')">
-                        <div class="action-icon">⚙️</div>
+                        <div class="action-icon" style="font-weight: bold;">S</div>
                         <div class="action-title">Custom Report</div>
                         <div class="action-description">Build your own</div>
                     </div>
@@ -2444,13 +2412,13 @@
                             <div style="font-size: 0.75rem; color: var(--gray-600); margin-top: 0.5rem;">8 permissions • Corporate Level</div>
                         </div>
                         <div class="action-card" onclick="applyPermissionTemplate('location-manager')">
-                            <div class="action-icon" style="background: var(--warning-light); color: var(--warning);">🏢</div>
+                            <div class="action-icon" style="background: var(--warning-light); color: var(--warning); font-weight: bold;">B</div>
                             <div class="action-title">Location Manager</div>
                             <div class="action-description">Manage work orders, assets, and reports for assigned locations</div>
                             <div style="font-size: 0.75rem; color: var(--gray-600); margin-top: 0.5rem;">5 permissions • Location Level</div>
                         </div>
                         <div class="action-card" onclick="applyPermissionTemplate('staff-member')">
-                            <div class="action-icon" style="background: var(--info-light); color: var(--info);">👤</div>
+                            <div class="action-icon" style="background: var(--info-light); color: var(--info); font-weight: bold;">U</div>
                             <div class="action-title">Staff Member</div>
                             <div class="action-description">View work orders and submit basic requests</div>
                             <div style="font-size: 0.75rem; color: var(--gray-600); margin-top: 0.5rem;">2 permissions • Read Only</div>
@@ -2493,7 +2461,7 @@
             modal.innerHTML = `
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h3>Create Work Order</h3>
+                        <h3>New Service Request</h3>
                         <button class="close-btn" onclick="closeModal(this)">&times;</button>
                     </div>
                     <div class="modal-body">
@@ -2505,6 +2473,20 @@
                                     <option>McDonald's - Sunset</option>
                                     <option>Burger King - Melrose</option>
                                     <option>Delilah LA</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Asset (Optional)</label>
+                                <select class="form-select" id="asset-select">
+                                    <option value="">Select asset...</option>
+                                    <option value="asset-1">HVAC Unit - Rooftop #1</option>
+                                    <option value="asset-2">Walk-in Freezer #1</option>
+                                    <option value="asset-3">Fryer Station #2</option>
+                                    <option value="asset-4">Ice Machine - Front</option>
+                                    <option value="asset-5">Dishwasher - Main</option>
+                                    <option value="asset-6">Refrigerator - Prep Area</option>
+                                    <option value="asset-7">Grease Trap #1</option>
+                                    <option value="asset-8">Hot Water Heater</option>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -2552,27 +2534,424 @@
             }
         }
         
+        function showPreventativeMaintenanceModal() {
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.innerHTML = `
+                <div class="modal-content" style="max-width: 700px;">
+                    <div class="modal-header">
+                        <h3>Add Preventative Maintenance</h3>
+                        <button class="close-btn" onclick="closeModal(this)">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="pm-form">
+                            <!-- Basic Information -->
+                            <div class="form-group">
+                                <label class="form-label">Title/PM *</label>
+                                <input type="text" class="form-input" placeholder="e.g., HVAC Filter Replacement" required>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group" style="flex: 1;">
+                                    <label class="form-label">Asset Group *</label>
+                                    <select class="form-select" required>
+                                        <option value="">Select asset group...</option>
+                                        <option>HVAC Systems</option>
+                                        <option>Kitchen Equipment</option>
+                                        <option>Refrigeration</option>
+                                        <option>Plumbing</option>
+                                        <option>Electrical</option>
+                                        <option>Fire Safety</option>
+                                    </select>
+                                </div>
+                                <div class="form-group" style="flex: 1;">
+                                    <label class="form-label">Trade *</label>
+                                    <select class="form-select" required>
+                                        <option value="">Select trade...</option>
+                                        <option>HVAC</option>
+                                        <option>Plumbing</option>
+                                        <option>Electrical</option>
+                                        <option>General Maintenance</option>
+                                        <option>Appliance Repair</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group" style="flex: 1;">
+                                    <label class="form-label">Category</label>
+                                    <select class="form-select">
+                                        <option>Maintenance</option>
+                                        <option>Inspection</option>
+                                        <option>Cleaning</option>
+                                        <option>Calibration</option>
+                                        <option>Testing</option>
+                                    </select>
+                                </div>
+                                <div class="form-group" style="flex: 1;">
+                                    <label class="form-label">Priority *</label>
+                                    <select class="form-select" required>
+                                        <option>Low</option>
+                                        <option selected>Medium</option>
+                                        <option>High</option>
+                                        <option>Critical</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Service Provider</label>
+                                <select class="form-select">
+                                    <option value="">Auto-assign based on trade</option>
+                                    <option>ABC Maintenance Co.</option>
+                                    <option>XYZ HVAC Services</option>
+                                    <option>Pro Plumbing Inc.</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group" style="flex: 1;">
+                                    <label class="form-label">Bill *</label>
+                                    <input type="number" class="form-input" placeholder="0.00" step="0.01" min="0">
+                                </div>
+                                <div class="form-group" style="flex: 1;">
+                                    <label class="form-label">Locations *</label>
+                                    <select class="form-select" required>
+                                        <option value="">Select locations...</option>
+                                        <option>All Locations</option>
+                                        <option>McDonald's - Sunset</option>
+                                        <option>Burger King - Melrose</option>
+                                        <option>Delilah LA</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <!-- Service Frequency Section -->
+                            <div style="background: var(--gray-50); padding: 1rem; border-radius: 8px; margin: 1.5rem 0;">
+                                <h4 style="margin-bottom: 1rem;">Service Frequency</h4>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">Service by Month</label>
+                                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                                        <button type="button" class="month-btn" onclick="toggleMonth(this, 'JAN')">JAN</button>
+                                        <button type="button" class="month-btn" onclick="toggleMonth(this, 'FEB')">FEB</button>
+                                        <button type="button" class="month-btn" onclick="toggleMonth(this, 'MAR')">MAR</button>
+                                        <button type="button" class="month-btn" onclick="toggleMonth(this, 'APR')">APR</button>
+                                        <button type="button" class="month-btn" onclick="toggleMonth(this, 'MAY')">MAY</button>
+                                        <button type="button" class="month-btn" onclick="toggleMonth(this, 'JUN')">JUN</button>
+                                        <button type="button" class="month-btn" onclick="toggleMonth(this, 'JUL')">JUL</button>
+                                        <button type="button" class="month-btn" onclick="toggleMonth(this, 'AUG')">AUG</button>
+                                        <button type="button" class="month-btn" onclick="toggleMonth(this, 'SEP')">SEP</button>
+                                        <button type="button" class="month-btn" onclick="toggleMonth(this, 'OCT')">OCT</button>
+                                        <button type="button" class="month-btn" onclick="toggleMonth(this, 'NOV')">NOV</button>
+                                        <button type="button" class="month-btn" onclick="toggleMonth(this, 'DEC')">DEC</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group" style="flex: 1;">
+                                        <label class="form-label">Date of Month</label>
+                                        <select class="form-select">
+                                            <option value="">Select date...</option>
+                                            ${Array.from({length: 31}, (_, i) => `<option>${i + 1}</option>`).join('')}
+                                        </select>
+                                    </div>
+                                    <div class="form-group" style="flex: 1;">
+                                        <label class="form-label">OR</label>
+                                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                            <input type="radio" name="service-day" id="service-by-day">
+                                            <label for="service-by-day">Service by Day</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" style="flex: 1;">
+                                        <label class="form-label">Day Frequency</label>
+                                        <select class="form-select">
+                                            <option>First Monday</option>
+                                            <option>Second Monday</option>
+                                            <option>Third Monday</option>
+                                            <option>Last Monday</option>
+                                            <option>Every Monday</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Work Order Generation -->
+                            <div class="form-group">
+                                <label class="form-label">Generate WO in Advance *</label>
+                                <select class="form-select" required>
+                                    <option>Same day</option>
+                                    <option>1 day before</option>
+                                    <option>3 days before</option>
+                                    <option selected>7 days before</option>
+                                    <option>14 days before</option>
+                                    <option>30 days before</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group" style="flex: 1;">
+                                    <label class="form-label">Service Starts *</label>
+                                    <input type="date" class="form-input" required>
+                                </div>
+                                <div class="form-group" style="flex: 1;">
+                                    <label class="form-label">Date of the Next Work Order</label>
+                                    <input type="date" class="form-input" readonly style="background: var(--gray-100);">
+                                </div>
+                            </div>
+                            
+                            <!-- PM Setup Info -->
+                            <div style="background: var(--info-light); padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                                <div style="display: flex; align-items: center; gap: 0.5rem; color: var(--info);">
+                                    <span style="font-size: 1.25rem; font-weight: bold;">i</span>
+                                    <div>
+                                        <strong>Preventative Maintenance Setup overview</strong><br>
+                                        <small>For Service by Month: Service will be created XX days in advance according to your preferred schedule.<br>
+                                        For Service by Day: Based on the Service Starts Date and Days Between Service, your first work order will be created XX days in advance.</small>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Description</label>
+                                <textarea class="form-input" rows="4" placeholder="Enter maintenance description, special instructions, or checklist items..."></textarea>
+                            </div>
+                            
+                            <!-- Attachments -->
+                            <div class="form-group">
+                                <label class="form-label">Attachments</label>
+                                <div style="border: 2px dashed var(--gray-300); border-radius: 8px; padding: 2rem; text-align: center; cursor: pointer;" onclick="document.getElementById('pm-file-upload').click()">
+                                    <div style="font-size: 2rem; margin-bottom: 0.5rem; font-weight: bold;">+</div>
+                                    <div>Drag and Drop here<br>or<br><span style="color: var(--primary);">BROWSE FILE</span></div>
+                                    <input type="file" id="pm-file-upload" style="display: none;" multiple>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" onclick="closeModal(this)">Cancel</button>
+                        <button class="btn btn-primary" onclick="savePreventativeMaintenance()">Create PM Schedule</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            
+            // Add custom styles for month buttons
+            const style = document.createElement('style');
+            style.textContent = `
+                .month-btn {
+                    padding: 0.5rem 1rem;
+                    border: 1px solid var(--gray-300);
+                    background: white;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    transition: all 0.2s;
+                }
+                .month-btn:hover {
+                    background: var(--gray-50);
+                }
+                .month-btn.active {
+                    background: var(--primary);
+                    color: white;
+                    border-color: var(--primary);
+                }
+                .form-row {
+                    display: flex;
+                    gap: 1rem;
+                    margin-bottom: 1rem;
+                }
+                .info-light {
+                    background: #e0f2fe;
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
+        function toggleMonth(btn, month) {
+            btn.classList.toggle('active');
+        }
+        
+        function savePreventativeMaintenance() {
+            showToast('Preventative Maintenance schedule created successfully!', 'success');
+            closeModal(document.querySelector('.modal.active .close-btn'));
+        }
+        
         // Action Functions
         function viewWorkOrder(id) {
             showToast(`Opening work order ${id}...`, 'info');
         }
         
         function approveQuote(id) {
-            showToast(`Quote ${id} approved successfully`, 'success');
+            // Get quotes from localStorage
+            let quotes = JSON.parse(localStorage.getItem('clientQuotes') || '[]');
+            const quoteIndex = quotes.findIndex(q => q.id === id);
+            
+            if (quoteIndex !== -1) {
+                // Update quote status
+                quotes[quoteIndex].status = 'approved';
+                quotes[quoteIndex].approvedAt = new Date().toISOString();
+                
+                // Save back to localStorage
+                localStorage.setItem('clientQuotes', JSON.stringify(quotes));
+                
+                showToast(`Quote ${id} approved successfully! Work order has been assigned.`, 'success');
+                
+                // Refresh the quotes section
+                loadSection('quotes');
+            }
         }
         
         function rejectQuote(id) {
-            showToast(`Quote ${id} rejected`, 'warning');
+            // Get quotes from localStorage
+            let quotes = JSON.parse(localStorage.getItem('clientQuotes') || '[]');
+            const quoteIndex = quotes.findIndex(q => q.id === id);
+            
+            if (quoteIndex !== -1) {
+                // Update quote status
+                quotes[quoteIndex].status = 'rejected';
+                quotes[quoteIndex].rejectedAt = new Date().toISOString();
+                
+                // Save back to localStorage
+                localStorage.setItem('clientQuotes', JSON.stringify(quotes));
+                
+                showToast(`Quote ${id} rejected`, 'warning');
+                
+                // Refresh the quotes section
+                loadSection('quotes');
+            }
+        }
+        
+        function viewQuoteDetails(id) {
+            // Get the specific quote
+            const quotes = JSON.parse(localStorage.getItem('clientQuotes') || '[]');
+            const quote = quotes.find(q => q.id === id);
+            
+            if (!quote) {
+                showToast('Quote not found', 'error');
+                return;
+            }
+            
+            // Create quote details modal
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.innerHTML = `
+                <div class="modal-content" style="max-width: 600px;">
+                    <div class="modal-header">
+                        <h3>Quote Details - ${quote.id}</h3>
+                        <button class="close-btn" onclick="this.closest('.modal').remove()">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div style="background: var(--gray-50); padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                            <h4 style="color: var(--primary); margin-bottom: 1rem;">${quote.service}</h4>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                <div>
+                                    <label style="font-size: 0.875rem; color: var(--gray-600);">Client:</label>
+                                    <div style="font-weight: 600;">${quote.clientName}</div>
+                                </div>
+                                <div>
+                                    <label style="font-size: 0.875rem; color: var(--gray-600);">Work Order:</label>
+                                    <div style="font-weight: 600;">${quote.workOrderId}</div>
+                                </div>
+                                <div>
+                                    <label style="font-size: 0.875rem; color: var(--gray-600);">Created:</label>
+                                    <div style="font-weight: 600;">${new Date(quote.createdAt).toLocaleDateString()}</div>
+                                </div>
+                                <div>
+                                    <label style="font-size: 0.875rem; color: var(--gray-600);">Expires:</label>
+                                    <div style="font-weight: 600;">${new Date(quote.expiresAt).toLocaleDateString()}</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div style="border: 1px solid var(--gray-200); border-radius: 8px; padding: 1.5rem;">
+                            <h4 style="margin-bottom: 1rem;">Cost Breakdown</h4>
+                            <div style="display: flex; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px solid var(--gray-100);">
+                                <span>Service Cost:</span>
+                                <span style="font-weight: 600;">$${quote.bidAmount.toFixed(2)}</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px solid var(--gray-100);">
+                                <span>Platform Fee:</span>
+                                <span style="font-weight: 600;">$${quote.platformFee.toFixed(2)}</span>
+                            </div>
+                            ${quote.processingFee ? `
+                            <div style="display: flex; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px solid var(--gray-100);">
+                                <span>Processing Fee:</span>
+                                <span style="font-weight: 600;">$${quote.processingFee.toFixed(2)}</span>
+                            </div>
+                            ` : ''}
+                            <div style="display: flex; justify-content: space-between; padding: 0.75rem 0; font-size: 1.125rem;">
+                                <span style="font-weight: 700;">Total Amount:</span>
+                                <span style="font-weight: 700; color: var(--primary);">$${quote.totalAmount.toFixed(2)}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" onclick="this.closest('.modal').remove()">Close</button>
+                        ${quote.status === 'pending' ? `
+                            <button class="btn btn-success" onclick="this.closest('.modal').remove(); approveQuote('${quote.id}')">Approve Quote</button>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
         }
         
         function payInvoice(id) {
             showToast(`Processing payment for invoice ${id}...`, 'info');
         }
         
-        function submitWorkOrder() {
-            showToast('Work order submitted successfully', 'success');
-            closeModal(document.querySelector('.modal.active .close-btn'));
-            loadSection('work-orders');
+        async function submitWorkOrder() {
+            // Get form data
+            const modal = document.querySelector('.modal.active');
+            const location = modal.querySelector('select:nth-of-type(1)').value;
+            const assetSelect = modal.querySelector('#asset-select');
+            const asset = assetSelect ? assetSelect.value : '';
+            const categorySelect = modal.querySelectorAll('.form-select')[2];
+            const prioritySelect = modal.querySelectorAll('.form-select')[3];
+            const category = categorySelect.value;
+            const priority = prioritySelect.value;
+            const description = modal.querySelector('.form-textarea').value;
+            
+            // Validate required fields
+            if (!location || !category || !priority || !description) {
+                showToast('Please fill in all required fields', 'error');
+                return;
+            }
+            
+            // Create work order object
+            const workOrder = {
+                location,
+                asset_id: asset || null,
+                asset_name: asset ? assetSelect.options[assetSelect.selectedIndex].text : null,
+                category,
+                priority,
+                description,
+                status: 'pending',
+                created_at: new Date().toISOString(),
+                client_id: 'current-user' // This should come from auth
+            };
+            
+            try {
+                // Send to API
+                const response = await fetch('/api/work-orders', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(workOrder)
+                });
+                
+                if (response.ok) {
+                    showToast('Service request submitted successfully', 'success');
+                    closeModal(document.querySelector('.modal.active .close-btn'));
+                    loadSection('work-orders');
+                } else {
+                    throw new Error('Failed to submit request');
+                }
+            } catch (error) {
+                console.error('Error submitting work order:', error);
+                showToast('Failed to submit request. Please try again.', 'error');
+            }
         }
         
         // Toast Notification
@@ -2881,7 +3260,7 @@
             const role = roleSelect.value;
             
             if (role === 'corporate_admin') {
-                container.innerHTML = '<div style="padding: 0.5rem; background: var(--success-light); border-radius: 4px; color: var(--success);">✓ Full access to all locations</div>';
+                container.innerHTML = '<div style="padding: 0.5rem; background: var(--success-light); border-radius: 4px; color: var(--success);">Full access to all locations</div>';
             } else {
                 container.innerHTML = `
                     <select class="form-select" multiple style="height: 120px;">

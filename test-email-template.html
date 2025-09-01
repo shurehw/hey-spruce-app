@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hey Spruce Email Template Preview</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f0f0f0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .email-preview {
+            margin-bottom: 40px;
+        }
+        .email-header {
+            background: white;
+            padding: 20px;
+            border-radius: 8px 8px 0 0;
+            border-bottom: 1px solid #ddd;
+        }
+        .email-header h2 {
+            margin: 0 0 10px 0;
+            color: #10b981;
+        }
+        .email-meta {
+            color: #666;
+            font-size: 14px;
+        }
+        iframe {
+            width: 100%;
+            height: 800px;
+            border: none;
+            background: white;
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .controls {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .btn {
+            padding: 10px 20px;
+            margin-right: 10px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-primary {
+            background: #10b981;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #059669;
+        }
+        .btn-secondary {
+            background: #f59e0b;
+            color: white;
+        }
+        .btn-secondary:hover {
+            background: #d97706;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Hey Spruce Email Templates Preview</h1>
+        
+        <div class="controls">
+            <button class="btn btn-primary" onclick="loadScheduledEmail()">View Scheduled Email</button>
+            <button class="btn btn-secondary" onclick="loadChangedEmail()">View Changed Email</button>
+        </div>
+        
+        <div class="email-preview">
+            <div class="email-header">
+                <h2 id="email-title">Work Order Scheduled Email</h2>
+                <div class="email-meta">
+                    <strong>From:</strong> Hey Spruce &lt;noreply@heyspruce.com&gt;<br>
+                    <strong>To:</strong> customer@example.com<br>
+                    <strong>Subject:</strong> <span id="email-subject">Work Order Scheduled: Electrical at The Nice Guy (Cienega, West Hollywood)</span>
+                </div>
+            </div>
+            <iframe id="email-frame" src=""></iframe>
+        </div>
+    </div>
+    
+    <script>
+        // Sample data for templates
+        const sampleData = {
+            scheduled: {
+                SERVICE_TYPE: 'Electrical',
+                LOCATION_NAME: 'The Nice Guy (Cienega, West Hollywood)',
+                LOCATION_ADDRESS: 'The Nice Guy (Cienega, West Hollywood)',
+                SERVICE_DATE: 'Monday, September 2, 2024',
+                START_TIME: '3:00 PM',
+                END_TIME: '5:00 PM',
+                COST: '450.00',
+                WORK_ORDER_LINK: '#',
+                RECIPIENT_EMAIL: 'customer@example.com',
+                TERMS_LINK: '#'
+            },
+            changed: {
+                SERVICE_TYPE: 'HVAC Maintenance',
+                LOCATION_NAME: 'Downtown Office',
+                LOCATION_ADDRESS: '123 Main St, Suite 500',
+                WORK_ORDER_NUMBER: 'WO-2024-1234',
+                SERVICE_DATE: 'Tuesday, September 3, 2024',
+                START_TIME: '9:00 AM',
+                END_TIME: '11:00 AM',
+                STATUS: 'Rescheduled',
+                COST: '750.00',
+                CHANGE_DETAILS: '• Date changed from September 1 to September 3<br>• Time changed from 2:00 PM to 9:00 AM<br>• Technician updated to Senior HVAC Specialist',
+                WORK_ORDER_LINK: '#',
+                PORTAL_LINK: '#',
+                RECIPIENT_EMAIL: 'customer@example.com',
+                TERMS_LINK: '#'
+            }
+        };
+        
+        function loadEmailTemplate(templatePath, data) {
+            fetch(templatePath)
+                .then(response => response.text())
+                .then(html => {
+                    // Replace placeholders with sample data
+                    Object.keys(data).forEach(key => {
+                        const placeholder = new RegExp(`{{${key}}}`, 'g');
+                        html = html.replace(placeholder, data[key]);
+                    });
+                    
+                    // Write to iframe
+                    const iframe = document.getElementById('email-frame');
+                    const doc = iframe.contentDocument || iframe.contentWindow.document;
+                    doc.open();
+                    doc.write(html);
+                    doc.close();
+                })
+                .catch(error => console.error('Error loading template:', error));
+        }
+        
+        function loadScheduledEmail() {
+            document.getElementById('email-title').textContent = 'Work Order Scheduled Email';
+            document.getElementById('email-subject').textContent = 'Work Order Scheduled: Electrical at The Nice Guy (Cienega, West Hollywood)';
+            loadEmailTemplate('email-templates/work-order-scheduled.html', sampleData.scheduled);
+        }
+        
+        function loadChangedEmail() {
+            document.getElementById('email-title').textContent = 'Work Order Changed Email';
+            document.getElementById('email-subject').textContent = 'Work Order Updated: HVAC Maintenance at Downtown Office';
+            loadEmailTemplate('email-templates/work-order-changed.html', sampleData.changed);
+        }
+        
+        // Load scheduled email by default
+        window.onload = function() {
+            loadScheduledEmail();
+        };
+    </script>
+</body>
+</html>

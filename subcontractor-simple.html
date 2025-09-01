@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subcontractor Portal - Hey Spruce</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f9fafb;
+            color: #111827;
+        }
+        
+        .header {
+            background: white;
+            padding: 1rem 2rem;
+            border-bottom: 1px solid #e5e7eb;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #10b981;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .welcome {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .metric-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .metric-label {
+            color: #6b7280;
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #111827;
+        }
+        
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #111827;
+        }
+        
+        .rfp-item {
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+        }
+        
+        .rfp-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .rfp-client {
+            color: #6b7280;
+            margin-bottom: 1rem;
+        }
+        
+        .rfp-budget {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #10b981;
+            margin-bottom: 1rem;
+        }
+        
+        .btn {
+            padding: 0.625rem 1.25rem;
+            border-radius: 6px;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary {
+            background: #10b981;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #059669;
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: #374151;
+            border: 1px solid #d1d5db;
+        }
+        
+        .btn-secondary:hover {
+            background: #f9fafb;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">Hey Spruce</div>
+    </div>
+    
+    <div class="container">
+        <div class="welcome">
+            <h1>Welcome, Johnson Electric</h1>
+            <p>Subcontractor Portal - Manage your bids, work orders, and payments</p>
+        </div>
+        
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-label">Active Work Orders</div>
+                <div class="metric-value">8</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Pending Bids</div>
+                <div class="metric-value">5</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Monthly Revenue</div>
+                <div class="metric-value">$24,580</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Average Rating</div>
+                <div class="metric-value">4.8 ⭐</div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2 class="section-title">Available RFPs</h2>
+            
+            <div class="rfp-item">
+                <div class="rfp-title">Commercial HVAC System Repair</div>
+                <div class="rfp-client">OpenWrench Facilities - Downtown Office</div>
+                <div class="rfp-budget">$5,000 - $8,000</div>
+                <button class="btn btn-primary" onclick="submitBid('RFP-2024-001')">Submit Bid</button>
+                <button class="btn btn-secondary">View Details</button>
+            </div>
+            
+            <div class="rfp-item">
+                <div class="rfp-title">Electrical Panel Upgrade</div>
+                <div class="rfp-client">Tech Startup Hub - Building A</div>
+                <div class="rfp-budget">$12,000 - $15,000</div>
+                <button class="btn btn-primary" onclick="submitBid('RFP-2024-002')">Submit Bid</button>
+                <button class="btn btn-secondary">View Details</button>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2 class="section-title">Active Work Orders</h2>
+            
+            <div class="rfp-item">
+                <div class="rfp-title">Emergency Plumbing Repair - WO #1001</div>
+                <div class="rfp-client">456 Oak Street, Building B</div>
+                <div class="rfp-budget">$3,500 - In Progress</div>
+                <button class="btn btn-secondary">View Details</button>
+            </div>
+            
+            <div class="rfp-item">
+                <div class="rfp-title">HVAC Preventive Maintenance - WO #1002</div>
+                <div class="rfp-client">123 Main St, Suite 200</div>
+                <div class="rfp-budget">$1,200 - Scheduled</div>
+                <button class="btn btn-secondary">View Details</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function submitBid(rfpId) {
+            alert(`Bid submission for ${rfpId}:\n\nThis would open the bid submission form. For now, showing success message.`);
+        }
+        
+        console.log('Hey Spruce Subcontractor Portal loaded successfully');
+    </script>
+</body>
+</html>

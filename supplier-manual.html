@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hey Spruce Supplier Portal - User Manual</title>
+    <style>
+        @media print {
+            .page-break { page-break-after: always; }
+            body { margin: 0; }
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: white;
+            padding: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            color: #1e3a8a;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 3px solid #1e3a8a;
+        }
+        
+        h2 {
+            color: #1e40af;
+            font-size: 1.8rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e5e7eb;
+        }
+        
+        h3 {
+            color: #374151;
+            font-size: 1.4rem;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        h4 {
+            color: #4b5563;
+            font-size: 1.2rem;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        p {
+            margin-bottom: 1rem;
+            color: #4b5563;
+        }
+        
+        ul, ol {
+            margin-left: 2rem;
+            margin-bottom: 1rem;
+            color: #4b5563;
+        }
+        
+        li {
+            margin-bottom: 0.5rem;
+        }
+        
+        code {
+            background: #f3f4f6;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+        
+        pre {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+        }
+        
+        .toc {
+            background: #f9fafb;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .toc h2 {
+            margin-top: 0;
+            color: #1e3a8a;
+            border: none;
+        }
+        
+        .toc ol {
+            margin-left: 1.5rem;
+        }
+        
+        .toc a {
+            color: #1e40af;
+            text-decoration: none;
+        }
+        
+        .toc a:hover {
+            text-decoration: underline;
+        }
+        
+        .highlight {
+            background: #fef3c7;
+            padding: 1rem;
+            border-left: 4px solid #f59e0b;
+            margin: 1rem 0;
+            border-radius: 4px;
+        }
+        
+        .info-box {
+            background: #dbeafe;
+            padding: 1rem;
+            border-left: 4px solid #1e40af;
+            margin: 1rem 0;
+            border-radius: 4px;
+        }
+        
+        .warning-box {
+            background: #fee2e2;
+            padding: 1rem;
+            border-left: 4px solid #dc2626;
+            margin: 1rem 0;
+            border-radius: 4px;
+        }
+        
+        .success-box {
+            background: #d1fae5;
+            padding: 1rem;
+            border-left: 4px solid #10b981;
+            margin: 1rem 0;
+            border-radius: 4px;
+        }
+        
+        .workflow-step {
+            background: #f3f4f6;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            border-radius: 8px;
+            border-left: 4px solid #1e40af;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .feature-card {
+            background: #f9fafb;
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .feature-card h4 {
+            color: #1e40af;
+            margin-top: 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+        
+        th {
+            background: #1e3a8a;
+            color: white;
+            padding: 0.75rem;
+            text-align: left;
+        }
+        
+        td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        tr:nth-child(even) {
+            background: #f9fafb;
+        }
+        
+        .footer {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 2px solid #e5e7eb;
+            text-align: center;
+            color: #6b7280;
+        }
+        
+        .logo-section {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+            color: white;
+            border-radius: 12px;
+        }
+        
+        strong {
+            color: #1f2937;
+        }
+    </style>
+</head>
+<body>
+    <div class="logo-section">
+        <img src="/public/hey-spruce-logo.png" alt="Hey Spruce" style="height: 60px; margin-bottom: 10px;">
+        <h1 style="color: white; border: none;">Hey Spruce</h1>
+        <p style="color: white; font-size: 1.2rem; margin: 0;">Supplier Portal User Manual</p>
+    </div>
+
+    <div class="toc">
+        <h2>Table of Contents</h2>
+        <ol>
+            <li><a href="#getting-started">Getting Started</a></li>
+            <li><a href="#dashboard">Dashboard Overview</a></li>
+            <li><a href="#workflow">Complete Workflow Guide</a></li>
+            <li><a href="#rfps">RFPs & Bid Management</a></li>
+            <li><a href="#quotes">Quote Management</a></li>
+            <li><a href="#workorders">Work Order Management</a></li>
+            <li><a href="#invoices">Invoice & Payment Processing</a></li>
+            <li><a href="#vendors">Vendor & Subcontractor Management</a></li>
+            <li><a href="#preventative">Preventative Maintenance</a></li>
+            <li><a href="#settings">Settings & Configuration</a></li>
+        </ol>
+    </div>
+
+    <h2 id="getting-started">1. Getting Started</h2>
+    
+    <h3>Accessing the Portal</h3>
+    <ul>
+        <li><strong>URL:</strong> Your dedicated portal URL (e.g., https://your-company.useopenwrench.com)</li>
+        <li><strong>Login:</strong> Use your email and password</li>
+        <li><strong>First Time Setup:</strong> Complete profile and Stripe onboarding</li>
+    </ul>
+
+    <h3>Navigation Overview</h3>
+    <p>The left sidebar follows the natural workflow:</p>
+    <ol>
+        <li><strong>RFPs & Bid Requests</strong> - New service requests</li>
+        <li><strong>Quotes & Proposals</strong> - Quote management</li>
+        <li><strong>Work Orders</strong> - Active jobs</li>
+        <li><strong>Invoices & Payments</strong> - Financial management</li>
+    </ol>
+
+    <div class="page-break"></div>
+
+    <h2 id="dashboard">2. Dashboard Overview</h2>
+
+    <h3>Key Metrics</h3>
+    <p>The dashboard displays real-time metrics:</p>
+    <div class="feature-grid">
+        <div class="feature-card">
+            <h4>Active Work Orders</h4>
+            <p>Currently in progress</p>
+        </div>
+        <div class="feature-card">
+            <h4>Pending Quotes</h4>
+            <p>Awaiting client approval</p>
+        </div>
+        <div class="feature-card">
+            <h4>Monthly Revenue</h4>
+            <p>Total earnings this month</p>
+        </div>
+        <div class="feature-card">
+            <h4>Completed Jobs</h4>
+            <p>Finished work orders</p>
+        </div>
+    </div>
+
+    <h3>Pipeline Overview</h3>
+    <p>Visual representation of work order stages:</p>
+    <table>
+        <thead>
+            <tr>
+                <th>Stage</th>
+                <th>Description</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>New (5)</strong></td>
+                <td>Newly created work orders</td>
+                <td>Click to filter</td>
+            </tr>
+            <tr>
+                <td><strong>Scheduled (8)</strong></td>
+                <td>Assigned and scheduled</td>
+                <td>Click to filter</td>
+            </tr>
+            <tr>
+                <td><strong>In Progress (3)</strong></td>
+                <td>Currently being worked on</td>
+                <td>Click to filter</td>
+            </tr>
+            <tr>
+                <td><strong>Review (2)</strong></td>
+                <td>Pending review/approval</td>
+                <td>Click to filter</td>
+            </tr>
+            <tr>
+                <td><strong>Completed (12)</strong></td>
+                <td>Finished work orders</td>
+                <td>Click to filter</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="info-box">
+        <strong>Tip:</strong> Click any pipeline number to filter work orders by that stage.
+    </div>
+
+    <div class="page-break"></div>
+
+    <h2 id="workflow">3. Complete Workflow Guide</h2>
+
+    <h3>Service Lifecycle</h3>
+    <pre>Client Request → RFP → Vendor Bids → Quote → Work Order → Completion → Invoice → Payment</pre>
+
+    <h3>Step-by-Step Process</h3>
+
+    <div class="workflow-step">
+        <h4>Step 1: RFP Arrives</h4>
+        <ol>
+            <li>New service request appears in <strong>RFPs & Bid Requests</strong></li>
+            <li>Review requirements and budget</li>
+            <li>Click <strong>"Send to Bidders"</strong> to invite vendors</li>
+        </ol>
+    </div>
+
+    <div class="workflow-step">
+        <h4>Step 2: Manage Bids</h4>
+        <ol>
+            <li>Select qualified vendors from your network</li>
+            <li>Set bid deadline</li>
+            <li>Vendors submit competitive bids</li>
+            <li>Compare all bids side-by-side</li>
+        </ol>
+    </div>
+
+    <div class="workflow-step">
+        <h4>Step 3: Create Quote</h4>
+        <ol>
+            <li>Select winning bid</li>
+            <li>Adjust platform fee (default 15%)</li>
+            <li>Add any additional costs</li>
+            <li>Send quote to client for approval</li>
+        </ol>
+    </div>
+
+    <div class="workflow-step">
+        <h4>Step 4: Execute Work Order</h4>
+        <ol>
+            <li>Approved quote converts to work order</li>
+            <li>Assign technician or vendor</li>
+            <li>Track progress through completion</li>
+            <li>Generate invoice upon completion</li>
+        </ol>
+    </div>
+
+    <div class="page-break"></div>
+
+    <h2 id="rfps">4. RFPs & Bid Management</h2>
+
+    <h3>Viewing RFPs</h3>
+
+    <h4>Incoming RFPs Tab</h4>
+    <p>Shows new service requests from clients.</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Column</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>RFP #</strong></td>
+                <td>Unique identifier</td>
+            </tr>
+            <tr>
+                <td><strong>Client</strong></td>
+                <td>Requesting client</td>
+            </tr>
+            <tr>
+                <td><strong>Service Type</strong></td>
+                <td>Category of work</td>
+            </tr>
+            <tr>
+                <td><strong>Location</strong></td>
+                <td>Service location</td>
+            </tr>
+            <tr>
+                <td><strong>Budget Range</strong></td>
+                <td>Client's budget</td>
+            </tr>
+            <tr>
+                <td><strong>Deadline</strong></td>
+                <td>Response deadline</td>
+            </tr>
+            <tr>
+                <td><strong>Status</strong></td>
+                <td>New, Bidding Open, Closed</td>
+            </tr>
+            <tr>
+                <td><strong>Actions</strong></td>
+                <td>View, Send to Bidders</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h4>Sending RFP to Vendors</h4>
+    <ol>
+        <li>Click <strong>"Send to Bidders"</strong> button</li>
+        <li><strong>Select Vendors:</strong>
+            <ul>
+                <li>Check vendors qualified for the service</li>
+                <li>System shows ratings and specializations</li>
+                <li>Preferred vendors marked with star</li>
+            </ul>
+        </li>
+        <li><strong>Set Parameters:</strong>
+            <ul>
+                <li>Bid submission deadline</li>
+                <li>Special requirements</li>
+                <li>Additional instructions</li>
+            </ul>
+        </li>
+        <li>Click <strong>"Send to Selected Vendors"</strong></li>
+    </ol>
+
+    <h3>Managing Bids</h3>
+
+    <h4>Viewing Submitted Bids</h4>
+    <ol>
+        <li>Click <strong>"View Bids"</strong> on an RFP</li>
+        <li>See all submitted bids with:
+            <ul>
+                <li>Company information</li>
+                <li>Price and timeline</li>
+                <li>Ratings and verification status</li>
+                <li>Expandable detailed breakdown</li>
+            </ul>
+        </li>
+    </ol>
+
+    <h4>Bid Details Include:</h4>
+    <div class="feature-grid">
+        <div class="feature-card">
+            <h4>Company Information</h4>
+            <ul>
+                <li>License number</li>
+                <li>Insurance coverage</li>
+                <li>Years of experience</li>
+                <li>Completed jobs count</li>
+            </ul>
+        </div>
+        <div class="feature-card">
+            <h4>Cost Breakdown</h4>
+            <ul>
+                <li>Labor costs (itemized by role)</li>
+                <li>Materials & parts (with quantities)</li>
+                <li>Additional costs</li>
+                <li>Total bid amount</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="page-break"></div>
+
+    <h2 id="quotes">5. Quote Management</h2>
+
+    <h3>Quote Types</h3>
+
+    <h4>Client Quotes</h4>
+    <p>Quotes sent to clients for approval.</p>
+    <ul>
+        <li>Track approval status</li>
+        <li>Set expiration dates</li>
+        <li>Include terms and conditions</li>
+        <li>Digital signature capture</li>
+    </ul>
+
+    <h4>Vendor Quotes</h4>
+    <p>Quotes received from subcontractors.</p>
+    <ul>
+        <li>Compare multiple quotes</li>
+        <li>Track validity periods</li>
+        <li>Convert to work orders</li>
+    </ul>
+
+    <h3>Platform Fee Management</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Setting</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Default</strong></td>
+                <td>15% of service cost</td>
+            </tr>
+            <tr>
+                <td><strong>Adjustable</strong></td>
+                <td>Can be modified per quote</td>
+            </tr>
+            <tr>
+                <td><strong>Calculation</strong></td>
+                <td>Automatic with live updates</td>
+            </tr>
+            <tr>
+                <td><strong>Display</strong></td>
+                <td>Transparent to all parties</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="page-break"></div>
+
+    <h2 id="workorders">6. Work Order Management</h2>
+
+    <h3>Creating Work Orders</h3>
+
+    <h4>Method 1: Quick Create</h4>
+    <ol>
+        <li>Click <strong>"+ Create Work Order"</strong></li>
+        <li>Fill required fields:
+            <ul>
+                <li>Client/Location</li>
+                <li>Priority level</li>
+                <li>Service category & type</li>
+                <li>Description</li>
+                <li>Requested date</li>
+            </ul>
+        </li>
+        <li>Choose assignment method:
+            <ul>
+                <li><strong>Auto-Assign:</strong> System selects best available</li>
+                <li><strong>Specific Vendor:</strong> Choose from list</li>
+                <li><strong>Request Bids:</strong> Get multiple quotes</li>
+            </ul>
+        </li>
+    </ol>
+
+    <h4>Method 2: From Approved Quote</h4>
+    <ul>
+        <li>Automatically creates work order</li>
+        <li>Pre-populated with quote details</li>
+        <li>Immediate assignment to selected vendor</li>
+    </ul>
+
+    <h3>Work Order Views</h3>
+
+    <div class="feature-grid">
+        <div class="feature-card">
+            <h4>List View</h4>
+            <p>Traditional table format with filters:</p>
+            <ul>
+                <li>Status filter</li>
+                <li>Date range</li>
+                <li>Location</li>
+                <li>Priority</li>
+                <li>Assigned vendor</li>
+            </ul>
+        </div>
+        <div class="feature-card">
+            <h4>Calendar View</h4>
+            <p>Visual scheduling interface:</p>
+            <ul>
+                <li>Month View</li>
+                <li>Week View</li>
+                <li>Day View</li>
+                <li>Drag-and-drop rescheduling</li>
+                <li>Color-coded by status</li>
+            </ul>
+        </div>
+    </div>
+
+    <h3>Work Order Lifecycle</h3>
+
+    <h4>Status Progression</h4>
+    <ol>
+        <li><strong>Scheduled:</strong> Initial state</li>
+        <li><strong>Tech En Route:</strong> Technician dispatched</li>
+        <li><strong>In Progress:</strong> Work started</li>
+        <li><strong>Completed:</strong> Work finished</li>
+        <li><strong>Invoiced:</strong> Invoice generated</li>
+    </ol>
+
+    <h4>Check-In/Check-Out Process</h4>
+
+    <div class="workflow-step">
+        <h4>Check-In:</h4>
+        <ol>
+            <li>Tech clicks <strong>"Check In"</strong> upon arrival</li>
+            <li>System records arrival time</li>
+            <li>Status updates to "In Progress"</li>
+        </ol>
+    </div>
+
+    <div class="workflow-step">
+        <h4>Check-Out & Completion:</h4>
+        <ol>
+            <li>Click <strong>"Check Out"</strong> when finished</li>
+            <li>Complete work summary:
+                <ul>
+                    <li>Work performed description</li>
+                    <li>Parts & materials used</li>
+                    <li>Labor hours</li>
+                    <li>Photos (optional)</li>
+                </ul>
+            </li>
+            <li>Capture customer signature</li>
+            <li>Generate invoice automatically</li>
+        </ol>
+    </div>
+
+    <div class="page-break"></div>
+
+    <h2 id="invoices">7. Invoice & Payment Processing</h2>
+
+    <h3>Automatic Invoice Generation</h3>
+
+    <p>When work order is completed:</p>
+
+    <div class="feature-grid">
+        <div class="feature-card">
+            <h4>Invoice Details</h4>
+            <ul>
+                <li>Auto-generated invoice number</li>
+                <li>Work order reference</li>
+                <li>Service details</li>
+                <li>Date and duration</li>
+            </ul>
+        </div>
+        <div class="feature-card">
+            <h4>Cost Breakdown</h4>
+            <ul>
+                <li>Labor (hours × rate)</li>
+                <li>Parts & materials</li>
+                <li>Platform fee</li>
+                <li>Subtotal and total</li>
+            </ul>
+        </div>
+        <div class="feature-card">
+            <h4>Delivery Options</h4>
+            <ul>
+                <li>Email to client</li>
+                <li>Copy to accounting</li>
+                <li>Request immediate payment</li>
+            </ul>
+        </div>
+    </div>
+
+    <h3>Invoice Management</h3>
+
+    <h4>Features:</h4>
+    <ul>
+        <li>View all invoices</li>
+        <li>Track payment status</li>
+        <li>Send payment reminders</li>
+        <li>Export for accounting</li>
+        <li>Generate reports</li>
+    </ul>
+
+    <h4>Payment Status:</h4>
+    <table>
+        <thead>
+            <tr>
+                <th>Status</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Pending</strong></td>
+                <td>Invoice sent, awaiting payment</td>
+            </tr>
+            <tr>
+                <td><strong>Partially Paid</strong></td>
+                <td>Partial payment received</td>
+            </tr>
+            <tr>
+                <td><strong>Paid</strong></td>
+                <td>Full payment received</td>
+            </tr>
+            <tr>
+                <td><strong>Overdue</strong></td>
+                <td>Past due date</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="page-break"></div>
+
+    <h2 id="vendors">8. Vendor & Subcontractor Management</h2>
+
+    <h3>Subcontractor Portal</h3>
+
+    <h4>Adding Subcontractors</h4>
+    <ol>
+        <li>Click <strong>"+ Add Subcontractor"</strong></li>
+        <li>Enter company details:
+            <ul>
+                <li>Business name</li>
+                <li>Services offered</li>
+                <li>Insurance information</li>
+                <li>License numbers</li>
+            </ul>
+        </li>
+        <li>Set platform fee percentage</li>
+        <li>Send Stripe onboarding invite</li>
+    </ol>
+
+    <h4>Managing Subcontractors</h4>
+    <ul>
+        <li>Track performance metrics</li>
+        <li>View work history</li>
+        <li>Manage payment terms</li>
+        <li>Update contact information</li>
+        <li>Set preferred vendor status</li>
+    </ul>
+
+    <h3>Bid Management</h3>
+
+    <h4>Viewing Vendor Bids</h4>
+    <ol>
+        <li>Navigate to work order</li>
+        <li>Click <strong>"View Bids"</strong> under Subcontractor section</li>
+        <li>Review expandable bid cards showing:
+            <ul>
+                <li>Company profile</li>
+                <li>Detailed cost breakdown</li>
+                <li>Availability</li>
+                <li>Past performance</li>
+            </ul>
+        </li>
+    </ol>
+
+    <h4>Bid Comparison Features</h4>
+    <ul>
+        <li>Side-by-side comparison</li>
+        <li>Sort by price, rating, or response time</li>
+        <li>Filter by verified vendors</li>
+        <li>View complete bid breakdowns</li>
+    </ul>
+
+    <div class="page-break"></div>
+
+    <h2 id="preventative">9. Preventative Maintenance</h2>
+
+    <h3>Setting Up Recurring Services</h3>
+
+    <ol>
+        <li>Click <strong>"+ Preventative Maintenance"</strong></li>
+        <li><strong>Configure Service:</strong>
+            <ul>
+                <li>Service type (HVAC, plumbing, etc.)</li>
+                <li>Frequency (weekly to annual)</li>
+                <li>Location and assets</li>
+                <li>Start date and time preference</li>
+            </ul>
+        </li>
+        <li><strong>Assignment Method:</strong></li>
+    </ol>
+
+    <div class="feature-grid">
+        <div class="feature-card">
+            <h4>Direct Assignment</h4>
+            <ul>
+                <li>Select specific vendor/tech</li>
+                <li>Set fixed price</li>
+                <li>Configure platform fee</li>
+            </ul>
+        </div>
+        <div class="feature-card">
+            <h4>Request Bids</h4>
+            <ul>
+                <li>Define requirements</li>
+                <li>Set maximum budget</li>
+                <li>Specify bid deadline</li>
+                <li>Select vendor requirements</li>
+            </ul>
+        </div>
+    </div>
+
+    <h4>Additional Settings:</h4>
+    <ul>
+        <li>Service description</li>
+        <li>Maintenance checklist</li>
+        <li>Budget per service</li>
+        <li>Auto-approval option</li>
+    </ul>
+
+    <h3>Managing Recurring Work Orders</h3>
+    <ul>
+        <li>View schedule calendar</li>
+        <li>Modify frequency</li>
+        <li>Update assigned vendors</li>
+        <li>Track completion rates</li>
+        <li>Analyze cost trends</li>
+    </ul>
+
+    <div class="page-break"></div>
+
+    <h2 id="settings">10. Settings & Configuration</h2>
+
+    <h3>Platform Settings</h3>
+
+    <h4>Fee Configuration</h4>
+    <ul>
+        <li>Default platform fee percentage</li>
+        <li>Service-specific fees</li>
+        <li>Processing fee options</li>
+        <li>Vendor-specific rates</li>
+    </ul>
+
+    <h4>Notification Preferences</h4>
+    <table>
+        <thead>
+            <tr>
+                <th>Type</th>
+                <th>Options</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Email notifications</strong></td>
+                <td>New RFPs, Bid updates, Work order changes</td>
+            </tr>
+            <tr>
+                <td><strong>SMS alerts</strong></td>
+                <td>Urgent updates, Payment notifications</td>
+            </tr>
+            <tr>
+                <td><strong>In-app notifications</strong></td>
+                <td>All system events</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>Quick Reference</h3>
+
+    <h4>Keyboard Shortcuts</h4>
+    <table>
+        <thead>
+            <tr>
+                <th>Shortcut</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><code>Alt + N</code></td>
+                <td>New work order</td>
+            </tr>
+            <tr>
+                <td><code>Alt + R</code></td>
+                <td>View RFPs</td>
+            </tr>
+            <tr>
+                <td><code>Alt + W</code></td>
+                <td>Work orders list</td>
+            </tr>
+            <tr>
+                <td><code>Alt + I</code></td>
+                <td>Invoices</td>
+            </tr>
+            <tr>
+                <td><code>Esc</code></td>
+                <td>Close modal</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="page-break"></div>
+
+    <h2>Troubleshooting</h2>
+
+    <h3>Common Issues</h3>
+
+    <div class="warning-box">
+        <h4>Bids Not Showing</h4>
+        <ul>
+            <li>Check vendor invitation was sent</li>
+            <li>Verify bid deadline hasn't passed</li>
+            <li>Ensure vendors are active</li>
+        </ul>
+    </div>
+
+    <div class="warning-box">
+        <h4>Invoice Not Generating</h4>
+        <ul>
+            <li>Confirm work order is marked complete</li>
+            <li>Check all required fields are filled</li>
+            <li>Verify customer signature if required</li>
+        </ul>
+    </div>
+
+    <div class="warning-box">
+        <h4>Calendar Not Loading</h4>
+        <ul>
+            <li>Refresh the page</li>
+            <li>Check date filters</li>
+            <li>Verify work orders have scheduled dates</li>
+        </ul>
+    </div>
+
+    <h2>Best Practices</h2>
+
+    <h3>Daily Tasks</h3>
+    <div class="success-box">
+        <ul>
+            <li>Review new RFPs each morning</li>
+            <li>Check work order pipeline</li>
+            <li>Process pending invoices</li>
+            <li>Respond to vendor bids</li>
+        </ul>
+    </div>
+
+    <h3>Weekly Tasks</h3>
+    <div class="success-box">
+        <ul>
+            <li>Review preventative maintenance schedules</li>
+            <li>Analyze bid win rates</li>
+            <li>Check payment status</li>
+            <li>Update vendor ratings</li>
+        </ul>
+    </div>
+
+    <h3>Tips for Success</h3>
+    <div class="info-box">
+        <ul>
+            <li><strong>Competitive Bidding:</strong> Always invite 3+ vendors for better pricing</li>
+            <li><strong>Documentation:</strong> Take photos before/after work</li>
+            <li><strong>Communication:</strong> Update work order status in real-time</li>
+            <li><strong>Efficiency:</strong> Use bulk actions when available</li>
+            <li><strong>Quality:</strong> Always get customer signatures</li>
+        </ul>
+    </div>
+
+    <div class="footer">
+        <p><strong>Hey Spruce Supplier Portal</strong></p>
+        <p>Version 1.0 | Last Updated: January 2025</p>
+        <p>© Hey Spruce - Integrated Facilities Management Platform</p>
+    </div>
+</body>
+</html>

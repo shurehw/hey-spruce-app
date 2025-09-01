@@ -1,0 +1,1443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subcontractor Portal - Hey Spruce</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --sidebar-width: 260px;
+            --header-height: 60px;
+            --primary: #10b981;
+            --primary-dark: #059669;
+            --primary-light: #d1fae5;
+            --secondary: #3b82f6;
+            --secondary-dark: #2563eb;
+            --secondary-light: #dbeafe;
+            --success: #10b981;
+            --success-light: #d1fae5;
+            --warning: #f59e0b;
+            --warning-light: #fed7aa;
+            --danger: #ef4444;
+            --danger-light: #fee2e2;
+            --info: #3b82f6;
+            --info-light: #dbeafe;
+            --dark: #1f2937;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--gray-50);
+            color: var(--gray-900);
+            line-height: 1.6;
+        }
+        
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--header-height);
+            background: white;
+            border-bottom: 1px solid var(--gray-200);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            padding: 0 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+        
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .portal-badge {
+            background: var(--primary);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .notification-bell {
+            position: relative;
+            padding: 0.5rem;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+        
+        .notification-bell:hover {
+            background: var(--gray-100);
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            background: var(--danger);
+            color: white;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+        
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 1rem;
+            background: var(--gray-50);
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: var(--header-height);
+            left: 0;
+            width: var(--sidebar-width);
+            height: calc(100vh - var(--header-height));
+            background: white;
+            border-right: 1px solid var(--gray-200);
+            overflow-y: auto;
+            z-index: 50;
+        }
+        
+        .nav-section {
+            padding: 1.5rem 1rem;
+            border-bottom: 1px solid var(--gray-100);
+        }
+        
+        .nav-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--gray-500);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.75rem;
+        }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.625rem 0.75rem;
+            margin-bottom: 0.25rem;
+            color: var(--gray-700);
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+        
+        .nav-item:hover {
+            background: var(--gray-50);
+            color: var(--primary);
+        }
+        
+        .nav-item.active {
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            font-weight: 500;
+        }
+        
+        .nav-badge {
+            margin-left: auto;
+            background: var(--primary);
+            color: white;
+            padding: 0.125rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            margin-top: var(--header-height);
+            padding: 2rem;
+            min-height: calc(100vh - var(--header-height));
+        }
+        
+        /* Dashboard Cards */
+        .dashboard-header {
+            margin-bottom: 2rem;
+        }
+        
+        .dashboard-title {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 0.5rem;
+        }
+        
+        .dashboard-subtitle {
+            color: var(--gray-600);
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .metric-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--gray-200);
+            transition: all 0.3s;
+        }
+        
+        .metric-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transform: translateY(-2px);
+        }
+        
+        .metric-label {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 0.5rem;
+        }
+        
+        .metric-change {
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .metric-change.positive {
+            color: var(--success);
+        }
+        
+        .metric-change.negative {
+            color: var(--danger);
+        }
+        
+        /* Available RFPs Section */
+        .section-card {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid var(--gray-200);
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+        
+        .section-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+        
+        .btn {
+            padding: 0.625rem 1.25rem;
+            border-radius: 8px;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: var(--gray-700);
+            border: 1px solid var(--gray-300);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--gray-50);
+        }
+        
+        /* RFP List */
+        .rfp-list {
+            padding: 1rem;
+        }
+        
+        .rfp-item {
+            padding: 1.25rem;
+            border: 1px solid var(--gray-200);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        
+        .rfp-item:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border-color: var(--primary);
+        }
+        
+        .rfp-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+        
+        .rfp-info {
+            flex: 1;
+        }
+        
+        .rfp-number {
+            font-size: 0.875rem;
+            color: var(--gray-500);
+            margin-bottom: 0.25rem;
+        }
+        
+        .rfp-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 0.5rem;
+        }
+        
+        .rfp-client {
+            font-size: 0.9rem;
+            color: var(--gray-600);
+        }
+        
+        .rfp-budget {
+            text-align: right;
+        }
+        
+        .budget-label {
+            font-size: 0.75rem;
+            color: var(--gray-500);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .budget-amount {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-top: 0.25rem;
+        }
+        
+        .rfp-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--gray-100);
+        }
+        
+        .rfp-detail {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .detail-label {
+            font-size: 0.75rem;
+            color: var(--gray-500);
+            margin-bottom: 0.25rem;
+        }
+        
+        .detail-value {
+            font-size: 0.9rem;
+            color: var(--gray-900);
+            font-weight: 500;
+        }
+        
+        .rfp-actions {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--gray-100);
+        }
+        
+        .deadline-urgent {
+            color: var(--danger);
+        }
+        
+        /* Active Work Orders */
+        .work-order-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+            padding: 1.5rem;
+        }
+        
+        .work-order-card {
+            background: white;
+            border: 1px solid var(--gray-200);
+            border-radius: 8px;
+            padding: 1.25rem;
+            transition: all 0.2s;
+        }
+        
+        .work-order-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        
+        .wo-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+        
+        .wo-number {
+            font-size: 0.875rem;
+            color: var(--gray-500);
+        }
+        
+        .wo-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .status-scheduled {
+            background: var(--info-light);
+            color: var(--info);
+        }
+        
+        .status-in-progress {
+            background: var(--warning-light);
+            color: var(--warning);
+        }
+        
+        .status-completed {
+            background: var(--success-light);
+            color: var(--success);
+        }
+        
+        .wo-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 0.5rem;
+        }
+        
+        .wo-location {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            margin-bottom: 1rem;
+        }
+        
+        .wo-details {
+            display: flex;
+            justify-content: space-between;
+            padding-top: 1rem;
+            border-top: 1px solid var(--gray-100);
+        }
+        
+        .wo-date, .wo-payment {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+        }
+        
+        .wo-amount {
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        /* Performance Dashboard */
+        .performance-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .performance-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--gray-200);
+        }
+        
+        .performance-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 1.5rem;
+        }
+        
+        .rating-display {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .rating-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .rating-stars {
+            display: flex;
+            gap: 0.25rem;
+        }
+        
+        .star {
+            width: 20px;
+            height: 20px;
+            fill: var(--warning);
+        }
+        
+        .star.empty {
+            fill: var(--gray-300);
+        }
+        
+        .rating-count {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+        }
+        
+        .performance-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--gray-100);
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+        
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--gray-500);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 0.25rem;
+        }
+        
+        /* Bid Submission Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+        
+        .modal-close {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            border: none;
+            background: var(--gray-100);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+        
+        .modal-close:hover {
+            background: var(--gray-200);
+        }
+        
+        .modal-body {
+            padding: 1.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--gray-700);
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-input, .form-textarea {
+            width: 100%;
+            padding: 0.625rem 0.875rem;
+            border: 1px solid var(--gray-300);
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: border-color 0.2s;
+        }
+        
+        .form-input:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-light);
+        }
+        
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .cost-breakdown {
+            background: var(--gray-50);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+        
+        .cost-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+        }
+        
+        .cost-item.total {
+            border-top: 2px solid var(--gray-300);
+            margin-top: 0.5rem;
+            padding-top: 1rem;
+            font-weight: 600;
+            font-size: 1.125rem;
+        }
+        
+        .modal-footer {
+            padding: 1.5rem;
+            border-top: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+        
+        /* Payment History */
+        .payment-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .payment-table th {
+            text-align: left;
+            padding: 0.75rem 1rem;
+            background: var(--gray-50);
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--gray-600);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        
+        .payment-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--gray-100);
+            font-size: 0.9rem;
+        }
+        
+        .payment-table tr:hover {
+            background: var(--gray-50);
+        }
+        
+        .payment-status {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .payment-status.paid {
+            background: var(--success-light);
+            color: var(--success);
+        }
+        
+        .payment-status.pending {
+            background: var(--warning-light);
+            color: var(--warning);
+        }
+        
+        .payment-status.processing {
+            background: var(--info-light);
+            color: var(--info);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .performance-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .work-order-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logo">Hey Spruce</div>
+                <span class="portal-badge">Subcontractor Portal</span>
+            </div>
+            <div class="header-actions">
+                <div class="notification-bell">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6z"/>
+                        <path d="M10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"/>
+                    </svg>
+                    <span class="notification-badge">3</span>
+                </div>
+                <div class="user-menu">
+                    <div class="user-avatar">JD</div>
+                    <div>
+                        <div style="font-size: 0.875rem; font-weight: 500;">Johnson Electric</div>
+                        <div style="font-size: 0.75rem; color: var(--gray-500);">Subcontractor</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <nav>
+            <div class="nav-section">
+                <div class="nav-title">Main</div>
+                <a href="#dashboard" class="nav-item active">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
+                    </svg>
+                    Dashboard
+                </a>
+                <a href="#rfps" class="nav-item">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
+                        <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 1 1 0 000 2H6a2 2 0 00-2 2v6a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2 1 1 0 100-2 2 2 0 012 2v8a2 2 0 01-2 2H6a2 2 0 01-2-2V5z"/>
+                    </svg>
+                    Available RFPs
+                    <span class="nav-badge">5</span>
+                </a>
+                <a href="#bids" class="nav-item">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"/>
+                    </svg>
+                    My Bids
+                    <span class="nav-badge">12</span>
+                </a>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-title">Work</div>
+                <a href="#work-orders" class="nav-item">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
+                        <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 1 1 0 000 2H6a2 2 0 00-2 2v6a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2 1 1 0 100-2 2 2 0 012 2v8a2 2 0 01-2 2H6a2 2 0 01-2-2V5z"/>
+                    </svg>
+                    Active Work Orders
+                    <span class="nav-badge">8</span>
+                </a>
+                <a href="#completed" class="nav-item">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/>
+                    </svg>
+                    Completed Jobs
+                </a>
+                <a href="#schedule" class="nav-item">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"/>
+                    </svg>
+                    Schedule
+                </a>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-title">Financial</div>
+                <a href="#invoices" class="nav-item">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z"/>
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z"/>
+                    </svg>
+                    Invoices
+                </a>
+                <a href="#payments" class="nav-item">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z"/>
+                        <path fill-rule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z"/>
+                    </svg>
+                    Payment History
+                </a>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-title">Account</div>
+                <a href="#profile" class="nav-item">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"/>
+                    </svg>
+                    Company Profile
+                </a>
+                <a href="#settings" class="nav-item">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z"/>
+                    </svg>
+                    Settings
+                </a>
+            </div>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Dashboard Header -->
+        <div class="dashboard-header">
+            <h1 class="dashboard-title">Welcome back, Johnson Electric</h1>
+            <p class="dashboard-subtitle">Here's what's happening with your business today.</p>
+        </div>
+
+        <!-- Metrics -->
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-label">Active Work Orders</div>
+                <div class="metric-value" data-metric="activeWorkOrders">8</div>
+                <div class="metric-change positive">
+                    <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z"/>
+                    </svg>
+                    +2 from last week
+                </div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-label">Pending Bids</div>
+                <div class="metric-value" data-metric="pendingBids">5</div>
+                <div class="metric-change">
+                    Response needed by today
+                </div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-label">Monthly Revenue</div>
+                <div class="metric-value" data-metric="monthlyRevenue">$24,580</div>
+                <div class="metric-change positive">
+                    <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z"/>
+                    </svg>
+                    +15% from last month
+                </div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-label">Avg. Rating</div>
+                <div class="metric-value" data-metric="avgRating">4.8</div>
+                <div class="metric-change">
+                    Based on 47 reviews
+                </div>
+            </div>
+        </div>
+
+        <!-- Available RFPs Section -->
+        <div class="section-card">
+            <div class="section-header">
+                <h2 class="section-title">Available RFPs - Respond Today</h2>
+                <button class="btn btn-primary">View All RFPs</button>
+            </div>
+            
+            <div class="rfp-list">
+                <!-- RFP Item 1 -->
+                <div class="rfp-item" onclick="openBidModal('RFP-2024-001')">
+                    <div class="rfp-header">
+                        <div class="rfp-info">
+                            <div class="rfp-number">RFP #2024-001</div>
+                            <div class="rfp-title">Commercial HVAC System Repair</div>
+                            <div class="rfp-client">OpenWrench Facilities - Downtown Office</div>
+                        </div>
+                        <div class="rfp-budget">
+                            <div class="budget-label">Budget Range</div>
+                            <div class="budget-amount">$5,000 - $8,000</div>
+                        </div>
+                    </div>
+                    <div class="rfp-details">
+                        <div class="rfp-detail">
+                            <span class="detail-label">Service Type</span>
+                            <span class="detail-value">HVAC Repair</span>
+                        </div>
+                        <div class="rfp-detail">
+                            <span class="detail-label">Location</span>
+                            <span class="detail-value">123 Main St, Suite 500</span>
+                        </div>
+                        <div class="rfp-detail">
+                            <span class="detail-label">Deadline</span>
+                            <span class="detail-value deadline-urgent">Today, 5:00 PM</span>
+                        </div>
+                        <div class="rfp-detail">
+                            <span class="detail-label">Priority</span>
+                            <span class="detail-value">High</span>
+                        </div>
+                    </div>
+                    <div class="rfp-actions">
+                        <button class="btn btn-primary" onclick="event.stopPropagation(); openBidModal('RFP-2024-001')">Submit Bid</button>
+                        <button class="btn btn-secondary" onclick="event.stopPropagation();">View Details</button>
+                    </div>
+                </div>
+
+                <!-- RFP Item 2 -->
+                <div class="rfp-item" onclick="openBidModal('RFP-2024-002')">
+                    <div class="rfp-header">
+                        <div class="rfp-info">
+                            <div class="rfp-number">RFP #2024-002</div>
+                            <div class="rfp-title">Electrical Panel Upgrade</div>
+                            <div class="rfp-client">Tech Startup Hub - Building A</div>
+                        </div>
+                        <div class="rfp-budget">
+                            <div class="budget-label">Budget Range</div>
+                            <div class="budget-amount">$12,000 - $15,000</div>
+                        </div>
+                    </div>
+                    <div class="rfp-details">
+                        <div class="rfp-detail">
+                            <span class="detail-label">Service Type</span>
+                            <span class="detail-value">Electrical</span>
+                        </div>
+                        <div class="rfp-detail">
+                            <span class="detail-label">Location</span>
+                            <span class="detail-value">789 Tech Blvd</span>
+                        </div>
+                        <div class="rfp-detail">
+                            <span class="detail-label">Deadline</span>
+                            <span class="detail-value">Tomorrow, 12:00 PM</span>
+                        </div>
+                        <div class="rfp-detail">
+                            <span class="detail-label">Priority</span>
+                            <span class="detail-value">Medium</span>
+                        </div>
+                    </div>
+                    <div class="rfp-actions">
+                        <button class="btn btn-primary" onclick="event.stopPropagation(); openBidModal('RFP-2024-002')">Submit Bid</button>
+                        <button class="btn btn-secondary" onclick="event.stopPropagation();">View Details</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Active Work Orders -->
+        <div class="section-card">
+            <div class="section-header">
+                <h2 class="section-title">Active Work Orders</h2>
+                <button class="btn btn-secondary">View Calendar</button>
+            </div>
+            
+            <div class="work-order-grid">
+                <!-- Work Order Card 1 -->
+                <div class="work-order-card">
+                    <div class="wo-header">
+                        <div>
+                            <div class="wo-number">WO #1001</div>
+                            <div class="wo-title">Emergency Plumbing Repair</div>
+                        </div>
+                        <span class="wo-status status-in-progress">In Progress</span>
+                    </div>
+                    <div class="wo-location">456 Oak Street, Building B</div>
+                    <div class="wo-details">
+                        <div class="wo-date">Due: Today, 3:00 PM</div>
+                        <div class="wo-payment">
+                            <span class="wo-amount">$3,500</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Work Order Card 2 -->
+                <div class="work-order-card">
+                    <div class="wo-header">
+                        <div>
+                            <div class="wo-number">WO #1002</div>
+                            <div class="wo-title">HVAC Preventive Maintenance</div>
+                        </div>
+                        <span class="wo-status status-scheduled">Scheduled</span>
+                    </div>
+                    <div class="wo-location">123 Main St, Suite 200</div>
+                    <div class="wo-details">
+                        <div class="wo-date">Tomorrow, 9:00 AM</div>
+                        <div class="wo-payment">
+                            <span class="wo-amount">$1,200</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Work Order Card 3 -->
+                <div class="work-order-card">
+                    <div class="wo-header">
+                        <div>
+                            <div class="wo-number">WO #1003</div>
+                            <div class="wo-title">Lighting System Installation</div>
+                        </div>
+                        <span class="wo-status status-scheduled">Scheduled</span>
+                    </div>
+                    <div class="wo-location">789 Tech Blvd, Floor 3</div>
+                    <div class="wo-details">
+                        <div class="wo-date">Jan 28, 10:00 AM</div>
+                        <div class="wo-payment">
+                            <span class="wo-amount">$5,800</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Performance Dashboard -->
+        <div class="performance-grid">
+            <div class="performance-card">
+                <h3 class="performance-title">Your Performance Rating</h3>
+                <div class="rating-display">
+                    <div class="rating-value">4.8</div>
+                    <div>
+                        <div class="rating-stars">
+                            <svg class="star" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                            </svg>
+                            <svg class="star" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                            </svg>
+                            <svg class="star" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                            </svg>
+                            <svg class="star" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                            </svg>
+                            <svg class="star" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                            </svg>
+                        </div>
+                        <div class="rating-count">Based on 47 reviews</div>
+                    </div>
+                </div>
+                <div class="performance-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">98%</div>
+                        <div class="stat-label">On-Time Rate</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">95%</div>
+                        <div class="stat-label">Customer Satisfaction</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="performance-card">
+                <h3 class="performance-title">This Month's Performance</h3>
+                <div class="performance-stats" style="margin-top: 0; padding-top: 0; border-top: none;">
+                    <div class="stat-item">
+                        <div class="stat-value">24</div>
+                        <div class="stat-label">Jobs Completed</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">18</div>
+                        <div class="stat-label">Bids Won</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">75%</div>
+                        <div class="stat-label">Win Rate</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">2.5h</div>
+                        <div class="stat-label">Avg Response Time</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Payments -->
+        <div class="section-card">
+            <div class="section-header">
+                <h2 class="section-title">Recent Payments</h2>
+                <button class="btn btn-secondary">View All</button>
+            </div>
+            
+            <table class="payment-table">
+                <thead>
+                    <tr>
+                        <th>Invoice #</th>
+                        <th>Work Order</th>
+                        <th>Client</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>INV-2024-0145</td>
+                        <td>WO #998</td>
+                        <td>OpenWrench Facilities</td>
+                        <td style="font-weight: 600; color: var(--primary);">$3,500</td>
+                        <td><span class="payment-status paid">Paid</span></td>
+                        <td>Jan 24, 2024</td>
+                    </tr>
+                    <tr>
+                        <td>INV-2024-0144</td>
+                        <td>WO #997</td>
+                        <td>Tech Startup Hub</td>
+                        <td style="font-weight: 600; color: var(--primary);">$5,200</td>
+                        <td><span class="payment-status paid">Paid</span></td>
+                        <td>Jan 22, 2024</td>
+                    </tr>
+                    <tr>
+                        <td>INV-2024-0143</td>
+                        <td>WO #996</td>
+                        <td>Downtown Office Complex</td>
+                        <td style="font-weight: 600; color: var(--primary);">$1,800</td>
+                        <td><span class="payment-status processing">Processing</span></td>
+                        <td>Jan 20, 2024</td>
+                    </tr>
+                    <tr>
+                        <td>INV-2024-0142</td>
+                        <td>WO #995</td>
+                        <td>Retail Center Mall</td>
+                        <td style="font-weight: 600; color: var(--primary);">$2,400</td>
+                        <td><span class="payment-status pending">Pending</span></td>
+                        <td>Jan 18, 2024</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <!-- Bid Submission Modal -->
+    <div id="bidModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Submit Your Bid</h3>
+                <button class="modal-close" onclick="closeBidModal()">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">RFP Reference</label>
+                    <input type="text" class="form-input" id="rfpReference" readonly value="RFP #2024-001">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Labor Cost</label>
+                    <input type="number" class="form-input" id="laborCost" placeholder="Enter labor cost" oninput="calculateTotal()">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Materials Cost</label>
+                    <input type="number" class="form-input" id="materialsCost" placeholder="Enter materials cost" oninput="calculateTotal()">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Estimated Duration (hours)</label>
+                    <input type="number" class="form-input" id="duration" placeholder="Enter estimated hours">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Availability</label>
+                    <input type="date" class="form-input" id="availability">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Additional Notes</label>
+                    <textarea class="form-textarea" id="notes" placeholder="Describe your approach, experience, or any special considerations..."></textarea>
+                </div>
+                
+                <div class="cost-breakdown">
+                    <div class="cost-item">
+                        <span>Labor</span>
+                        <span id="laborDisplay">$0</span>
+                    </div>
+                    <div class="cost-item">
+                        <span>Materials</span>
+                        <span id="materialsDisplay">$0</span>
+                    </div>
+                    <div class="cost-item total">
+                        <span>Total Bid</span>
+                        <span id="totalDisplay">$0</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeBidModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="submitBid()">Submit Bid</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Error handler
+        window.addEventListener('error', function(e) {
+            console.error('JavaScript error:', e.message, 'at', e.filename, ':', e.lineno);
+        });
+        
+        // Debug on load
+        console.log('Script loading...');
+        
+        // Static data - no API calls
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM Content Loaded');
+            
+            // Check if elements exist
+            const mainContent = document.querySelector('.main-content');
+            const sidebar = document.querySelector('.sidebar');
+            console.log('Main content found:', !!mainContent);
+            console.log('Sidebar found:', !!sidebar);
+            
+            // Set today's date as default availability
+            const today = new Date().toISOString().split('T')[0];
+            const availabilityInput = document.getElementById('availability');
+            if (availabilityInput) {
+                availabilityInput.min = today;
+            }
+            
+            console.log('Subcontractor portal loaded successfully');
+        });
+        
+        // Bid Modal Functions
+        function openBidModal(rfpId) {
+            document.getElementById('rfpReference').value = rfpId;
+            document.getElementById('bidModal').classList.add('active');
+        }
+        
+        function closeBidModal() {
+            document.getElementById('bidModal').classList.remove('active');
+            // Reset form
+            document.getElementById('laborCost').value = '';
+            document.getElementById('materialsCost').value = '';
+            document.getElementById('duration').value = '';
+            document.getElementById('availability').value = '';
+            document.getElementById('notes').value = '';
+            calculateTotal();
+        }
+        
+        function calculateTotal() {
+            const labor = parseFloat(document.getElementById('laborCost').value) || 0;
+            const materials = parseFloat(document.getElementById('materialsCost').value) || 0;
+            const total = labor + materials;
+            
+            document.getElementById('laborDisplay').textContent = `$${labor.toFixed(2)}`;
+            document.getElementById('materialsDisplay').textContent = `$${materials.toFixed(2)}`;
+            document.getElementById('totalDisplay').textContent = `$${total.toFixed(2)}`;
+        }
+        
+        function submitBid() {
+            const rfpId = document.getElementById('rfpReference').value;
+            const laborCost = document.getElementById('laborCost').value;
+            const materialsCost = document.getElementById('materialsCost').value;
+            const duration = document.getElementById('duration').value;
+            const availability = document.getElementById('availability').value;
+            const notes = document.getElementById('notes').value;
+            
+            if (!laborCost || !materialsCost || !duration || !availability) {
+                alert('Please fill in all required fields');
+                return;
+            }
+            
+            alert('Bid submitted successfully! You will receive a notification when the client responds.');
+            closeBidModal();
+        }
+        
+        // View RFP details
+        function viewRFPDetails(rfpId) {
+            alert(`RFP Details for ${rfpId}:\n\nCommercial HVAC System Repair\nBudget: $5,000 - $8,000\nDeadline: Today, 5:00 PM\n\nDetailed requirements and specifications would be shown here.`);
+        }
+        
+        // Utility functions
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const options = { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true };
+            return date.toLocaleDateString('en-US', options);
+        }
+        
+        function formatDeadline(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const diffMs = date - now;
+            const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+            
+            if (diffHours < 0) {
+                return 'Expired';
+            } else if (diffHours < 24) {
+                return `Today, ${date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })}`;
+            } else if (diffHours < 48) {
+                return `Tomorrow, ${date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })}`;
+            } else {
+                return formatDate(dateString);
+            }
+        }
+        
+        function isUrgent(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const diffMs = date - now;
+            const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+            return diffHours < 24;
+        }
+        
+        function formatStatus(status) {
+            return status.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase());
+        }
+        
+        function formatPaymentStatus(status) {
+            return status.charAt(0).toUpperCase() + status.slice(1);
+        }
+        
+        // Navigation Active State
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+        
+        // Mobile Sidebar Toggle
+        function toggleSidebar() {
+            document.querySelector('.sidebar').classList.toggle('active');
+        }
+        
+        // Portal ready
+        console.log('Hey Spruce Subcontractor Portal is ready!');
+    </script>
+</body>
+</html>

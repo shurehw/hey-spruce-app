@@ -16,15 +16,25 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "@capacitor/cli": "^7.4.3",
+    "@capacitor/core": "^7.4.3",
+    "@capacitor/ios": "^7.4.3",
     "@sendgrid/mail": "^8.1.5",
     "@shure/shared-utils": "file:../shared-utils",
+    "@supabase/supabase-js": "^2.56.0",
     "axios": "^1.11.0",
+    "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
     "multer": "^2.0.2",
-    "nodemailer": "^7.0.5",
+    "node-cron": "^3.0.3",
+    "nodemailer": "^6.9.7",
     "pdfkit": "^0.17.1",
-    "stripe": "^18.4.0"
+    "sqlite3": "^5.1.7",
+    "stripe": "^18.4.0",
+    "twilio": "^4.20.0",
+    "ws": "^8.16.0",
+    "xlsx": "^0.18.5"
   }
 }

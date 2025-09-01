@@ -164,9 +164,17 @@
             color: #1e40af;
         }
     </style>
+    <script src="/common-header.js"></script>
 </head>
 <body>
-    <div class="container">
+    <!-- Common Header -->
+    <div id="common-header-container"></div>
+    <script>
+        // Initialize common header
+        insertCommonHeader('supplier');
+    </script>
+    
+    <div class="container" style="padding-top: 80px;">
         <div class="header">
             <img src="/public/hey-spruce-logo.png" alt="Hey Spruce" class="logo">
             <h1>Hey Spruce</h1>
@@ -250,18 +258,18 @@
                     document.getElementById('actionType').textContent = 'Approval';
                     signatureSection.style.display = 'block';
                     urgencySection.style.display = 'block';
-                    submitBtn.textContent = '✅ Approve Proposal';
+                    submitBtn.textContent = 'Approve Proposal';
                     break;
                 case 'changes':
                     pageTitle.textContent = 'Request Changes';
                     document.getElementById('actionType').textContent = 'Change Request';
-                    submitBtn.textContent = '💬 Submit Change Request';
+                    submitBtn.textContent = 'Submit Change Request';
                     submitBtn.classList.add('changes');
                     break;
                 case 'decline':
                     pageTitle.textContent = 'Decline Proposal';
                     document.getElementById('actionType').textContent = 'Decline';
-                    submitBtn.textContent = '❌ Submit Decline';
+                    submitBtn.textContent = 'Submit Decline';
                     submitBtn.classList.add('decline');
                     break;
                 default:

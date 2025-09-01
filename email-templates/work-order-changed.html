@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Work Order Updated - Hey Spruce</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f5f5f5;">
+    <table cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color: #f5f5f5; padding: 20px 0;">
+        <tr>
+            <td align="center">
+                <table cellpadding="0" cellspacing="0" border="0" width="600" style="background-color: #1a1a1a; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+                    <!-- Header with Logo -->
+                    <tr>
+                        <td style="padding: 40px 40px 30px 40px; text-align: left;">
+                            <div style="display: inline-block;">
+                                <svg width="150" height="40" viewBox="0 0 150 40" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M10 10 L20 5 L30 10 L30 25 L20 30 L10 25 Z" fill="none" stroke="#f59e0b" stroke-width="2"/>
+                                    <path d="M10 10 L20 15 L20 30" fill="none" stroke="#f59e0b" stroke-width="2"/>
+                                    <path d="M20 15 L30 10" fill="none" stroke="#f59e0b" stroke-width="2"/>
+                                </svg>
+                                <span style="color: #f59e0b; font-size: 28px; font-weight: 700; margin-left: 10px; vertical-align: middle;">hey spruce</span>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <!-- Alert Banner -->
+                    <tr>
+                        <td style="padding: 0 40px 20px 40px;">
+                            <div style="background-color: #f59e0b; color: #1a1a1a; padding: 12px 20px; border-radius: 8px; text-align: center; font-weight: 600;">
+                                IMPORTANT: Your work order has been updated
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <!-- Main Content -->
+                    <tr>
+                        <td style="padding: 0 40px 30px 40px;">
+                            <h1 style="color: #ffffff; font-size: 24px; font-weight: 400; margin: 0 0 30px 0; line-height: 1.4;">
+                                Your work order for {{SERVICE_TYPE}} at {{LOCATION_NAME}} has been updated
+                            </h1>
+                            
+                            <div style="background-color: #262626; border-radius: 8px; padding: 20px; margin-bottom: 30px;">
+                                <h3 style="color: #f59e0b; font-size: 16px; font-weight: 600; margin: 0 0 15px 0;">What's Changed:</h3>
+                                <div style="color: #e5e5e5; font-size: 14px; line-height: 1.6;">
+                                    {{CHANGE_DETAILS}}
+                                </div>
+                            </div>
+                            
+                            <div style="color: #e5e5e5; font-size: 16px; line-height: 1.6;">
+                                <h3 style="color: #ffffff; font-size: 18px; margin-bottom: 20px;">Updated Work Order Details:</h3>
+                                
+                                <div style="margin-bottom: 20px;">
+                                    <strong style="color: #ffffff;">Work Order #:</strong> {{WORK_ORDER_NUMBER}}
+                                </div>
+                                <div style="margin-bottom: 20px;">
+                                    <strong style="color: #ffffff;">Location:</strong> {{LOCATION_ADDRESS}}
+                                </div>
+                                <div style="margin-bottom: 20px;">
+                                    <strong style="color: #ffffff;">Service:</strong> {{SERVICE_TYPE}}
+                                </div>
+                                <div style="margin-bottom: 20px;">
+                                    <strong style="color: #ffffff;">New Date:</strong> {{SERVICE_DATE}} between {{START_TIME}} and {{END_TIME}}
+                                </div>
+                                <div style="margin-bottom: 20px;">
+                                    <strong style="color: #ffffff;">Status:</strong> <span style="background-color: #10b981; color: #1a1a1a; padding: 4px 12px; border-radius: 4px; font-size: 14px; font-weight: 600;">{{STATUS}}</span>
+                                </div>
+                                <div style="margin-bottom: 30px;">
+                                    <strong style="color: #ffffff;">Updated cost:</strong> ${{COST}}
+                                </div>
+                                
+                                <div style="margin-bottom: 20px; color: #e5e5e5;">
+                                    <strong>Need to make additional changes?</strong> Use the Hey Spruce portal to reschedule or modify your work order.
+                                </div>
+                            </div>
+                            
+                            <!-- CTA Buttons -->
+                            <div style="text-align: center; margin: 40px 0;">
+                                <a href="{{WORK_ORDER_LINK}}" style="display: inline-block; background-color: #10b981; color: #1a1a1a; text-decoration: none; padding: 14px 32px; border-radius: 25px; font-size: 16px; font-weight: 600; margin-right: 10px;">
+                                    View updated work order
+                                </a>
+                                <a href="{{PORTAL_LINK}}" style="display: inline-block; background-color: transparent; color: #10b981; text-decoration: none; padding: 14px 32px; border-radius: 25px; font-size: 16px; font-weight: 600; border: 2px solid #10b981;">
+                                    Go to portal
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <!-- Divider -->
+                    <tr>
+                        <td style="padding: 0 40px;">
+                            <div style="border-top: 1px solid #333333;"></div>
+                        </td>
+                    </tr>
+                    
+                    <!-- Support Section -->
+                    <tr>
+                        <td style="padding: 30px 40px;">
+                            <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                                <tr>
+                                    <td width="40" valign="top">
+                                        <div style="background-color: #10b981; width: 32px; height: 32px; border-radius: 50%; text-align: center; line-height: 32px;">
+                                            <span style="color: #1a1a1a; font-weight: 700; font-size: 18px;">S</span>
+                                        </div>
+                                    </td>
+                                    <td style="padding-left: 15px;">
+                                        <div style="color: #ffffff; font-size: 16px; font-weight: 600; margin-bottom: 8px;">Hey Spruce Support</div>
+                                        <div style="color: #b3b3b3; font-size: 14px; line-height: 1.5;">
+                                            If you have questions about this change, please contact us through the portal or call our support line at 1-800-SPRUCE-1.
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    
+                    <!-- Footer -->
+                    <tr>
+                        <td style="padding: 30px 40px 40px 40px; text-align: center;">
+                            <div style="color: #b3b3b3; font-size: 14px; margin-bottom: 15px;">
+                                This email was sent to <a href="mailto:{{RECIPIENT_EMAIL}}" style="color: #10b981; text-decoration: none;">{{RECIPIENT_EMAIL}}</a>
+                            </div>
+                            <div style="color: #808080; font-size: 13px; margin-bottom: 20px;">
+                                Please do not respond to this email;<br>
+                                instead, make use of the portal features provided within the app
+                            </div>
+                            
+                            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #333333;">
+                                <div style="color: #808080; font-size: 12px; margin-bottom: 10px;">
+                                    Find us at<br>
+                                    <a href="https://heyspruce.com" style="color: #10b981; text-decoration: none; font-weight: 600;">heyspruce.com</a> | 
+                                    <a href="{{TERMS_LINK}}" style="color: #10b981; text-decoration: none; font-weight: 600;">Read our Terms of Service</a>
+                                </div>
+                                <div style="color: #666666; font-size: 12px;">
+                                    2024 <a href="https://heyspruce.com" style="color: #10b981; text-decoration: none;">Hey Spruce</a>, Inc.<br>
+                                    All rights reserved.
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

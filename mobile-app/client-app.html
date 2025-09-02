@@ -793,13 +793,152 @@
         }
         
         function viewWorkOrder(workOrderId) {
-            showToast(`Opening work order ${workOrderId}`, 'info');
-            // In a real app, this would open a detailed view
+            const modal = document.createElement('div');
+            modal.className = 'mobile-modal';
+            modal.innerHTML = `
+                <div class="modal-content" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; border-radius: 12px; width: 90%; max-width: 400px; max-height: 80vh; overflow-y: auto; box-shadow: 0 10px 40px rgba(0,0,0,0.2); z-index: 2000;">
+                    <div class="modal-header" style="padding: 1.5rem; border-bottom: 1px solid var(--gray-200); display: flex; justify-content: space-between; align-items: center;">
+                        <h3 style="font-size: 1.25rem; font-weight: 600;">Work Order: ${workOrderId}</h3>
+                        <button onclick="this.closest('.mobile-modal').remove()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--gray-500);">&times;</button>
+                    </div>
+                    <div style="padding: 1.5rem;">
+                        <div style="margin-bottom: 1rem;">
+                            <div style="font-weight: 600; color: var(--gray-700); margin-bottom: 0.5rem;">Service Type</div>
+                            <div>${workOrderId === 'WO-2024-1523' ? 'HVAC Emergency Repair' : workOrderId === 'WO-2024-1522' ? 'Plumbing Maintenance' : workOrderId === 'WO-2024-1521' ? 'Deep Cleaning Service' : 'Electrical Inspection'}</div>
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <div style="font-weight: 600; color: var(--gray-700); margin-bottom: 0.5rem;">Location</div>
+                            <div>${workOrderId === 'WO-2024-1523' ? 'McDonald\'s - Sunset Blvd' : workOrderId === 'WO-2024-1522' ? 'Burger King - Melrose' : workOrderId === 'WO-2024-1521' ? 'Delilah LA' : 'The Nice Guy'}</div>
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <div style="font-weight: 600; color: var(--gray-700); margin-bottom: 0.5rem;">Vendor</div>
+                            <div>${workOrderId === 'WO-2024-1523' ? 'CoolAir HVAC Services' : workOrderId === 'WO-2024-1522' ? 'Elite Plumbing' : workOrderId === 'WO-2024-1521' ? 'Sparkle Clean Pro' : 'PowerPro Electric'}</div>
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <div style="font-weight: 600; color: var(--gray-700); margin-bottom: 0.5rem;">Status</div>
+                            <div style="display: inline-block; padding: 0.25rem 0.75rem; border-radius: 12px; background: ${workOrderId === 'WO-2024-1523' ? 'var(--danger)' : workOrderId === 'WO-2024-1522' ? 'var(--warning-light)' : workOrderId === 'WO-2024-1521' ? 'var(--success-light)' : 'var(--info-light)'}; color: ${workOrderId === 'WO-2024-1523' ? 'white' : workOrderId === 'WO-2024-1522' ? 'var(--warning)' : workOrderId === 'WO-2024-1521' ? 'var(--success)' : 'var(--info)'}; font-weight: 600; font-size: 0.875rem;">
+                                ${workOrderId === 'WO-2024-1523' ? 'URGENT' : workOrderId === 'WO-2024-1522' ? 'IN PROGRESS' : workOrderId === 'WO-2024-1521' ? 'COMPLETED' : 'SCHEDULED'}
+                            </div>
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <div style="font-weight: 600; color: var(--gray-700); margin-bottom: 0.5rem;">Cost</div>
+                            <div style="font-size: 1.25rem; font-weight: 700; color: var(--primary);">${workOrderId === 'WO-2024-1523' ? '$8,500' : workOrderId === 'WO-2024-1522' ? '$875' : workOrderId === 'WO-2024-1521' ? '$1,200' : '$450'}</div>
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <div style="font-weight: 600; color: var(--gray-700); margin-bottom: 0.5rem;">Technician</div>
+                            <div>John Smith - (555) 123-4567</div>
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <div style="font-weight: 600; color: var(--gray-700); margin-bottom: 0.5rem;">Description</div>
+                            <div style="line-height: 1.6;">${workOrderId === 'WO-2024-1523' ? 'Emergency HVAC system failure. No cooling in main dining area. Temperature at 85°F. Urgent repair needed.' : workOrderId === 'WO-2024-1522' ? 'Routine plumbing maintenance. Check all fixtures, clear drains, inspect for leaks.' : workOrderId === 'WO-2024-1521' ? 'Monthly deep cleaning of kitchen and dining areas. Includes equipment, floors, and surfaces.' : 'Annual electrical safety inspection and certification required for insurance compliance.'}</div>
+                        </div>
+                        ${workOrderId !== 'WO-2024-1521' ? `
+                        <div style="margin-bottom: 1rem;">
+                            <div style="font-weight: 600; color: var(--gray-700); margin-bottom: 0.5rem;">Timeline</div>
+                            <div>${workOrderId === 'WO-2024-1523' ? 'Tech arriving in 30 minutes' : workOrderId === 'WO-2024-1522' ? 'Started at 2:00 PM, 60% complete' : 'Scheduled for tomorrow at 9:00 AM'}</div>
+                        </div>
+                        ` : ''}
+                    </div>
+                    <div style="padding: 1.5rem; border-top: 1px solid var(--gray-200);">
+                        ${workOrderId === 'WO-2024-1521' ? '<button onclick="approveInvoice(\'WO-2024-1521\')" class="btn-mobile primary" style="width: 100%; margin-bottom: 0.5rem;">Approve Invoice</button>' : workOrderId === 'WO-2024-1523' ? '<button onclick="callTechnician()" class="btn-mobile primary" style="width: 100%; margin-bottom: 0.5rem;">Call Technician</button>' : '<button onclick="viewProgress(\''+workOrderId+'\')" class="btn-mobile primary" style="width: 100%; margin-bottom: 0.5rem;">View Progress</button>'}
+                        <button onclick="contactVendor('${workOrderId}')" class="btn-mobile secondary" style="width: 100%; margin-bottom: 0.5rem;">Message Vendor</button>
+                        <button onclick="this.closest('.mobile-modal').remove()" class="btn-mobile secondary" style="width: 100%;">Close</button>
+                    </div>
+                </div>
+                <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1999;" onclick="this.parentElement.remove()"></div>
+            `;
+            document.body.appendChild(modal);
         }
         
         function createServiceRequest() {
-            showToast('Opening new service request form...', 'info');
-            // In a real app, this would open a modal or new screen
+            const modal = document.createElement('div');
+            modal.className = 'mobile-modal';
+            modal.innerHTML = `
+                <div class="modal-content" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; border-radius: 12px; width: 90%; max-width: 400px; max-height: 80vh; overflow-y: auto; box-shadow: 0 10px 40px rgba(0,0,0,0.2); z-index: 2000;">
+                    <div class="modal-header" style="padding: 1.5rem; border-bottom: 1px solid var(--gray-200); display: flex; justify-content: space-between; align-items: center;">
+                        <h3 style="font-size: 1.25rem; font-weight: 600;">New Service Request</h3>
+                        <button onclick="this.closest('.mobile-modal').remove()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--gray-500);">&times;</button>
+                    </div>
+                    <form onsubmit="submitServiceRequest(event)" style="padding: 1.5rem;">
+                        <div style="margin-bottom: 1rem;">
+                            <label style="font-weight: 600; color: var(--gray-700); display: block; margin-bottom: 0.5rem;">Location *</label>
+                            <select required style="width: 100%; padding: 0.75rem; border: 1px solid var(--gray-300); border-radius: 8px; font-size: 1rem;">
+                                <option value="">Select Location</option>
+                                <option value="mcdonalds-sunset">McDonald's - Sunset Blvd</option>
+                                <option value="burgerking-melrose">Burger King - Melrose</option>
+                                <option value="delilah">Delilah LA</option>
+                                <option value="niceguy">The Nice Guy</option>
+                            </select>
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <label style="font-weight: 600; color: var(--gray-700); display: block; margin-bottom: 0.5rem;">Service Type *</label>
+                            <select required style="width: 100%; padding: 0.75rem; border: 1px solid var(--gray-300); border-radius: 8px; font-size: 1rem;">
+                                <option value="">Select Service</option>
+                                <option value="hvac">HVAC</option>
+                                <option value="plumbing">Plumbing</option>
+                                <option value="electrical">Electrical</option>
+                                <option value="cleaning">Cleaning</option>
+                                <option value="pest">Pest Control</option>
+                                <option value="general">General Maintenance</option>
+                            </select>
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <label style="font-weight: 600; color: var(--gray-700); display: block; margin-bottom: 0.5rem;">Priority *</label>
+                            <select required style="width: 100%; padding: 0.75rem; border: 1px solid var(--gray-300); border-radius: 8px; font-size: 1rem;">
+                                <option value="standard">Standard (24-48 hours)</option>
+                                <option value="urgent">Urgent (4-8 hours)</option>
+                                <option value="emergency">Emergency (Within 2 hours)</option>
+                            </select>
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <label style="font-weight: 600; color: var(--gray-700); display: block; margin-bottom: 0.5rem;">Description *</label>
+                            <textarea required style="width: 100%; padding: 0.75rem; border: 1px solid var(--gray-300); border-radius: 8px; font-size: 1rem; min-height: 100px; resize: vertical;" placeholder="Describe the issue or service needed..."></textarea>
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <label style="font-weight: 600; color: var(--gray-700); display: block; margin-bottom: 0.5rem;">Add Photo</label>
+                            <input type="file" accept="image/*" style="width: 100%; padding: 0.75rem; border: 1px solid var(--gray-300); border-radius: 8px; font-size: 1rem;">
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <label style="font-weight: 600; color: var(--gray-700); display: block; margin-bottom: 0.5rem;">Preferred Date</label>
+                            <input type="date" style="width: 100%; padding: 0.75rem; border: 1px solid var(--gray-300); border-radius: 8px; font-size: 1rem;">
+                        </div>
+                        <button type="submit" class="btn-mobile primary" style="width: 100%; margin-bottom: 0.5rem;">Submit Request</button>
+                        <button type="button" onclick="this.closest('.mobile-modal').remove()" class="btn-mobile secondary" style="width: 100%;">Cancel</button>
+                    </form>
+                </div>
+                <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1999;" onclick="this.parentElement.remove()"></div>
+            `;
+            document.body.appendChild(modal);
+        }
+        
+        function submitServiceRequest(event) {
+            event.preventDefault();
+            showToast('Service request submitted successfully!', 'success');
+            document.querySelector('.mobile-modal').remove();
+            // Update dashboard with new request
+            const count = parseInt(document.getElementById('notificationCount').textContent) + 1;
+            document.getElementById('notificationCount').textContent = count;
+            document.getElementById('notificationCount').style.display = 'block';
+        }
+        
+        function approveInvoice(workOrderId) {
+            if (confirm('Approve invoice for $1,200?')) {
+                showToast('Invoice approved!', 'success');
+                document.querySelector('.mobile-modal').remove();
+            }
+        }
+        
+        function callTechnician() {
+            window.location.href = 'tel:555-123-4567';
+        }
+        
+        function viewProgress(workOrderId) {
+            showToast('Loading real-time progress...', 'info');
+        }
+        
+        function contactVendor(workOrderId) {
+            showView('messages');
+            document.querySelector('.mobile-modal').remove();
         }
         
         function showNotifications() {
@@ -841,9 +980,12 @@
         
         function signOut() {
             if (confirm('Are you sure you want to sign out?')) {
-                // Clear session
+                // Clear all session data
                 localStorage.removeItem('userSession');
-                sessionStorage.removeItem('userSession');
+                localStorage.removeItem('authToken');
+                localStorage.removeItem('sessionExpiry');
+                localStorage.removeItem('lastActivity');
+                sessionStorage.clear();
                 // Redirect to login
                 window.location.href = 'login.html';
             }
@@ -891,8 +1033,60 @@
         `;
         document.head.appendChild(style);
         
+        // Check authentication
+        function checkAuth() {
+            const session = localStorage.getItem('userSession');
+            if (!session) {
+                window.location.href = 'login.html';
+                return false;
+            }
+            
+            const userData = JSON.parse(session);
+            const expiry = new Date(userData.expiresAt || userData.timestamp);
+            const now = new Date();
+            
+            // Check if session expired
+            if (userData.expiresAt && expiry <= now) {
+                localStorage.removeItem('userSession');
+                localStorage.removeItem('authToken');
+                window.location.href = 'login.html?expired=true';
+                return false;
+            }
+            
+            // Extend session on activity
+            const lastActivity = localStorage.getItem('lastActivity');
+            const timeSinceLastActivity = lastActivity ? (now - new Date(lastActivity)) / 1000 / 60 : 0;
+            
+            if (timeSinceLastActivity < 5 || !lastActivity) {
+                if (userData.rememberMe) {
+                    userData.expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
+                } else {
+                    userData.expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
+                }
+                localStorage.setItem('userSession', JSON.stringify(userData));
+            }
+            
+            localStorage.setItem('lastActivity', now.toISOString());
+            return true;
+        }
+        
+        // Track user activity
+        function trackActivity() {
+            const lastTracked = localStorage.getItem('lastActivityTracked');
+            const now = Date.now();
+            if (!lastTracked || now - parseInt(lastTracked) > 60000) {
+                localStorage.setItem('lastActivity', new Date().toISOString());
+                localStorage.setItem('lastActivityTracked', now.toString());
+            }
+        }
+        
+        ['click', 'scroll', 'keypress', 'touchstart'].forEach(event => {
+            document.addEventListener(event, trackActivity, { passive: true });
+        });
+        
         // Initialize app
         document.addEventListener('DOMContentLoaded', function() {
+            if (!checkAuth()) return;
             showView('dashboard');
         });
         

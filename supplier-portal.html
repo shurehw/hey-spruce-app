@@ -9,14 +9,19 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         :root {
+            /* Layout Variables */
             --sidebar-width: 260px;
             --header-height: 60px;
+            
+            /* Portal Theme Colors - Supplier (Purple) */
             --primary: #6366f1;
             --primary-dark: #4f46e5;
             --primary-light: #e0e7ff;
             --secondary: #8b5cf6;
             --secondary-dark: #7c3aed;
             --secondary-light: #ede9fe;
+            
+            /* Status Colors */
             --success: #10b981;
             --success-light: #d1fae5;
             --warning: #f59e0b;
@@ -25,7 +30,8 @@
             --danger-light: #fee2e2;
             --info: #3b82f6;
             --info-light: #dbeafe;
-            --dark: #1f2937;
+            
+            /* Gray Scale */
             --gray-50: #f9fafb;
             --gray-100: #f3f4f6;
             --gray-200: #e5e7eb;
@@ -36,6 +42,38 @@
             --gray-700: #374151;
             --gray-800: #1f2937;
             --gray-900: #111827;
+            --dark: #1f2937; /* Keep for backward compatibility */
+            
+            /* Typography */
+            --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            --font-size-xs: 0.75rem;
+            --font-size-sm: 0.875rem;
+            --font-size-base: 1rem;
+            --font-size-lg: 1.125rem;
+            --font-size-xl: 1.25rem;
+            --font-size-2xl: 1.5rem;
+            --font-size-3xl: 1.875rem;
+            
+            /* Spacing */
+            --spacing-xs: 0.25rem;
+            --spacing-sm: 0.5rem;
+            --spacing-md: 1rem;
+            --spacing-lg: 1.5rem;
+            --spacing-xl: 2rem;
+            --spacing-2xl: 3rem;
+            
+            /* Border Radius */
+            --radius-sm: 4px;
+            --radius-md: 6px;
+            --radius-lg: 8px;
+            --radius-xl: 12px;
+            --radius-full: 9999px;
+            
+            /* Shadows */
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+            --shadow-xl: 0 20px 25px rgba(0,0,0,0.1);
         }
         
         body {
@@ -70,7 +108,8 @@
         .portal-badge {
             background: var(--primary);
             color: white;
-            padding: 0.25rem 0.75rem;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
             border-radius: 20px;
             font-size: 0.875rem;
             font-weight: 500;
@@ -108,41 +147,52 @@
         }
         
         .sidebar-section {
-            padding: 1rem;
-            border-bottom: 1px solid var(--gray-100);
+            margin-bottom: 2rem;
         }
         
         .sidebar-title {
+            padding: 0 1.5rem;
+            margin-bottom: 0.5rem;
             font-size: 0.75rem;
             font-weight: 600;
-            color: var(--gray-500);
             text-transform: uppercase;
+            color: var(--gray-500);
             letter-spacing: 0.05em;
-            margin-bottom: 0.5rem;
         }
         
         .nav-item {
             display: flex;
             align-items: center;
             gap: 0.75rem;
-            padding: 0.625rem 0.75rem;
-            border-radius: 6px;
+            padding: 0.625rem 1.5rem;
             color: var(--gray-700);
             text-decoration: none;
+            transition: all 0.2s;
+            cursor: pointer;
             font-size: 0.875rem;
             font-weight: 500;
-            transition: all 0.2s;
-            margin-bottom: 0.25rem;
         }
         
         .nav-item:hover {
-            background: var(--gray-100);
-            color: var(--gray-900);
+            background: var(--gray-50);
+            color: var(--primary);
         }
         
         .nav-item.active {
+            background: var(--primary-light);
+            color: var(--primary);
+            font-weight: 500;
+            position: relative;
+        }
+        
+        .nav-item.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
             background: var(--primary);
-            color: white;
         }
         
         .nav-item .icon {
@@ -3619,16 +3669,38 @@ Spruce - Professional Service Management
         }
 
         // User Menu Functions
-        function toggleUserMenu() {
-            const dropdown = document.getElementById('userDropdown');
+        function toggleUserDropdown() {
+            const dropdown = document.getElementById('userDropdownMenu');
             if (dropdown) {
                 dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+                
+                // Close dropdown when clicking outside
+                if (dropdown.style.display === 'block') {
+                    document.addEventListener('click', function closeDropdown(e) {
+                        const userDropdown = document.getElementById('userDropdown');
+                        if (!userDropdown.contains(e.target)) {
+                            dropdown.style.display = 'none';
+                            document.removeEventListener('click', closeDropdown);
+                        }
+                    });
+                    // Prevent the document click from immediately closing
+                    event.stopPropagation();
+                }
             }
+        }
+        
+        function closeUserDropdown() {
+            const dropdown = document.getElementById('userDropdownMenu');
+            if (dropdown) dropdown.style.display = 'none';
+        }
+        
+        // Keep old function for compatibility
+        function toggleUserMenu() {
+            toggleUserDropdown();
         }
 
         function loadUserSettings(section) {
-            const dropdown = document.getElementById('userDropdown');
-            if (dropdown) dropdown.style.display = 'none';
+            closeUserDropdown();
             showToast(`Loading ${section} settings...`, 'info');
         }
 
@@ -4900,12 +4972,9 @@ Spruce - Professional Service Management
     <!-- Header -->
     <header class="header">
         <div class="header-content">
-            <div style="display: flex; align-items: center;">
-                <img src="/public/hey-spruce-logo.png" alt="Hey Spruce" style="height: 40px; margin-right: 0.75rem;">
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary);">Hey Spruce</div>
                 <span class="portal-badge">Supplier Portal</span>
-                <span style="background: #10b981; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.875rem; font-weight: 500; margin-left: 0.5rem;">
-                    Demo Version
-                </span>
             </div>
             
             <!-- Right side navigation -->
@@ -4922,39 +4991,39 @@ Spruce - Professional Service Management
                     </select>
                 </div>
                 
-                <!-- User Settings -->
-                <div style="position: relative;">
-                    <button onclick="toggleUserMenu()" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem; border: 1px solid var(--gray-300); border-radius: 8px; background: white; cursor: pointer; transition: all 0.2s;">
-                        <div style="width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--secondary)); display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 0.875rem;">
+                <!-- User Dropdown -->
+                <div class="user-dropdown" id="userDropdown" style="position: relative;">
+                    <button class="user-dropdown-toggle" onclick="toggleUserDropdown()" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.375rem 0.5rem; border-radius: 6px; background: white; cursor: pointer; transition: all 0.2s; border: 1px solid var(--gray-200); box-shadow: 0 1px 2px rgba(0,0,0,0.05);" onmouseover="this.style.background='var(--gray-50)'; this.style.borderColor='var(--gray-300)';" onmouseout="this.style.background='white'; this.style.borderColor='var(--gray-200)';">
+                        <div style="width: 28px; height: 28px; border-radius: 4px; background: var(--gray-100); display: flex; align-items: center; justify-content: center; color: var(--gray-700); font-weight: 600; font-size: 0.75rem; border: 1px solid var(--gray-200);">
                             JS
                         </div>
-                        <span style="font-weight: 500; color: var(--gray-700);">Jacob Shure</span>
-                        <span style="color: var(--gray-500);">▼</span>
+                        <span style="font-weight: 500; color: var(--gray-700); font-size: 0.875rem;">Jacob Shure</span>
+                        <span class="dropdown-arrow" style="font-size: 0.625rem; color: var(--gray-500); transition: transform 0.2s;">▼</span>
                     </button>
                     
                     <!-- User Dropdown Menu -->
-                    <div id="userDropdown" style="display: none; position: absolute; top: 100%; right: 0; background: white; border: 1px solid var(--gray-200); border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); min-width: 200px; z-index: 1000; margin-top: 0.5rem;">
-                        <div style="padding: 0.75rem; border-bottom: 1px solid var(--gray-100);">
-                            <div style="font-weight: 600; color: var(--gray-900);">Jacob Shure</div>
-                            <div style="font-size: 0.875rem; color: var(--gray-500);">jacob@hwood.com</div>
+                    <div class="user-dropdown-menu" id="userDropdownMenu" style="display: none; position: absolute; top: calc(100% + 0.5rem); right: 0; background: white; border: 1px solid var(--gray-200); border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 240px; z-index: 1000;">
+                        <div style="padding: 1rem; border-bottom: 1px solid var(--gray-200);">
+                            <div style="font-weight: 600; color: var(--gray-900); margin-bottom: 0.25rem;">Hwood Group Suppliers</div>
+                            <div style="font-size: 0.875rem; color: var(--gray-600);">jacob@hwood.com</div>
                         </div>
                         <div style="padding: 0.5rem 0;">
-                            <a href="#profile" onclick="loadUserSettings('profile')" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; color: var(--gray-700); text-decoration: none; transition: all 0.2s;" onmouseover="this.style.background='var(--gray-50)'" onmouseout="this.style.background='transparent'">
-                                <span style="font-family: monospace;">U</span>
-                                Profile Settings
+                            <a href="#profile" onclick="loadUserSettings('profile'); closeUserDropdown(); return false;" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; color: var(--gray-700); text-decoration: none; transition: all 0.2s;" onmouseover="this.style.background='var(--gray-50)'" onmouseout="this.style.background='transparent'">
+                                <span>👤</span>
+                                <span>Profile</span>
                             </a>
-                            <a href="#notifications" onclick="loadUserSettings('notifications')" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; color: var(--gray-700); text-decoration: none; transition: all 0.2s;" onmouseover="this.style.background='var(--gray-50)'" onmouseout="this.style.background='transparent'">
-                                <span style="font-family: monospace;">N</span>
-                                Notifications
+                            <a href="#settings" onclick="loadSection('company'); closeUserDropdown(); return false;" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; color: var(--gray-700); text-decoration: none; transition: all 0.2s;" onmouseover="this.style.background='var(--gray-50)'" onmouseout="this.style.background='transparent'">
+                                <span>⚙️</span>
+                                <span>Settings</span>
                             </a>
-                            <a href="#preferences" onclick="loadUserSettings('preferences')" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; color: var(--gray-700); text-decoration: none; transition: all 0.2s;" onmouseover="this.style.background='var(--gray-50)'" onmouseout="this.style.background='transparent'">
-                                <span style="font-family: monospace;">S</span>
-                                Preferences
+                            <a href="#team" onclick="loadSection('team'); closeUserDropdown(); return false;" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; color: var(--gray-700); text-decoration: none; transition: all 0.2s;" onmouseover="this.style.background='var(--gray-50)'" onmouseout="this.style.background='transparent'">
+                                <span>👥</span>
+                                <span>Team Management</span>
                             </a>
-                            <div style="height: 1px; background: var(--gray-100); margin: 0.5rem 0;"></div>
-                            <a href="/" onclick="logout()" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; color: var(--danger); text-decoration: none; transition: all 0.2s;" onmouseover="this.style.background='var(--gray-50)'" onmouseout="this.style.background='transparent'">
+                            <div style="height: 1px; background: var(--gray-200); margin: 0;"></div>
+                            <a href="#" onclick="alert('Logging out...'); return false;" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; color: var(--gray-700); text-decoration: none; transition: all 0.2s;" onmouseover="this.style.background='var(--gray-50)'" onmouseout="this.style.background='transparent'">
                                 <span>🚪</span>
-                                Sign Out
+                                <span>Sign Out</span>
                             </a>
                         </div>
                     </div>
@@ -5043,6 +5112,11 @@ Spruce - Professional Service Management
         
         <div class="sidebar-section">
             <div class="sidebar-title">Analytics</div>
+            <a href="#documents" class="nav-item" onclick="loadSection('documents')">
+                <span class="icon">📄</span>
+                Shared Documents
+                <span class="notification-badge" id="documentsBadge" style="background: var(--warning); color: white; font-size: 0.75rem; padding: 0.125rem 0.375rem; border-radius: 10px; margin-left: auto;">2</span>
+            </a>
             <a href="#analytics" class="nav-item" onclick="loadSection('analytics')">
                 <span class="icon"></span>
                 Analytics
@@ -5050,6 +5124,10 @@ Spruce - Professional Service Management
             <a href="#reports" class="nav-item" onclick="loadSection('reports')">
                 <span class="icon"></span>
                 Reports
+            </a>
+            <a href="#feedback" class="nav-item" onclick="loadSection('feedback')">
+                <span class="icon"></span>
+                Customer Feedback
             </a>
             <a href="#budget" class="nav-item" onclick="loadSection('budget')">
                 <span class="icon"></span>
@@ -5511,11 +5589,17 @@ Spruce - Professional Service Management
                 case 'inbox':
                     content.innerHTML = getInboxContent();
                     break;
+                case 'documents':
+                    content.innerHTML = getSharedDocumentsContent();
+                    break;
                 case 'analytics':
                     content.innerHTML = getAnalyticsContent();
                     break;
                 case 'reports':
                     content.innerHTML = getReportsContent();
+                    break;
+                case 'feedback':
+                    content.innerHTML = getCustomerFeedbackContent();
                     break;
                 case 'budget':
                     content.innerHTML = getBudgetContent();
@@ -5525,6 +5609,9 @@ Spruce - Professional Service Management
                     break;
                 case 'admin':
                     content.innerHTML = getAdminContent();
+                    break;
+                case 'team':
+                    content.innerHTML = getTeamManagementContent();
                     break;
                 default:
                     console.log('Unknown section, reloading');
@@ -7726,6 +7813,225 @@ Spruce - Professional Service Management
         }
         window.viewAssetGrid = viewAssetGrid;
         
+        function getSharedDocumentsContent() {
+            return `
+                <div class="header-bar">
+                    <h1 class="header-title">Shared Documents</h1>
+                    <div class="header-actions">
+                        <button class="btn btn-secondary" onclick="showDocumentFilters()">
+                            📂 Filter by Client
+                        </button>
+                        <button class="btn btn-primary" onclick="uploadDocument()">
+                            ↑ Upload Document
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Document Statistics -->
+                <div class="stats-grid" style="margin-bottom: 2rem;">
+                    <div class="stat-card">
+                        <div class="stat-value">24</div>
+                        <div class="stat-label">Documents Shared</div>
+                        <div class="stat-change">From 8 clients</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">2</div>
+                        <div class="stat-label">Pending Signatures</div>
+                        <div class="stat-change negative">Action required</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">5</div>
+                        <div class="stat-label">Uploaded This Week</div>
+                        <div class="stat-change positive">Compliance docs</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">12</div>
+                        <div class="stat-label">Digital Signatures</div>
+                        <div class="stat-change">Completed this month</div>
+                    </div>
+                </div>
+                
+                <!-- Document Categories -->
+                <div style="display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap;">
+                    <button class="btn btn-secondary active" onclick="filterDocuments('all')">All Documents (24)</button>
+                    <button class="btn btn-secondary" onclick="filterDocuments('contracts')">Contracts (8)</button>
+                    <button class="btn btn-secondary" onclick="filterDocuments('compliance')">Compliance (6)</button>
+                    <button class="btn btn-secondary" onclick="filterDocuments('invoices')">Invoices (10)</button>
+                </div>
+                
+                <div class="table-container">
+                    <div class="table-header">
+                        <h3 class="table-title">Document Library</h3>
+                        <div class="table-actions">
+                            <input type="search" placeholder="Search documents..." class="search-input">
+                        </div>
+                    </div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" id="selectAllDocs"></th>
+                                <th>Document Name</th>
+                                <th>Client</th>
+                                <th>Type</th>
+                                <th>Status</th>
+                                <th>Shared Date</th>
+                                <th>Size</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="checkbox" class="doc-select"></td>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <span style="color: var(--primary);">📄</span>
+                                        <a href="#" style="color: var(--primary); text-decoration: none;">HVAC Service Agreement - McDonald's.pdf</a>
+                                    </div>
+                                </td>
+                                <td>McDonald's Corp</td>
+                                <td><span class="badge">Contract</span></td>
+                                <td><span class="badge badge-warning">Signature Pending</span></td>
+                                <td>Nov 25, 2024</td>
+                                <td>2.1 MB</td>
+                                <td>
+                                    <button class="btn btn-sm" onclick="viewDocument('supplier-1')">View</button>
+                                    <button class="btn btn-sm" onclick="downloadDocument('supplier-1')">Download</button>
+                                    <button class="btn btn-sm btn-warning" onclick="signDocument('supplier-1')">✍️ Sign</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="doc-select"></td>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <span style="color: var(--success);">📋</span>
+                                        <a href="#" style="color: var(--primary); text-decoration: none;">Insurance Certificate - General Liability.pdf</a>
+                                    </div>
+                                </td>
+                                <td>The Nice Guy Restaurant</td>
+                                <td><span class="badge badge-info">Compliance</span></td>
+                                <td><span class="badge badge-success">Active</span></td>
+                                <td>Nov 20, 2024</td>
+                                <td>1.5 MB</td>
+                                <td>
+                                    <button class="btn btn-sm" onclick="viewDocument('supplier-2')">View</button>
+                                    <button class="btn btn-sm" onclick="downloadDocument('supplier-2')">Download</button>
+                                    <button class="btn btn-sm" onclick="updateDocument('supplier-2')">Update</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="doc-select"></td>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <span style="color: var(--info);">💰</span>
+                                        <a href="#" style="color: var(--primary); text-decoration: none;">Invoice #2024-11-15 - HVAC Maintenance.pdf</a>
+                                    </div>
+                                </td>
+                                <td>Burger King - Hollywood</td>
+                                <td><span class="badge badge-secondary">Invoice</span></td>
+                                <td><span class="badge badge-success">Paid</span></td>
+                                <td>Nov 15, 2024</td>
+                                <td>892 KB</td>
+                                <td>
+                                    <button class="btn btn-sm" onclick="viewDocument('supplier-3')">View</button>
+                                    <button class="btn btn-sm" onclick="downloadDocument('supplier-3')">Download</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Signature Modal -->
+                <div id="signatureModal" class="modal" style="display: none;">
+                    <div class="modal-content" style="max-width: 800px;">
+                        <div class="modal-header">
+                            <h2>Digital Signature Required</h2>
+                            <span class="close" onclick="closeSignatureModal()">&times;</span>
+                        </div>
+                        <div class="modal-body">
+                            <div style="background: var(--info-light); padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                                <h4>Document: HVAC Service Agreement - McDonald's.pdf</h4>
+                                <p>Client: McDonald's Corp</p>
+                                <p>This document requires your digital signature to proceed with the work order.</p>
+                            </div>
+                            
+                            <div style="border: 2px dashed var(--gray-300); border-radius: 8px; padding: 2rem; text-align: center; margin-bottom: 1.5rem;">
+                                <div id="signatureCanvas" style="width: 100%; height: 200px; border: 1px solid var(--gray-300); border-radius: 4px; cursor: crosshair; background: white;">
+                                    <p style="padding-top: 80px; color: var(--gray-500);">Draw your signature here</p>
+                                </div>
+                                <div style="margin-top: 1rem;">
+                                    <button class="btn btn-sm btn-secondary" onclick="clearSignature()">Clear</button>
+                                </div>
+                            </div>
+                            
+                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
+                                <input type="checkbox" id="agreeToTerms">
+                                <label for="agreeToTerms">I agree to the terms and conditions outlined in this document</label>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary" onclick="closeSignatureModal()">Cancel</button>
+                            <button class="btn btn-primary" onclick="submitSignature()">Submit Signature</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Digital signature functions for supplier portal
+        function signDocument(docId) {
+            document.getElementById('signatureModal').style.display = 'block';
+        }
+        window.signDocument = signDocument;
+        
+        function closeSignatureModal() {
+            document.getElementById('signatureModal').style.display = 'none';
+        }
+        window.closeSignatureModal = closeSignatureModal;
+        
+        function clearSignature() {
+            const canvas = document.getElementById('signatureCanvas');
+            canvas.innerHTML = '<p style="padding-top: 80px; color: var(--gray-500);">Draw your signature here</p>';
+        }
+        window.clearSignature = clearSignature;
+        
+        function submitSignature() {
+            const termsChecked = document.getElementById('agreeToTerms').checked;
+            if (!termsChecked) {
+                showToast('Please agree to the terms and conditions', 'error');
+                return;
+            }
+            
+            showToast('Document signed successfully!', 'success');
+            closeSignatureModal();
+            
+            // Update the document badge
+            const badge = document.getElementById('documentsBadge');
+            if (badge) {
+                let count = parseInt(badge.textContent) - 1;
+                if (count > 0) {
+                    badge.textContent = count;
+                } else {
+                    badge.style.display = 'none';
+                }
+            }
+        }
+        window.submitSignature = submitSignature;
+        
+        function uploadDocument() {
+            showToast('Document upload functionality coming soon', 'info');
+        }
+        window.uploadDocument = uploadDocument;
+        
+        function filterDocuments(type) {
+            showToast(`Filtering documents by: ${type}`, 'info');
+        }
+        window.filterDocuments = filterDocuments;
+        
+        function updateDocument(docId) {
+            showToast('Document updated successfully', 'success');
+        }
+        window.updateDocument = updateDocument;
+        
         function getAnalyticsContent() {
             return `
                 <div>
@@ -8653,6 +8959,81 @@ Spruce - Professional Service Management
         }
         window.getCompanyContent = getCompanyContent;
         
+        function getTeamManagementContent() {
+            return `
+                <div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                        <h2 style="font-size: 1.875rem; font-weight: 700;">Team Management</h2>
+                        <button class="btn btn-primary" onclick="openAddTeamMemberModal()">+ Add Team Member</button>
+                    </div>
+                    
+                    <div class="table-container">
+                        <div class="table-header">
+                            <h3 class="table-title">Team Members</h3>
+                        </div>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th>Department</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Jacob Shure</td>
+                                    <td>jacob@hwood.com</td>
+                                    <td>Admin</td>
+                                    <td>Management</td>
+                                    <td><span class="badge badge-success">Active</span></td>
+                                    <td>
+                                        <button class="btn-icon" onclick="editTeamMember('1')">✏️</button>
+                                        <button class="btn-icon" onclick="removeTeamMember('1')">🗑️</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Emily Chen</td>
+                                    <td>emily.chen@hwood.com</td>
+                                    <td>Vendor Manager</td>
+                                    <td>Procurement</td>
+                                    <td><span class="badge badge-success">Active</span></td>
+                                    <td>
+                                        <button class="btn-icon" onclick="editTeamMember('2')">✏️</button>
+                                        <button class="btn-icon" onclick="removeTeamMember('2')">🗑️</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Robert Davis</td>
+                                    <td>robert.davis@hwood.com</td>
+                                    <td>Coordinator</td>
+                                    <td>Operations</td>
+                                    <td><span class="badge badge-success">Active</span></td>
+                                    <td>
+                                        <button class="btn-icon" onclick="editTeamMember('3')">✏️</button>
+                                        <button class="btn-icon" onclick="removeTeamMember('3')">🗑️</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Lisa Martinez</td>
+                                    <td>lisa.martinez@hwood.com</td>
+                                    <td>Analyst</td>
+                                    <td>Finance</td>
+                                    <td><span class="badge badge-warning">Pending</span></td>
+                                    <td>
+                                        <button class="btn-icon" onclick="resendInvite('4')">📧</button>
+                                        <button class="btn-icon" onclick="removeTeamMember('4')">🗑️</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }
+        
         function getAdminContent() {
             return `
                 <div>
@@ -8750,6 +9131,25 @@ Spruce - Professional Service Management
             showToast('Company settings saved successfully', 'success');
         }
         window.saveCompanySettings = saveCompanySettings;
+        
+        // Team Management Functions
+        function openAddTeamMemberModal() {
+            addNewUser(); // Reuse existing function
+        }
+        
+        function editTeamMember(id) {
+            showToast('Opening edit form for team member', 'info');
+        }
+        
+        function removeTeamMember(id) {
+            if (confirm('Are you sure you want to remove this team member?')) {
+                showToast('Team member removed successfully', 'success');
+            }
+        }
+        
+        function resendInvite(id) {
+            showToast('Invitation email resent successfully', 'success');
+        }
         
         function addNewUser() {
             const modal = document.createElement('div');
@@ -13392,6 +13792,394 @@ Spruce - Professional Service Management
             alert('Checked in successfully!');
             closeCheckinModal();
         }
+        
+        function getCustomerFeedbackContent() {
+            return `
+                <div class="header-bar">
+                    <h1 class="header-title">Customer Feedback & Ratings</h1>
+                    <div class="header-actions">
+                        <button class="btn btn-secondary" onclick="exportFeedback()">
+                            📊 Export Report
+                        </button>
+                        <button class="btn btn-primary" onclick="showResponseTemplates()">
+                            📝 Response Templates
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Overall Rating Overview -->
+                <div class="stats-grid" style="margin-bottom: 2rem;">
+                    <div class="stat-card">
+                        <div class="stat-value" style="display: flex; align-items: center; gap: 0.5rem;">
+                            4.8
+                            <span style="color: var(--warning); font-size: 1.5rem;">⭐</span>
+                        </div>
+                        <div class="stat-label">Overall Rating</div>
+                        <div class="stat-change positive">+0.3 from last month</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">156</div>
+                        <div class="stat-label">Total Reviews</div>
+                        <div class="stat-change">23 this month</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">94%</div>
+                        <div class="stat-label">Response Rate</div>
+                        <div class="stat-change positive">Above industry avg</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">2.4h</div>
+                        <div class="stat-label">Avg Response Time</div>
+                        <div class="stat-change positive">-30min improvement</div>
+                    </div>
+                </div>
+                
+                <!-- Rating Distribution -->
+                <div class="table-container" style="margin-bottom: 2rem;">
+                    <div class="table-header">
+                        <h3 class="table-title">Rating Distribution</h3>
+                    </div>
+                    <div style="padding: 1.5rem;">
+                        <div style="display: grid; gap: 0.75rem;">
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <span style="width: 60px;">5 stars</span>
+                                <div style="flex: 1; background: var(--gray-200); height: 24px; border-radius: 4px; overflow: hidden;">
+                                    <div style="background: var(--success); height: 100%; width: 72%; display: flex; align-items: center; padding-left: 0.5rem;">
+                                        <span style="color: white; font-size: 0.875rem; font-weight: 600;">112 (72%)</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <span style="width: 60px;">4 stars</span>
+                                <div style="flex: 1; background: var(--gray-200); height: 24px; border-radius: 4px; overflow: hidden;">
+                                    <div style="background: var(--primary); height: 100%; width: 18%; display: flex; align-items: center; padding-left: 0.5rem;">
+                                        <span style="color: white; font-size: 0.875rem; font-weight: 600;">28 (18%)</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <span style="width: 60px;">3 stars</span>
+                                <div style="flex: 1; background: var(--gray-200); height: 24px; border-radius: 4px; overflow: hidden;">
+                                    <div style="background: var(--warning); height: 100%; width: 6%; display: flex; align-items: center; padding-left: 0.5rem;">
+                                        <span style="color: white; font-size: 0.875rem; font-weight: 600;">10</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <span style="width: 60px;">2 stars</span>
+                                <div style="flex: 1; background: var(--gray-200); height: 24px; border-radius: 4px; overflow: hidden;">
+                                    <div style="background: var(--warning); height: 100%; width: 3%; display: flex; align-items: center; padding-left: 0.5rem;">
+                                        <span style="color: white; font-size: 0.875rem; font-weight: 600;">4</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <span style="width: 60px;">1 star</span>
+                                <div style="flex: 1; background: var(--gray-200); height: 24px; border-radius: 4px; overflow: hidden;">
+                                    <div style="background: var(--danger); height: 100%; width: 1%; display: flex; align-items: center; padding-left: 0.5rem;">
+                                        <span style="color: white; font-size: 0.875rem; font-weight: 600;">2</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Recent Reviews -->
+                <div class="table-container">
+                    <div class="table-header">
+                        <h3 class="table-title">Recent Customer Reviews</h3>
+                        <select class="form-select" style="width: 150px;" onchange="sortReviews(this.value)">
+                            <option>Most Recent</option>
+                            <option>Highest Rated</option>
+                            <option>Lowest Rated</option>
+                            <option>Needs Response</option>
+                        </select>
+                    </div>
+                    <div style="padding: 1.5rem;">
+                        <!-- Review Item 1 -->
+                        <div style="border-bottom: 1px solid var(--gray-200); padding-bottom: 1.5rem; margin-bottom: 1.5rem;">
+                            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.75rem;">
+                                <div>
+                                    <div style="display: flex; align-items: center; gap: 1rem;">
+                                        <strong>McDonald's - Sunset Blvd</strong>
+                                        <span style="color: var(--warning);">⭐⭐⭐⭐⭐</span>
+                                        <span class="badge badge-success">Responded</span>
+                                    </div>
+                                    <div style="font-size: 0.875rem; color: var(--gray-600); margin-top: 0.25rem;">
+                                        John Smith • WO #2024-1523 • Nov 28, 2024
+                                    </div>
+                                </div>
+                                <button class="btn btn-sm" onclick="viewFeedbackDetails(1)">View Details</button>
+                            </div>
+                            <p style="color: var(--gray-700); margin: 0.75rem 0;">
+                                "Excellent service! The HVAC team arrived on time and fixed our AC unit within 2 hours. Very professional and cleaned up after themselves. Highly recommend!"
+                            </p>
+                            <div style="display: flex; gap: 1rem; align-items: center;">
+                                <span style="font-size: 0.875rem; color: var(--gray-600);">Service: HVAC Repair</span>
+                                <span style="font-size: 0.875rem; color: var(--gray-600);">Response Time: 1.5 hours</span>
+                                <span style="font-size: 0.875rem; color: var(--gray-600);">Cost: $450</span>
+                            </div>
+                            <div style="background: var(--gray-50); padding: 0.75rem; border-radius: 6px; margin-top: 0.75rem;">
+                                <div style="font-size: 0.875rem; font-weight: 600; margin-bottom: 0.25rem;">Your Response:</div>
+                                <p style="font-size: 0.875rem; color: var(--gray-700); margin: 0;">
+                                    "Thank you for your wonderful feedback! We're thrilled to hear that our team provided excellent service. We look forward to serving you again!"
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <!-- Review Item 2 -->
+                        <div style="border-bottom: 1px solid var(--gray-200); padding-bottom: 1.5rem; margin-bottom: 1.5rem;">
+                            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.75rem;">
+                                <div>
+                                    <div style="display: flex; align-items: center; gap: 1rem;">
+                                        <strong>Burger King - Melrose</strong>
+                                        <span style="color: var(--warning);">⭐⭐⭐⭐</span>
+                                        <span class="badge badge-warning">Pending Response</span>
+                                    </div>
+                                    <div style="font-size: 0.875rem; color: var(--gray-600); margin-top: 0.25rem;">
+                                        Sarah Johnson • WO #2024-1519 • Nov 27, 2024
+                                    </div>
+                                </div>
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <button class="btn btn-sm btn-primary" onclick="respondToFeedback(2)">Respond</button>
+                                    <button class="btn btn-sm" onclick="viewFeedbackDetails(2)">View Details</button>
+                                </div>
+                            </div>
+                            <p style="color: var(--gray-700); margin: 0.75rem 0;">
+                                "Good service overall. The plumber fixed the issue but arrived 30 minutes late. Work was done well and the area was cleaned up nicely."
+                            </p>
+                            <div style="display: flex; gap: 1rem; align-items: center;">
+                                <span style="font-size: 0.875rem; color: var(--gray-600);">Service: Plumbing</span>
+                                <span style="font-size: 0.875rem; color: var(--gray-600);">Response Time: 2.5 hours</span>
+                                <span style="font-size: 0.875rem; color: var(--gray-600);">Cost: $320</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Review Item 3 -->
+                        <div style="border-bottom: 1px solid var(--gray-200); padding-bottom: 1.5rem; margin-bottom: 1.5rem;">
+                            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.75rem;">
+                                <div>
+                                    <div style="display: flex; align-items: center; gap: 1rem;">
+                                        <strong>Delilah LA</strong>
+                                        <span style="color: var(--warning);">⭐⭐⭐</span>
+                                        <span class="badge badge-danger">Needs Attention</span>
+                                    </div>
+                                    <div style="font-size: 0.875rem; color: var(--gray-600); margin-top: 0.25rem;">
+                                        Mike Wilson • WO #2024-1515 • Nov 26, 2024
+                                    </div>
+                                </div>
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <button class="btn btn-sm btn-primary" onclick="respondToFeedback(3)">Respond</button>
+                                    <button class="btn btn-sm" onclick="escalateFeedback(3)">Escalate</button>
+                                </div>
+                            </div>
+                            <p style="color: var(--gray-700); margin: 0.75rem 0;">
+                                "The electrical work was completed but took much longer than quoted. Communication could have been better about the delays."
+                            </p>
+                            <div style="display: flex; gap: 1rem; align-items: center;">
+                                <span style="font-size: 0.875rem; color: var(--gray-600);">Service: Electrical</span>
+                                <span style="font-size: 0.875rem; color: var(--gray-600);">Response Time: 4 hours</span>
+                                <span style="font-size: 0.875rem; color: var(--gray-600);">Cost: $680</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Performance Insights -->
+                <div class="table-container" style="margin-top: 2rem;">
+                    <div class="table-header">
+                        <h3 class="table-title">Performance Insights</h3>
+                    </div>
+                    <div style="padding: 1.5rem;">
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+                            <div>
+                                <h4 style="margin-bottom: 0.75rem;">Top Performing Categories</h4>
+                                <div style="display: grid; gap: 0.5rem;">
+                                    <div style="display: flex; justify-content: space-between; padding: 0.5rem; background: var(--gray-50); border-radius: 4px;">
+                                        <span>HVAC Services</span>
+                                        <strong>4.9 ⭐</strong>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; padding: 0.5rem; background: var(--gray-50); border-radius: 4px;">
+                                        <span>Emergency Response</span>
+                                        <strong>4.8 ⭐</strong>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; padding: 0.5rem; background: var(--gray-50); border-radius: 4px;">
+                                        <span>Preventive Maintenance</span>
+                                        <strong>4.7 ⭐</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 style="margin-bottom: 0.75rem;">Areas for Improvement</h4>
+                                <div style="display: grid; gap: 0.5rem;">
+                                    <div style="display: flex; justify-content: space-between; padding: 0.5rem; background: var(--warning-light); border-radius: 4px;">
+                                        <span>Communication</span>
+                                        <strong>3.8 ⭐</strong>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; padding: 0.5rem; background: var(--warning-light); border-radius: 4px;">
+                                        <span>Punctuality</span>
+                                        <strong>4.1 ⭐</strong>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; padding: 0.5rem; background: var(--warning-light); border-radius: 4px;">
+                                        <span>Cost Transparency</span>
+                                        <strong>4.2 ⭐</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 style="margin-bottom: 0.75rem;">Customer Sentiment</h4>
+                                <div style="display: grid; gap: 0.5rem;">
+                                    <div style="display: flex; justify-content: space-between; padding: 0.5rem; background: var(--gray-50); border-radius: 4px;">
+                                        <span>Would Recommend</span>
+                                        <strong>92%</strong>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; padding: 0.5rem; background: var(--gray-50); border-radius: 4px;">
+                                        <span>Repeat Customers</span>
+                                        <strong>78%</strong>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; padding: 0.5rem; background: var(--gray-50); border-radius: 4px;">
+                                        <span>NPS Score</span>
+                                        <strong>+62</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function respondToFeedback(id) {
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.innerHTML = `
+                <div class="modal-overlay" onclick="this.parentElement.remove()"></div>
+                <div class="modal-content" style="max-width: 600px;">
+                    <div class="modal-header">
+                        <h2>Respond to Customer Feedback</h2>
+                        <button class="modal-close" onclick="this.closest('.modal').remove()">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <div style="background: var(--gray-50); padding: 1rem; border-radius: 6px; margin-bottom: 1.5rem;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                <strong>Burger King - Melrose</strong>
+                                <span style="color: var(--warning);">⭐⭐⭐⭐</span>
+                            </div>
+                            <p style="color: var(--gray-700); margin: 0;">
+                                "Good service overall. The plumber fixed the issue but arrived 30 minutes late. Work was done well and the area was cleaned up nicely."
+                            </p>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Response Templates</label>
+                            <select class="form-select" onchange="loadResponseTemplate(this.value)">
+                                <option value="">Select a template...</option>
+                                <option value="positive">Thank You - Positive</option>
+                                <option value="apology">Apology - Service Issue</option>
+                                <option value="explanation">Explanation - Delay</option>
+                                <option value="custom">Custom Response</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Your Response</label>
+                            <textarea id="responseText" class="form-input" rows="6" placeholder="Type your response to the customer..."></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" checked>
+                                Mark as resolved after sending
+                            </label>
+                        </div>
+                        
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary" onclick="this.closest('.modal').remove()">Cancel</button>
+                            <button class="btn btn-primary" onclick="sendFeedbackResponse()">Send Response</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+        
+        function loadResponseTemplate(template) {
+            const responseText = document.getElementById('responseText');
+            if (!responseText) return;
+            
+            switch(template) {
+                case 'positive':
+                    responseText.value = "Thank you so much for your wonderful feedback! We're delighted to hear that you had a great experience with our service. Your satisfaction is our top priority, and we look forward to serving you again soon!";
+                    break;
+                case 'apology':
+                    responseText.value = "Thank you for taking the time to share your feedback. We sincerely apologize for not meeting your expectations. Your experience is important to us, and we're taking immediate steps to address the issues you've raised. We'd appreciate the opportunity to make this right.";
+                    break;
+                case 'explanation':
+                    responseText.value = "Thank you for your feedback. We apologize for the delay in our arrival. Due to an emergency at another location, our technician was delayed. We understand how valuable your time is and are implementing better communication protocols to keep you informed of any delays in the future. We appreciate your patience and understanding.";
+                    break;
+                case 'custom':
+                    responseText.value = "";
+                    break;
+            }
+        }
+        
+        function sendFeedbackResponse() {
+            showToast('Response sent successfully to customer', 'success');
+            document.querySelector('.modal').remove();
+        }
+        
+        function viewFeedbackDetails(id) {
+            alert('Opening detailed feedback view...');
+        }
+        
+        function escalateFeedback(id) {
+            if (confirm('Escalate this feedback to management for review?')) {
+                showToast('Feedback escalated to management', 'info');
+            }
+        }
+        
+        function showResponseTemplates() {
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.innerHTML = `
+                <div class="modal-overlay" onclick="this.parentElement.remove()"></div>
+                <div class="modal-content" style="max-width: 700px;">
+                    <div class="modal-header">
+                        <h2>Response Templates</h2>
+                        <button class="modal-close" onclick="this.closest('.modal').remove()">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <div style="margin-bottom: 1rem;">
+                            <button class="btn btn-primary btn-sm" onclick="createNewTemplate()">+ Create New Template</button>
+                        </div>
+                        
+                        <div style="display: grid; gap: 1rem;">
+                            <div style="border: 1px solid var(--gray-200); border-radius: 6px; padding: 1rem;">
+                                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem;">
+                                    <strong>Thank You - Positive</strong>
+                                    <div style="display: flex; gap: 0.5rem;">
+                                        <button class="btn btn-sm" onclick="editTemplate(1)">Edit</button>
+                                        <button class="btn btn-sm" onclick="deleteTemplate(1)">Delete</button>
+                                    </div>
+                                </div>
+                                <p style="color: var(--gray-700); font-size: 0.875rem; margin: 0;">
+                                    Thank you so much for your wonderful feedback! We're delighted to hear that you had a great experience...
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+        
+        function exportFeedback() {
+            showToast('Exporting customer feedback report...', 'info');
+            setTimeout(() => {
+                showToast('Feedback report exported successfully', 'success');
+            }, 2000);
+        }
     </script>
     
     <!-- Schedule Service Modal -->
@@ -13692,7 +14480,8 @@ Spruce - Professional Service Management
                             <tr style="border-bottom: 2px solid var(--gray-200);">
                                 <th style="text-align: left; padding: 0.5rem 0; font-size: 0.875rem; font-weight: 600;">Type</th>
                                 <th style="text-align: center; padding: 0.5rem; font-size: 0.875rem; font-weight: 600;">Email</th>
-                                <th style="text-align: center; padding: 0.5rem; font-size: 0.875rem; font-weight: 600;">Mobile Push</th>
+                                <th style="text-align: center; padding: 0.5rem; font-size: 0.875rem; font-weight: 600;">Text</th>
+                                <th style="text-align: center; padding: 0.5rem; font-size: 0.875rem; font-weight: 600;">App</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -13704,6 +14493,9 @@ Spruce - Professional Service Management
                                 <td style="text-align: center; padding: 0.75rem;">
                                     <input type="checkbox" checked style="width: 18px; height: 18px;">
                                 </td>
+                                <td style="text-align: center; padding: 0.75rem;">
+                                    <input type="checkbox" style="width: 18px; height: 18px;">
+                                </td>
                             </tr>
                             <tr style="border-bottom: 1px solid var(--gray-100);">
                                 <td style="padding: 0.75rem 0; font-size: 0.875rem;">Subscription</td>
@@ -13712,6 +14504,9 @@ Spruce - Professional Service Management
                                 </td>
                                 <td style="text-align: center; padding: 0.75rem;">
                                     <input type="checkbox" style="width: 18px; height: 18px;">
+                                </td>
+                                <td style="text-align: center; padding: 0.75rem;">
+                                    <input type="checkbox" checked style="width: 18px; height: 18px;">
                                 </td>
                             </tr>
                         </tbody>
@@ -13726,12 +14521,16 @@ Spruce - Professional Service Management
                             <tr style="border-bottom: 2px solid var(--gray-200);">
                                 <th style="text-align: left; padding: 0.5rem 0; font-size: 0.875rem; font-weight: 600;">Status</th>
                                 <th style="text-align: center; padding: 0.5rem; font-size: 0.875rem; font-weight: 600;">Email</th>
-                                <th style="text-align: center; padding: 0.5rem; font-size: 0.875rem; font-weight: 600;">Mobile Push</th>
+                                <th style="text-align: center; padding: 0.5rem; font-size: 0.875rem; font-weight: 600;">Text</th>
+                                <th style="text-align: center; padding: 0.5rem; font-size: 0.875rem; font-weight: 600;">App</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr style="border-bottom: 1px solid var(--gray-100);">
                                 <td style="padding: 0.75rem 0; font-size: 0.875rem;">Assigned to Internal Team</td>
+                                <td style="text-align: center; padding: 0.75rem;">
+                                    <input type="checkbox" checked style="width: 18px; height: 18px;">
+                                </td>
                                 <td style="text-align: center; padding: 0.75rem;">
                                     <input type="checkbox" checked style="width: 18px; height: 18px;">
                                 </td>
@@ -13747,6 +14546,9 @@ Spruce - Professional Service Management
                                 <td style="text-align: center; padding: 0.75rem;">
                                     <input type="checkbox" checked style="width: 18px; height: 18px;">
                                 </td>
+                                <td style="text-align: center; padding: 0.75rem;">
+                                    <input type="checkbox" style="width: 18px; height: 18px;">
+                                </td>
                             </tr>
                             <tr style="border-bottom: 1px solid var(--gray-100);">
                                 <td style="padding: 0.75rem 0; font-size: 0.875rem;">Confirmed by Service Provider</td>
@@ -13755,6 +14557,9 @@ Spruce - Professional Service Management
                                 </td>
                                 <td style="text-align: center; padding: 0.75rem;">
                                     <input type="checkbox" style="width: 18px; height: 18px;">
+                                </td>
+                                <td style="text-align: center; padding: 0.75rem;">
+                                    <input type="checkbox" checked style="width: 18px; height: 18px;">
                                 </td>
                             </tr>
                             <tr style="border-bottom: 1px solid var(--gray-100);">
@@ -13765,9 +14570,15 @@ Spruce - Professional Service Management
                                 <td style="text-align: center; padding: 0.75rem;">
                                     <input type="checkbox" style="width: 18px; height: 18px;">
                                 </td>
+                                <td style="text-align: center; padding: 0.75rem;">
+                                    <input type="checkbox" checked style="width: 18px; height: 18px;">
+                                </td>
                             </tr>
                             <tr style="border-bottom: 1px solid var(--gray-100);">
                                 <td style="padding: 0.75rem 0; font-size: 0.875rem;">Tech Scheduled</td>
+                                <td style="text-align: center; padding: 0.75rem;">
+                                    <input type="checkbox" checked style="width: 18px; height: 18px;">
+                                </td>
                                 <td style="text-align: center; padding: 0.75rem;">
                                     <input type="checkbox" checked style="width: 18px; height: 18px;">
                                 </td>
@@ -13783,9 +14594,15 @@ Spruce - Professional Service Management
                                 <td style="text-align: center; padding: 0.75rem;">
                                     <input type="checkbox" checked style="width: 18px; height: 18px;">
                                 </td>
+                                <td style="text-align: center; padding: 0.75rem;">
+                                    <input type="checkbox" style="width: 18px; height: 18px;">
+                                </td>
                             </tr>
                             <tr style="border-bottom: 1px solid var(--gray-100);">
                                 <td style="padding: 0.75rem 0; font-size: 0.875rem;">Work Incomplete with reason</td>
+                                <td style="text-align: center; padding: 0.75rem;">
+                                    <input type="checkbox" checked style="width: 18px; height: 18px;">
+                                </td>
                                 <td style="text-align: center; padding: 0.75rem;">
                                     <input type="checkbox" checked style="width: 18px; height: 18px;">
                                 </td>
@@ -13801,6 +14618,9 @@ Spruce - Professional Service Management
                                 <td style="text-align: center; padding: 0.75rem;">
                                     <input type="checkbox" style="width: 18px; height: 18px;">
                                 </td>
+                                <td style="text-align: center; padding: 0.75rem;">
+                                    <input type="checkbox" checked style="width: 18px; height: 18px;">
+                                </td>
                             </tr>
                             <tr style="border-bottom: 1px solid var(--gray-100);">
                                 <td style="padding: 0.75rem 0; font-size: 0.875rem;">Cancelled With Reason</td>
@@ -13810,9 +14630,15 @@ Spruce - Professional Service Management
                                 <td style="text-align: center; padding: 0.75rem;">
                                     <input type="checkbox" checked style="width: 18px; height: 18px;">
                                 </td>
+                                <td style="text-align: center; padding: 0.75rem;">
+                                    <input type="checkbox" style="width: 18px; height: 18px;">
+                                </td>
                             </tr>
                             <tr style="border-bottom: 1px solid var(--gray-100);">
                                 <td style="padding: 0.75rem 0; font-size: 0.875rem;">Work Unsatisfactory</td>
+                                <td style="text-align: center; padding: 0.75rem;">
+                                    <input type="checkbox" checked style="width: 18px; height: 18px;">
+                                </td>
                                 <td style="text-align: center; padding: 0.75rem;">
                                     <input type="checkbox" checked style="width: 18px; height: 18px;">
                                 </td>
@@ -13832,7 +14658,8 @@ Spruce - Professional Service Management
                             <tr style="border-bottom: 2px solid var(--gray-200);">
                                 <th style="text-align: left; padding: 0.5rem 0; font-size: 0.875rem; font-weight: 600;">Status</th>
                                 <th style="text-align: center; padding: 0.5rem; font-size: 0.875rem; font-weight: 600;">Email</th>
-                                <th style="text-align: center; padding: 0.5rem; font-size: 0.875rem; font-weight: 600;">Mobile Push</th>
+                                <th style="text-align: center; padding: 0.5rem; font-size: 0.875rem; font-weight: 600;">Text</th>
+                                <th style="text-align: center; padding: 0.5rem; font-size: 0.875rem; font-weight: 600;">App</th>
                             </tr>
                         </thead>
                         <tbody>

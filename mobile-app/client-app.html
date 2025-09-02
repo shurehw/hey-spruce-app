@@ -412,31 +412,18 @@
             font-weight: 500;
         }
         
-        /* Action Buttons */
-        .action-buttons {
-            position: fixed;
-            bottom: 80px;
-            right: var(--spacing-lg);
-            z-index: 999;
+        /* Center navigation button styles */
+        .nav-center-btn {
+            flex: 1;
+            position: relative;
         }
         
-        .fab {
-            width: 56px;
-            height: 56px;
-            border-radius: 28px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .nav-center-btn .center-button {
+            transition: transform 0.2s;
         }
         
-        .fab:active {
-            transform: scale(0.95);
+        .nav-center-btn:active .center-button {
+            transform: translateX(-50%) scale(0.95);
         }
         
         /* Hidden class */
@@ -875,12 +862,6 @@
         </div>
     </div>
 
-    <!-- Floating Action Button -->
-    <div class="action-buttons">
-        <button class="fab" onclick="createServiceRequest()" title="New Service Request">
-            +
-        </button>
-    </div>
 
     <!-- Bottom Navigation -->
     <div class="bottom-nav">

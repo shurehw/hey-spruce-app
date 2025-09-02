@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hey Spruce - Client App</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+        
+        :root {
+            /* Hey Spruce Brand Colors */
+            --primary: #10b981;
+            --primary-dark: #059669;
+            --primary-light: #d1fae5;
+            --secondary: #6366f1;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #3b82f6;
+            
+            /* Mobile-first Gray Scale */
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+            
+            /* Mobile Spacing */
+            --spacing-xs: 0.25rem;
+            --spacing-sm: 0.5rem;
+            --spacing-md: 1rem;
+            --spacing-lg: 1.5rem;
+            --spacing-xl: 2rem;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--gray-50);
+            color: var(--gray-900);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        /* Mobile App Header */
+        .mobile-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: white;
+            border-bottom: 1px solid var(--gray-200);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            padding: 0 1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .mobile-header .logo {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .mobile-header .user-info {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .mobile-header .notification-btn {
+            position: relative;
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+            color: var(--gray-600);
+            padding: 0.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        
+        .mobile-header .notification-btn:hover {
+            background: var(--gray-100);
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: 0.25rem;
+            right: 0.25rem;
+            background: var(--danger);
+            color: white;
+            font-size: 0.75rem;
+            padding: 0.125rem 0.375rem;
+            border-radius: 10px;
+            min-width: 18px;
+            text-align: center;
+        }
+        
+        /* Mobile Content */
+        .mobile-content {
+            margin-top: 60px;
+            min-height: calc(100vh - 120px);
+            padding-bottom: 60px;
+        }
+        
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: white;
+            border-top: 1px solid var(--gray-200);
+            display: flex;
+            z-index: 1000;
+            box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray-500);
+            text-decoration: none;
+            font-size: 0.75rem;
+            font-weight: 500;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .nav-item.active {
+            color: var(--primary);
+        }
+        
+        .nav-item .icon {
+            font-size: 1.25rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        /* Mobile Cards */
+        .mobile-card {
+            background: white;
+            border-radius: 12px;
+            margin: var(--spacing-md);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .card-header {
+            padding: var(--spacing-lg);
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .card-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+        
+        .card-content {
+            padding: var(--spacing-lg);
+        }
+        
+        /* Mobile Buttons */
+        .btn-mobile {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.875rem;
+            min-height: 44px; /* iOS touch target */
+        }
+        
+        .btn-mobile.primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-mobile.primary:hover {
+            background: var(--primary-dark);
+        }
+        
+        .btn-mobile.secondary {
+            background: var(--gray-200);
+            color: var(--gray-700);
+        }
+        
+        .btn-mobile.danger {
+            background: var(--danger);
+            color: white;
+        }
+        
+        /* Status Badges */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .status-badge.urgent { background: var(--danger); color: white; }
+        .status-badge.in-progress { background: var(--warning); color: white; }
+        .status-badge.completed { background: var(--success); color: white; }
+        .status-badge.scheduled { background: var(--info); color: white; }
+        
+        /* Mobile Lists */
+        .mobile-list {
+            background: white;
+            border-radius: 12px;
+            margin: var(--spacing-md);
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .list-item {
+            padding: var(--spacing-lg);
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            cursor: pointer;
+        }
+        
+        .list-item:last-child {
+            border-bottom: none;
+        }
+        
+        .list-item:active {
+            background: var(--gray-50);
+        }
+        
+        .list-item .icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            color: white;
+            flex-shrink: 0;
+        }
+        
+        .list-item .content {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .list-item .title {
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 0.25rem;
+        }
+        
+        .list-item .subtitle {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+        }
+        
+        .list-item .meta {
+            text-align: right;
+            flex-shrink: 0;
+        }
+        
+        /* Modal Styles */
+        .mobile-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            display: flex;
+            align-items: flex-end;
+        }
+        
+        .mobile-modal.center {
+            align-items: center;
+            padding: var(--spacing-lg);
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 16px 16px 0 0;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .mobile-modal.center .modal-content {
+            border-radius: 16px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        
+        .modal-header {
+            padding: var(--spacing-lg);
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--gray-500);
+            cursor: pointer;
+            padding: 0.5rem;
+            margin: -0.5rem;
+        }
+        
+        /* Form Styles */
+        .form-group {
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .form-label {
+            display: block;
+            font-weight: 600;
+            color: var(--gray-700);
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--gray-300);
+            border-radius: 8px;
+            font-size: 1rem;
+            min-height: 44px;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--spacing-md);
+            margin: var(--spacing-md);
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: var(--spacing-lg);
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.25rem;
+        }
+        
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--gray-600);
+            font-weight: 500;
+        }
+        
+        /* Action Buttons */
+        .action-buttons {
+            position: fixed;
+            bottom: 80px;
+            right: var(--spacing-lg);
+            z-index: 999;
+        }
+        
+        .fab {
+            width: 56px;
+            height: 56px;
+            border-radius: 28px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .fab:active {
+            transform: scale(0.95);
+        }
+        
+        /* Hidden class */
+        .hidden {
+            display: none !important;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 375px) {
+            .mobile-card,
+            .mobile-list,
+            .stats-grid {
+                margin: var(--spacing-sm);
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Mobile Header -->
+    <div class="mobile-header">
+        <div class="logo">Hey Spruce</div>
+        <div class="user-info">
+            <button class="notification-btn" onclick="showNotifications()">
+                🔔
+                <span class="notification-badge" id="notificationCount">3</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Mobile Content -->
+    <div class="mobile-content" id="mobileContent">
+        <!-- Dashboard View (Default) -->
+        <div id="dashboardView" class="mobile-view">
+            <!-- Quick Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value">12</div>
+                    <div class="stat-label">Active Work Orders</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">3</div>
+                    <div class="stat-label">Pending Approvals</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">$2,850</div>
+                    <div class="stat-label">This Month</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">8</div>
+                    <div class="stat-label">Locations</div>
+                </div>
+            </div>
+
+            <!-- Recent Work Orders -->
+            <div class="mobile-card">
+                <div class="card-header">
+                    <div class="card-title">Recent Work Orders</div>
+                    <button class="btn-mobile secondary" onclick="showAllWorkOrders()">View All</button>
+                </div>
+                <div class="card-content">
+                    <div class="list-item" onclick="viewWorkOrder('WO-2024-1523')">
+                        <div class="icon" style="background: var(--danger);">🔧</div>
+                        <div class="content">
+                            <div class="title">HVAC Emergency Repair</div>
+                            <div class="subtitle">McDonald's - Sunset Blvd</div>
+                        </div>
+                        <div class="meta">
+                            <div class="status-badge urgent">Urgent</div>
+                            <div style="font-size: 0.75rem; color: var(--gray-500); margin-top: 0.25rem;">2 hours ago</div>
+                        </div>
+                    </div>
+                    
+                    <div class="list-item" onclick="viewWorkOrder('WO-2024-1522')">
+                        <div class="icon" style="background: var(--warning);">🚿</div>
+                        <div class="content">
+                            <div class="title">Plumbing Maintenance</div>
+                            <div class="subtitle">Burger King - Melrose</div>
+                        </div>
+                        <div class="meta">
+                            <div class="status-badge in-progress">In Progress</div>
+                            <div style="font-size: 0.75rem; color: var(--gray-500); margin-top: 0.25rem;">4 hours ago</div>
+                        </div>
+                    </div>
+                    
+                    <div class="list-item" onclick="viewWorkOrder('WO-2024-1521')">
+                        <div class="icon" style="background: var(--success);">✅</div>
+                        <div class="content">
+                            <div class="title">Deep Cleaning Service</div>
+                            <div class="subtitle">Delilah LA</div>
+                        </div>
+                        <div class="meta">
+                            <div class="status-badge completed">Completed</div>
+                            <div style="font-size: 0.75rem; color: var(--gray-500); margin-top: 0.25rem;">1 day ago</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="mobile-card">
+                <div class="card-header">
+                    <div class="card-title">Quick Actions</div>
+                </div>
+                <div class="card-content">
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--spacing-md);">
+                        <button class="btn-mobile primary" onclick="createServiceRequest()">
+                            + New Request
+                        </button>
+                        <button class="btn-mobile secondary" onclick="showView('messages')">
+                            💬 Messages
+                        </button>
+                        <button class="btn-mobile secondary" onclick="showEmergencyContact()">
+                            🚨 Emergency
+                        </button>
+                        <button class="btn-mobile secondary" onclick="showView('locations')">
+                            📍 Locations
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Work Orders View -->
+        <div id="workOrdersView" class="mobile-view hidden">
+            <div class="mobile-list">
+                <div class="list-item" onclick="viewWorkOrder('WO-2024-1523')">
+                    <div class="icon" style="background: var(--danger);">🔧</div>
+                    <div class="content">
+                        <div class="title">HVAC Emergency Repair</div>
+                        <div class="subtitle">McDonald's - Sunset • CoolAir HVAC</div>
+                    </div>
+                    <div class="meta">
+                        <div class="status-badge urgent">Urgent</div>
+                        <div style="font-size: 0.75rem; color: var(--gray-500); margin-top: 0.25rem;">$8,500</div>
+                    </div>
+                </div>
+                
+                <div class="list-item" onclick="viewWorkOrder('WO-2024-1522')">
+                    <div class="icon" style="background: var(--warning);">🚿</div>
+                    <div class="content">
+                        <div class="title">Plumbing Maintenance</div>
+                        <div class="subtitle">Burger King - Melrose • Elite Plumbing</div>
+                    </div>
+                    <div class="meta">
+                        <div class="status-badge in-progress">In Progress</div>
+                        <div style="font-size: 0.75rem; color: var(--gray-500); margin-top: 0.25rem;">$875</div>
+                    </div>
+                </div>
+                
+                <div class="list-item" onclick="viewWorkOrder('WO-2024-1521')">
+                    <div class="icon" style="background: var(--success);">✅</div>
+                    <div class="content">
+                        <div class="title">Deep Cleaning Service</div>
+                        <div class="subtitle">Delilah LA • Sparkle Clean Pro</div>
+                    </div>
+                    <div class="meta">
+                        <div class="status-badge completed">Completed</div>
+                        <div style="font-size: 0.75rem; color: var(--gray-500); margin-top: 0.25rem;">$1,200</div>
+                    </div>
+                </div>
+                
+                <div class="list-item" onclick="viewWorkOrder('WO-2024-1520')">
+                    <div class="icon" style="background: var(--info);">⚡</div>
+                    <div class="content">
+                        <div class="title">Electrical Inspection</div>
+                        <div class="subtitle">The Nice Guy • PowerPro Electric</div>
+                    </div>
+                    <div class="meta">
+                        <div class="status-badge scheduled">Scheduled</div>
+                        <div style="font-size: 0.75rem; color: var(--gray-500); margin-top: 0.25rem;">$450</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Messages View -->
+        <div id="messagesView" class="mobile-view hidden">
+            <div class="mobile-list">
+                <div class="list-item" onclick="openConversation('coolair-hvac')">
+                    <div class="icon" style="background: var(--primary);">CS</div>
+                    <div class="content">
+                        <div class="title">CoolAir HVAC Services</div>
+                        <div class="subtitle">"We're running 15 minutes late due to traffic..."</div>
+                    </div>
+                    <div class="meta">
+                        <div class="notification-badge">2</div>
+                        <div style="font-size: 0.75rem; color: var(--gray-500); margin-top: 0.25rem;">2m ago</div>
+                    </div>
+                </div>
+                
+                <div class="list-item" onclick="openConversation('elite-plumbing')">
+                    <div class="icon" style="background: var(--warning);">EP</div>
+                    <div class="content">
+                        <div class="title">Elite Plumbing Solutions</div>
+                        <div class="subtitle">"Job completed. Please review when convenient."</div>
+                    </div>
+                    <div class="meta">
+                        <div style="font-size: 0.75rem; color: var(--gray-500);">1h ago</div>
+                    </div>
+                </div>
+                
+                <div class="list-item" onclick="openConversation('emergency-team')">
+                    <div class="icon" style="background: var(--danger);">🚨</div>
+                    <div class="content">
+                        <div class="title">Emergency Repair Team</div>
+                        <div class="subtitle">"Emergency resolved. Full report attached."</div>
+                    </div>
+                    <div class="meta">
+                        <div style="font-size: 0.75rem; color: var(--gray-500);">3h ago</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Locations View -->
+        <div id="locationsView" class="mobile-view hidden">
+            <div class="mobile-list">
+                <div class="list-item" onclick="viewLocation('mcdonalds-sunset')">
+                    <div class="icon" style="background: var(--warning);">🍔</div>
+                    <div class="content">
+                        <div class="title">McDonald's - Sunset</div>
+                        <div class="subtitle">6801 Sunset Blvd, Los Angeles</div>
+                    </div>
+                    <div class="meta">
+                        <div class="status-badge in-progress">2 Active</div>
+                    </div>
+                </div>
+                
+                <div class="list-item" onclick="viewLocation('burger-king-melrose')">
+                    <div class="icon" style="background: var(--success);">👑</div>
+                    <div class="content">
+                        <div class="title">Burger King - Melrose</div>
+                        <div class="subtitle">7511 Melrose Ave, Los Angeles</div>
+                    </div>
+                    <div class="meta">
+                        <div class="status-badge completed">All Good</div>
+                    </div>
+                </div>
+                
+                <div class="list-item" onclick="viewLocation('delilah-la')">
+                    <div class="icon" style="background: var(--primary);">🍸</div>
+                    <div class="content">
+                        <div class="title">Delilah LA</div>
+                        <div class="subtitle">7969 Santa Monica Blvd</div>
+                    </div>
+                    <div class="meta">
+                        <div class="status-badge scheduled">1 Scheduled</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile View -->
+        <div id="profileView" class="mobile-view hidden">
+            <div class="mobile-card">
+                <div class="card-header">
+                    <div class="card-title">Account Settings</div>
+                </div>
+                <div class="card-content">
+                    <div class="list-item" onclick="editProfile()">
+                        <div class="icon" style="background: var(--primary);">👤</div>
+                        <div class="content">
+                            <div class="title">Profile Information</div>
+                            <div class="subtitle">Update your personal details</div>
+                        </div>
+                    </div>
+                    
+                    <div class="list-item" onclick="notificationSettings()">
+                        <div class="icon" style="background: var(--warning);">🔔</div>
+                        <div class="content">
+                            <div class="title">Notifications</div>
+                            <div class="subtitle">Manage your alert preferences</div>
+                        </div>
+                    </div>
+                    
+                    <div class="list-item" onclick="emergencyContacts()">
+                        <div class="icon" style="background: var(--danger);">🚨</div>
+                        <div class="content">
+                            <div class="title">Emergency Contacts</div>
+                            <div class="subtitle">24/7 support numbers</div>
+                        </div>
+                    </div>
+                    
+                    <div class="list-item" onclick="appSettings()">
+                        <div class="icon" style="background: var(--info);">⚙️</div>
+                        <div class="content">
+                            <div class="title">App Settings</div>
+                            <div class="subtitle">Preferences and privacy</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="padding: var(--spacing-lg);">
+                <button class="btn-mobile danger" onclick="signOut()" style="width: 100%;">
+                    Sign Out
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Action Button -->
+    <div class="action-buttons">
+        <button class="fab" onclick="createServiceRequest()" title="New Service Request">
+            +
+        </button>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <a class="nav-item active" onclick="showView('dashboard')">
+            <div class="icon">🏠</div>
+            <div>Home</div>
+        </a>
+        <a class="nav-item" onclick="showView('work-orders')">
+            <div class="icon">📋</div>
+            <div>Orders</div>
+            <span class="notification-badge" style="position: absolute; top: 0.25rem; right: 1rem;">12</span>
+        </a>
+        <a class="nav-item" onclick="showView('messages')">
+            <div class="icon">💬</div>
+            <div>Messages</div>
+            <span class="notification-badge" style="position: absolute; top: 0.25rem; right: 1rem;">3</span>
+        </a>
+        <a class="nav-item" onclick="showView('locations')">
+            <div class="icon">📍</div>
+            <div>Locations</div>
+        </a>
+        <a class="nav-item" onclick="showView('profile')">
+            <div class="icon">👤</div>
+            <div>Profile</div>
+        </a>
+    </div>
+
+    <script>
+        // Mobile App JavaScript
+        function showView(viewName) {
+            // Hide all views
+            document.querySelectorAll('.mobile-view').forEach(view => {
+                view.classList.add('hidden');
+            });
+            
+            // Remove active state from all nav items
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Show selected view
+            const viewId = viewName === 'work-orders' ? 'workOrdersView' : 
+                          viewName === 'messages' ? 'messagesView' :
+                          viewName === 'locations' ? 'locationsView' :
+                          viewName === 'profile' ? 'profileView' : 'dashboardView';
+            
+            document.getElementById(viewId).classList.remove('hidden');
+            
+            // Activate corresponding nav item
+            const navItems = document.querySelectorAll('.nav-item');
+            const index = viewName === 'dashboard' ? 0 :
+                         viewName === 'work-orders' ? 1 :
+                         viewName === 'messages' ? 2 :
+                         viewName === 'locations' ? 3 : 4;
+            
+            navItems[index].classList.add('active');
+        }
+        
+        function showAllWorkOrders() {
+            showView('work-orders');
+        }
+        
+        function viewWorkOrder(workOrderId) {
+            showToast(`Opening work order ${workOrderId}`, 'info');
+            // In a real app, this would open a detailed view
+        }
+        
+        function createServiceRequest() {
+            showToast('Opening new service request form...', 'info');
+            // In a real app, this would open a modal or new screen
+        }
+        
+        function showNotifications() {
+            showToast('Opening notifications...', 'info');
+            // Reset notification count
+            document.getElementById('notificationCount').textContent = '0';
+            document.getElementById('notificationCount').style.display = 'none';
+        }
+        
+        function openConversation(conversationId) {
+            showToast(`Opening conversation with ${conversationId}`, 'info');
+            // In a real app, this would open the chat interface
+        }
+        
+        function viewLocation(locationId) {
+            showToast(`Opening location details for ${locationId}`, 'info');
+            // In a real app, this would show location details
+        }
+        
+        function showEmergencyContact() {
+            alert('Emergency Hotline: 1-800-HEY-SPRUCE\n\nFor immediate assistance, call now or use the emergency chat feature.');
+        }
+        
+        function editProfile() {
+            showToast('Opening profile editor...', 'info');
+        }
+        
+        function notificationSettings() {
+            showToast('Opening notification settings...', 'info');
+        }
+        
+        function emergencyContacts() {
+            showToast('Loading emergency contacts...', 'info');
+        }
+        
+        function appSettings() {
+            showToast('Opening app settings...', 'info');
+        }
+        
+        function signOut() {
+            if (confirm('Are you sure you want to sign out?')) {
+                // Clear session
+                localStorage.removeItem('userSession');
+                sessionStorage.removeItem('userSession');
+                // Redirect to login
+                window.location.href = 'login.html';
+            }
+        }
+        
+        // Toast notification system
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                top: 80px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: ${type === 'error' ? 'var(--danger)' : type === 'success' ? 'var(--success)' : 'var(--info)'};
+                color: white;
+                padding: 0.75rem 1.5rem;
+                border-radius: 8px;
+                font-size: 0.875rem;
+                font-weight: 500;
+                z-index: 3000;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                animation: slideDown 0.3s ease;
+            `;
+            toast.textContent = message;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'slideUp 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+        
+        // Add CSS animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideDown {
+                from { transform: translateX(-50%) translateY(-100%); }
+                to { transform: translateX(-50%) translateY(0); }
+            }
+            @keyframes slideUp {
+                from { transform: translateX(-50%) translateY(0); }
+                to { transform: translateX(-50%) translateY(-100%); }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            showView('dashboard');
+        });
+        
+        // Handle hardware back button (Android)
+        document.addEventListener('backbutton', function(e) {
+            e.preventDefault();
+            // Handle back navigation
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hey Spruce - Field Tech</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+        
+        :root {
+            /* Hey Spruce Brand Colors - Matching Web */
+            --primary: #10b981;
+            --primary-dark: #059669;
+            --primary-light: #d1fae5;
+            --secondary: #f59e0b;
+            --secondary-dark: #d97706;
+            --secondary-light: #fed7aa;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #3b82f6;
+            
+            /* Field-focused colors */
+            --field-active: #22c55e;
+            --field-warning: #f59e0b;
+            --field-danger: #ef4444;
+            --field-gray: #6b7280;
+            
+            /* Mobile-first Gray Scale */
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+            
+            /* Mobile Spacing */
+            --spacing-xs: 0.25rem;
+            --spacing-sm: 0.5rem;
+            --spacing-md: 1rem;
+            --spacing-lg: 1.5rem;
+            --spacing-xl: 2rem;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--gray-50);
+            color: var(--gray-900);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        /* Mobile App Header */
+        .mobile-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: white;
+            border-bottom: 2px solid var(--primary);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            padding: 0 1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .dropdown-menu a:hover {
+            background: var(--gray-50);
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .spruce-logo {
+            width: 40px;
+            height: 40px;
+            background: #1e3a5f;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .mobile-header .app-title {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.2;
+        }
+        
+        .mobile-header .app-title .brand {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .mobile-header .app-title .portal {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--gray-600);
+        }
+        
+        .mobile-header .status-indicator {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            position: relative;
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--field-active);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .notification-btn {
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+            color: var(--gray-700);
+            padding: 0.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            position: relative;
+            margin-right: 1rem;
+        }
+        
+        .notification-btn:hover {
+            background: var(--gray-100);
+        }
+        
+        .notification-btn .notification-badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--danger);
+            color: white;
+            font-size: 0.7rem;
+            padding: 0.125rem 0.25rem;
+            border-radius: 10px;
+            min-width: 16px;
+            text-align: center;
+        }
+        
+        .company-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--gray-50);
+            border-radius: 20px;
+            border: 1px solid var(--gray-200);
+        }
+        
+        .company-badge span {
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: var(--gray-700);
+        }
+        
+        /* Mobile Content */
+        .mobile-content {
+            margin-top: 60px;
+            min-height: calc(100vh - 120px);
+            padding-bottom: 60px;
+        }
+        
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: white;
+            border-top: 1px solid var(--gray-200);
+            display: flex;
+            z-index: 1000;
+            box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray-500);
+            text-decoration: none;
+            font-size: 0.75rem;
+            font-weight: 500;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .nav-item.active {
+            color: var(--primary);
+        }
+        
+        .nav-item .icon {
+            font-size: 1.25rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        /* Mobile Cards */
+        .mobile-card {
+            background: white;
+            border-radius: 12px;
+            margin: var(--spacing-md);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .card-header {
+            padding: var(--spacing-lg);
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .card-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+        
+        .card-content {
+            padding: var(--spacing-lg);
+        }
+        
+        /* Field-specific buttons */
+        .btn-field {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.875rem;
+            min-height: 44px;
+        }
+        
+        .btn-field.start {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-field.start:hover {
+            background: var(--primary-dark);
+        }
+        
+        .btn-field.complete {
+            background: var(--success);
+            color: white;
+        }
+        
+        .btn-field.complete:hover {
+            background: #059669;
+        }
+        
+        .btn-field.emergency {
+            background: var(--danger);
+            color: white;
+        }
+        
+        .btn-field.secondary {
+            background: var(--gray-100);
+            color: var(--gray-700);
+            border: 1px solid var(--gray-300);
+        }
+        
+        .btn-field.secondary:hover {
+            background: var(--gray-200);
+        }
+        
+        /* Job Status Cards */
+        .job-card {
+            background: white;
+            border-radius: 12px;
+            margin: var(--spacing-md);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+            border-left: 4px solid var(--gray-300);
+        }
+        
+        .job-card.urgent {
+            border-left-color: var(--danger);
+            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.1);
+        }
+        
+        .job-card.active {
+            border-left-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
+        }
+        
+        .job-header {
+            padding: var(--spacing-lg);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        
+        .job-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 0.5rem;
+        }
+        
+        .job-location {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            margin-bottom: 0.5rem;
+        }
+        
+        .job-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.75rem;
+            color: var(--gray-500);
+        }
+        
+        .priority-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .priority-badge.urgent { 
+            background: var(--danger); 
+            color: white; 
+        }
+        
+        .priority-badge.normal { 
+            background: var(--primary); 
+            color: white; 
+        }
+        
+        .priority-badge.scheduled { 
+            background: var(--info); 
+            color: white; 
+        }
+        
+        /* Action buttons for jobs */
+        .job-actions {
+            padding: 0 var(--spacing-lg) var(--spacing-lg) var(--spacing-lg);
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        /* Timer display */
+        .active-timer {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: var(--spacing-lg);
+            margin: var(--spacing-md);
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+        }
+        
+        .timer-display {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .timer-job {
+            font-size: 0.875rem;
+            opacity: 0.9;
+        }
+        
+        /* Photo upload area */
+        .photo-upload {
+            border: 2px dashed var(--gray-300);
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            margin: var(--spacing-md) 0;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .photo-upload:hover {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+        
+        .photo-upload.has-photos {
+            border-color: var(--field-active);
+            background: var(--success-light);
+        }
+        
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        .photo-thumb {
+            aspect-ratio: 1;
+            background: var(--gray-200);
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .photo-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .photo-thumb .remove-btn {
+            position: absolute;
+            top: 0.25rem;
+            right: 0.25rem;
+            background: var(--field-danger);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 0.75rem;
+            cursor: pointer;
+        }
+        
+        /* Signature pad */
+        .signature-pad {
+            border: 1px solid var(--gray-300);
+            border-radius: 8px;
+            background: white;
+            cursor: crosshair;
+            margin: var(--spacing-md) 0;
+        }
+        
+        /* GPS location display */
+        .location-info {
+            background: var(--info-light);
+            padding: var(--spacing-md);
+            border-radius: 8px;
+            margin: var(--spacing-md) 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .location-info .icon {
+            color: var(--info);
+        }
+        
+        /* Stats for field workers */
+        .field-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--spacing-md);
+            margin: var(--spacing-md);
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: var(--spacing-lg);
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.25rem;
+        }
+        
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--gray-600);
+            font-weight: 500;
+        }
+        
+        /* Notification badge */
+        .notification-badge {
+            position: absolute;
+            top: 0.25rem;
+            right: 0.25rem;
+            background: var(--field-danger);
+            color: white;
+            font-size: 0.75rem;
+            padding: 0.125rem 0.375rem;
+            border-radius: 10px;
+            min-width: 18px;
+            text-align: center;
+        }
+        
+        /* Emergency button */
+        .emergency-fab {
+            position: fixed;
+            bottom: 80px;
+            right: var(--spacing-lg);
+            z-index: 999;
+            width: 56px;
+            height: 56px;
+            border-radius: 28px;
+            background: var(--danger);
+            color: white;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        
+        .emergency-fab:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);
+        }
+        
+        .emergency-fab:active {
+            transform: scale(0.95);
+        }
+        
+        /* Hidden class */
+        .hidden {
+            display: none !important;
+        }
+        
+        /* Form styles */
+        .form-group {
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .form-label {
+            display: block;
+            font-weight: 600;
+            color: var(--gray-700);
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--gray-300);
+            border-radius: 8px;
+            font-size: 1rem;
+            min-height: 44px;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        textarea.form-input {
+            min-height: 120px;
+            resize: vertical;
+        }
+    </style>
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="subcontractor-manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Hey Spruce Vendor">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Ccircle cx='96' cy='96' r='96' fill='%231e3a5f'/%3E%3Ctext x='96' y='75' text-anchor='middle' fill='white' font-family='serif' font-size='40' font-weight='bold'%3EHey%3C/text%3E%3Ctext x='96' y='115' text-anchor='middle' fill='white' font-family='serif' font-size='40' font-weight='bold'%3ESpruce%3C/text%3E%3C/svg%3E">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Ccircle cx='96' cy='96' r='96' fill='%231e3a5f'/%3E%3Ctext x='96' y='75' text-anchor='middle' fill='white' font-family='serif' font-size='40' font-weight='bold'%3EHey%3C/text%3E%3Ctext x='96' y='115' text-anchor='middle' fill='white' font-family='serif' font-size='40' font-weight='bold'%3ESpruce%3C/text%3E%3C/svg%3E">
+    <meta name="theme-color" content="#1e3a5f">
+</head>
+<body>
+    <!-- Mobile Header -->
+    <div class="mobile-header">
+        <div class="logo-container">
+            <div class="spruce-logo">
+                <svg width="36" height="36" viewBox="0 0 100 100">
+                    <style>
+                        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap');
+                    </style>
+                    <text x="50" y="40" text-anchor="middle" style="font-family: 'Dancing Script', cursive; font-size: 26px; fill: white; font-weight: 700;">Hey</text>
+                    <text x="50" y="65" text-anchor="middle" style="font-family: 'Dancing Script', cursive; font-size: 26px; fill: white; font-weight: 700;">Spruce</text>
+                </svg>
+            </div>
+            <div class="app-title">
+                <span class="brand">Hey Spruce</span>
+                <span class="portal">Vendor Portal</span>
+            </div>
+        </div>
+        <div class="status-indicator">
+            <button class="notification-btn" onclick="showNotifications()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                </svg>
+                <span class="notification-badge">4</span>
+            </button>
+            <div class="company-badge" onclick="toggleCompanyMenu()" style="cursor: pointer; background: var(--gray-100); padding: 0.5rem 0.75rem; border-radius: 6px; font-size: 0.875rem; font-weight: 500; display: flex; align-items: center; max-width: 150px;">
+                <span id="companyName" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">TechPro</span>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left: 0.25rem; flex-shrink: 0;">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+            </div>
+            <!-- Company Dropdown Menu -->
+            <div id="companyMenu" class="dropdown-menu" style="display: none; position: absolute; top: 100%; right: 1rem; margin-top: 0.5rem; background: white; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); min-width: 200px; z-index: 1001;">
+                <a onclick="viewCompanyProfile()" style="display: block; padding: 0.75rem 1rem; color: var(--gray-700); text-decoration: none; border-bottom: 1px solid var(--gray-200); cursor: pointer;">
+                    <div style="font-weight: 600;">Company Profile</div>
+                    <div style="font-size: 0.75rem; color: var(--gray-500);">View & edit company info</div>
+                </a>
+                <a onclick="appSettings()" style="display: block; padding: 0.75rem 1rem; color: var(--gray-700); text-decoration: none; border-bottom: 1px solid var(--gray-200); cursor: pointer;">
+                    <div style="font-weight: 600;">Settings</div>
+                    <div style="font-size: 0.75rem; color: var(--gray-500);">App preferences</div>
+                </a>
+                <a onclick="signOut()" style="display: block; padding: 0.75rem 1rem; color: var(--danger); text-decoration: none; cursor: pointer;">
+                    <div style="font-weight: 600;">Sign Out</div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Content -->
+    <div class="mobile-content" id="mobileContent">
+        <!-- Dashboard View (Default) -->
+        <div id="dashboardView" class="mobile-view">
+
+            <!-- Vendor Stats -->
+            <div class="field-stats">
+                <div class="stat-card">
+                    <div class="stat-value">8</div>
+                    <div class="stat-label">Open Bids</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">3</div>
+                    <div class="stat-label">Work Orders</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">$24.5K</div>
+                    <div class="stat-label">Pending</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">4.9</div>
+                    <div class="stat-label">Rating</div>
+                </div>
+            </div>
+
+            <!-- Bidding Opportunities -->
+            <h2 style="padding: 0 1rem; margin: 1rem 0 0.5rem; font-size: 1.125rem; font-weight: 600; color: var(--gray-800);">New Opportunities</h2>
+            <div class="job-card urgent">
+                <div class="job-header">
+                    <div>
+                        <div class="job-title">HVAC System Replacement - Urgent</div>
+                        <div class="job-location">Burger King - Downtown</div>
+                        <div class="job-meta">
+                            <span>Bid closes: 2 hours</span>
+                            <span>Est: $15-20K</span>
+                            <span>HVAC</span>
+                        </div>
+                    </div>
+                    <div class="priority-badge urgent">URGENT</div>
+                </div>
+                <div class="job-actions">
+                    <button class="btn-field start" onclick="submitBid('RFP-2024-1523')" style="flex: 1;">
+                        Submit Bid
+                    </button>
+                    <button class="btn-field secondary" onclick="viewRFP('RFP-2024-1523')">
+                        View RFP
+                    </button>
+                </div>
+            </div>
+
+            <div class="job-card">
+                <div class="job-header">
+                    <div>
+                        <div class="job-title">Quarterly Plumbing Maintenance Contract</div>
+                        <div class="job-location">10 Restaurant Locations</div>
+                        <div class="job-meta">
+                            <span>Bid closes: Tomorrow</span>
+                            <span>Est: $45K/year</span>
+                            <span>Plumbing</span>
+                        </div>
+                    </div>
+                    <div class="priority-badge scheduled">NEW</div>
+                </div>
+                <div class="job-actions">
+                    <button class="btn-field start" onclick="submitBid('RFP-2024-1522')" style="flex: 1;">
+                        Submit Bid
+                    </button>
+                    <button class="btn-field secondary" onclick="viewRFP('RFP-2024-1522')">
+                        View RFP
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Work Orders -->
+            <h2 style="padding: 0 1rem; margin: 2rem 0 0.5rem; font-size: 1.125rem; font-weight: 600; color: var(--gray-800);">Work Orders</h2>
+            
+            <div class="job-card active">
+                <div class="job-header">
+                    <div>
+                        <div class="job-title">Kitchen Exhaust Cleaning</div>
+                        <div class="job-location">The Nice Guy Restaurant</div>
+                        <div class="job-meta">
+                            <span>In Progress</span>
+                            <span>$3,500</span>
+                            <span>Invoice: Pending</span>
+                        </div>
+                    </div>
+                    <div class="priority-badge normal">ACTIVE</div>
+                </div>
+                <div class="job-actions">
+                    <button class="btn-field complete" onclick="completeJob('WO-2024-1520')" style="flex: 1;">
+                        Mark Complete
+                    </button>
+                    <button class="btn-field secondary" onclick="createInvoice('WO-2024-1520')">
+                        Invoice
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Work Orders View -->
+        <div id="workOrdersView" class="mobile-view hidden">
+            <div class="mobile-card">
+                <div class="card-header">
+                    <div class="card-title">Work Orders</div>
+                    <select class="form-input" style="width: auto; padding: 0.5rem;">
+                        <option>All Status</option>
+                        <option>In Progress</option>
+                        <option>Pending</option>
+                        <option>Completed</option>
+                        <option>On Hold</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Active Work Orders -->
+            <div class="job-card active">
+                <div class="job-header">
+                    <div>
+                        <div class="job-title">WO-2024-1520 - Kitchen Exhaust Cleaning</div>
+                        <div class="job-location">The Nice Guy Restaurant</div>
+                        <div class="job-meta">
+                            <span>Started: Dec 20</span>
+                            <span>Due: Dec 22</span>
+                            <span>$3,500</span>
+                        </div>
+                    </div>
+                    <div class="priority-badge normal">IN PROGRESS</div>
+                </div>
+                <div class="job-actions">
+                    <button class="btn-field complete" onclick="updateWorkOrder('WO-2024-1520')" style="flex: 1;">
+                        Update Status
+                    </button>
+                    <button class="btn-field secondary" onclick="viewWorkOrder('WO-2024-1520')">
+                        Details
+                    </button>
+                </div>
+            </div>
+            
+            <div class="job-card">
+                <div class="job-header">
+                    <div>
+                        <div class="job-title">WO-2024-1518 - Quarterly HVAC Maintenance</div>
+                        <div class="job-location">McDonald's - Sunset Blvd</div>
+                        <div class="job-meta">
+                            <span>Scheduled: Dec 23</span>
+                            <span>Recurring</span>
+                            <span>$1,200</span>
+                        </div>
+                    </div>
+                    <div class="priority-badge scheduled">SCHEDULED</div>
+                </div>
+                <div class="job-actions">
+                    <button class="btn-field start" onclick="startWorkOrder('WO-2024-1518')" style="flex: 1;">
+                        Start Work
+                    </button>
+                    <button class="btn-field secondary" onclick="viewWorkOrder('WO-2024-1518')">
+                        Details
+                    </button>
+                </div>
+            </div>
+            
+            <div class="job-card">
+                <div class="job-header">
+                    <div>
+                        <div class="job-title">WO-2024-1515 - Plumbing Repair</div>
+                        <div class="job-location">Burger King - Melrose</div>
+                        <div class="job-meta">
+                            <span>Completed: Dec 18</span>
+                            <span>Invoice: Pending</span>
+                            <span>$875</span>
+                        </div>
+                    </div>
+                    <div class="priority-badge" style="background: var(--success); color: white;">COMPLETED</div>
+                </div>
+                <div class="job-actions">
+                    <button class="btn-field start" onclick="createInvoice('WO-2024-1515')" style="flex: 1;">
+                        Create Invoice
+                    </button>
+                    <button class="btn-field secondary" onclick="viewWorkOrder('WO-2024-1515')">
+                        Details
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Bids View -->
+        <div id="bidsView" class="mobile-view hidden">
+            <div class="mobile-card">
+                <div class="card-header">
+                    <div class="card-title">Bidding Opportunities</div>
+                    <select class="form-input" style="width: auto; padding: 0.5rem;">
+                        <option>All Categories</option>
+                        <option>HVAC</option>
+                        <option>Plumbing</option>
+                        <option>Electrical</option>
+                        <option>Maintenance</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Bid opportunities list -->
+            <div class="job-card urgent">
+                <div class="job-header">
+                    <div>
+                        <div class="job-title">Emergency HVAC Replacement</div>
+                        <div class="job-location">Wendy's - Pacific Coast</div>
+                        <div class="job-meta">
+                            <span>Closes: 4 hours</span>
+                            <span>Budget: $25-30K</span>
+                            <span>3 Bidders</span>
+                        </div>
+                    </div>
+                    <div class="priority-badge urgent">HOT</div>
+                </div>
+                <div class="job-actions">
+                    <button class="btn-field start" onclick="submitBid('RFP-2024-1525')" style="flex: 1;">
+                        Submit Bid
+                    </button>
+                </div>
+            </div>
+            
+            <div class="job-card">
+                <div class="job-header">
+                    <div>
+                        <div class="job-title">Annual Maintenance Contract</div>
+                        <div class="job-location">15 Locations - LA County</div>
+                        <div class="job-meta">
+                            <span>Closes: 3 days</span>
+                            <span>Budget: $120K/year</span>
+                            <span>7 Bidders</span>
+                        </div>
+                    </div>
+                    <div class="priority-badge scheduled">CONTRACT</div>
+                </div>
+                <div class="job-actions">
+                    <button class="btn-field start" onclick="submitBid('RFP-2024-1526')" style="flex: 1;">
+                        Submit Bid
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Billing View (Combined Invoices & Payments) -->
+        <div id="billingView" class="mobile-view hidden">
+            <div class="mobile-card">
+                <div class="card-header">
+                    <div class="card-title">Billing & Payments</div>
+                    <button class="btn-field start" onclick="createNewInvoice()" style="padding: 0.5rem 1rem;">+ New Invoice</button>
+                </div>
+                <div class="card-content">
+                    <!-- Payment Summary -->
+                    <div style="background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;">
+                        <div style="font-size: 0.875rem; opacity: 0.9; margin-bottom: 0.5rem;">Total Outstanding</div>
+                        <div style="font-size: 2rem; font-weight: 700; margin-bottom: 1rem;">$24,450</div>
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; font-size: 0.875rem;">
+                            <div>
+                                <div style="opacity: 0.9;">Pending Invoices</div>
+                                <div style="font-weight: 600;">$11,700</div>
+                            </div>
+                            <div>
+                                <div style="opacity: 0.9;">Next Payout</div>
+                                <div style="font-weight: 600;">Dec 30</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Pending Invoices -->
+                    <h3 style="font-size: 1rem; margin-bottom: 1rem; color: var(--gray-700);">Pending Invoices</h3>
+                    <div style="background: var(--gray-50); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem;">
+                            <div>
+                                <div style="font-weight: 600;">INV-2024-0892</div>
+                                <div style="font-size: 0.875rem; color: var(--gray-600);">McDonald's - HVAC Repair</div>
+                            </div>
+                            <div style="text-align: right;">
+                                <div style="font-weight: 600; color: var(--primary);">$8,500</div>
+                                <div style="font-size: 0.75rem; color: var(--warning);">Pending</div>
+                            </div>
+                        </div>
+                        <button class="btn-field secondary" onclick="viewInvoice('INV-2024-0892')" style="width: 100%; margin-top: 0.5rem;">View Details</button>
+                    </div>
+                    
+                    <div style="background: var(--gray-50); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem;">
+                            <div>
+                                <div style="font-weight: 600;">INV-2024-0891</div>
+                                <div style="font-size: 0.875rem; color: var(--gray-600);">Burger King - Plumbing</div>
+                            </div>
+                            <div style="text-align: right;">
+                                <div style="font-weight: 600; color: var(--primary);">$3,200</div>
+                                <div style="font-size: 0.75rem; color: var(--warning);">Pending</div>
+                            </div>
+                        </div>
+                        <button class="btn-field secondary" onclick="viewInvoice('INV-2024-0891')" style="width: 100%; margin-top: 0.5rem;">View Details</button>
+                    </div>
+                    
+                    <!-- Recent Payments -->
+                    <h3 style="font-size: 1rem; margin: 1.5rem 0 1rem; color: var(--gray-700);">Recent Payments</h3>
+                    <div style="background: var(--gray-50); padding: 1rem; border-radius: 8px; margin-bottom: 0.75rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <div style="font-weight: 600;">Payment #4892</div>
+                                <div style="font-size: 0.875rem; color: var(--gray-600);">INV-2024-0890 - Electrical</div>
+                            </div>
+                            <div style="font-weight: 600; color: var(--success);">+$5,750</div>
+                        </div>
+                    </div>
+                    
+                    <div style="background: var(--gray-50); padding: 1rem; border-radius: 8px; margin-bottom: 0.75rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <div style="font-weight: 600;">Payment #4877</div>
+                                <div style="font-size: 0.875rem; color: var(--gray-600);">INV-2024-0885 - HVAC</div>
+                            </div>
+                            <div style="font-weight: 600; color: var(--success);">+$12,300</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Payment Methods -->
+                    <h3 style="font-size: 1rem; margin: 1.5rem 0 1rem; color: var(--gray-700);">Payment Settings</h3>
+                    <button class="btn-field secondary" onclick="manageBankAccount()" style="width: 100%; margin-bottom: 0.75rem;">
+                        Bank Account ****4892
+                    </button>
+                    <button class="btn-field secondary" onclick="viewPaymentHistory()" style="width: 100%;">
+                        View Full History
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat View -->
+        <div id="chatView" class="mobile-view hidden">
+            <div class="mobile-card">
+                <div class="card-header">
+                    <div class="card-title">Messages</div>
+                    <button class="btn-field start" onclick="newMessage()" style="padding: 0.5rem 1rem;">+ New</button>
+                </div>
+                <div class="card-content" style="padding: 0;">
+                    <!-- Chat List -->
+                    <div class="chat-list">
+                        <div class="chat-item" onclick="openChat('dispatch')" style="display: flex; align-items: center; padding: 1rem; border-bottom: 1px solid var(--gray-200); cursor: pointer;">
+                            <div style="width: 48px; height: 48px; border-radius: 24px; background: var(--primary); display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; margin-right: 1rem;">HS</div>
+                            <div style="flex: 1;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+                                    <div style="font-weight: 600;">Hey Spruce Dispatch</div>
+                                    <div style="font-size: 0.75rem; color: var(--gray-500);">2m ago</div>
+                                </div>
+                                <div style="font-size: 0.875rem; color: var(--gray-600);">New work order WO-2024-1525 assigned</div>
+                            </div>
+                            <div style="width: 8px; height: 8px; background: var(--danger); border-radius: 50%; margin-left: 0.5rem;"></div>
+                        </div>
+                        
+                        <div class="chat-item" onclick="openChat('client-mcdonalds')" style="display: flex; align-items: center; padding: 1rem; border-bottom: 1px solid var(--gray-200); cursor: pointer;">
+                            <div style="width: 48px; height: 48px; border-radius: 24px; background: var(--secondary); display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; margin-right: 1rem;">MD</div>
+                            <div style="flex: 1;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+                                    <div style="font-weight: 600;">McDonald's - Sunset</div>
+                                    <div style="font-size: 0.75rem; color: var(--gray-500);">1h ago</div>
+                                </div>
+                                <div style="font-size: 0.875rem; color: var(--gray-600);">Thanks for the quick response!</div>
+                            </div>
+                        </div>
+                        
+                        <div class="chat-item" onclick="openChat('support')" style="display: flex; align-items: center; padding: 1rem; border-bottom: 1px solid var(--gray-200); cursor: pointer;">
+                            <div style="width: 48px; height: 48px; border-radius: 24px; background: var(--info); display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; margin-right: 1rem;">SP</div>
+                            <div style="flex: 1;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+                                    <div style="font-weight: 600;">Support Team</div>
+                                    <div style="font-size: 0.75rem; color: var(--gray-500);">Yesterday</div>
+                                </div>
+                                <div style="font-size: 0.875rem; color: var(--gray-600);">Your invoice has been approved</div>
+                            </div>
+                        </div>
+                        
+                        <div class="chat-item" onclick="openChat('client-bk')" style="display: flex; align-items: center; padding: 1rem; border-bottom: 1px solid var(--gray-200); cursor: pointer;">
+                            <div style="width: 48px; height: 48px; border-radius: 24px; background: var(--gray-400); display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; margin-right: 1rem;">BK</div>
+                            <div style="flex: 1;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+                                    <div style="font-weight: 600;">Burger King - Melrose</div>
+                                    <div style="font-size: 0.75rem; color: var(--gray-500);">Dec 18</div>
+                                </div>
+                                <div style="font-size: 0.875rem; color: var(--gray-600);">Work completed successfully</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Support Button -->
+    <button class="emergency-fab" onclick="contactSupport()" title="Contact Support" style="background: var(--info);">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+        </svg>
+    </button>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <a class="nav-item active" onclick="showView('dashboard')">
+            <svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+            <div style="font-size: 0.7rem;">Home</div>
+        </a>
+        <a class="nav-item" onclick="showView('workorders')">
+            <svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 11H3v9h6V11z"></path>
+                <path d="M15 11H9v9h6V11z"></path>
+                <path d="M21 11h-6v9h6V11z"></path>
+                <rect x="3" y="4" width="18" height="7"></rect>
+            </svg>
+            <div style="font-size: 0.7rem;">Orders</div>
+            <span class="notification-badge" style="position: absolute; top: 0.25rem; right: 0.5rem;">3</span>
+        </a>
+        <a class="nav-item" onclick="showView('bids')">
+            <svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+            </svg>
+            <div style="font-size: 0.7rem;">Bids</div>
+            <span class="notification-badge" style="position: absolute; top: 0.25rem; right: 0.5rem;">8</span>
+        </a>
+        <a class="nav-item" onclick="showView('billing')">
+            <svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                <line x1="1" y1="10" x2="23" y2="10"></line>
+            </svg>
+            <div style="font-size: 0.7rem;">Billing</div>
+        </a>
+        <a class="nav-item" onclick="showView('chat')">
+            <svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+            <div style="font-size: 0.7rem;">Chat</div>
+            <span class="notification-badge" style="position: absolute; top: 0.25rem; right: 0.5rem;">2</span>
+        </a>
+    </div>
+
+    <script>
+        let isClocked = false;
+        let activeJobTimer = null;
+        let timerStartTime = null;
+
+        // Navigation
+        function showView(viewName) {
+            document.querySelectorAll('.mobile-view').forEach(view => {
+                view.classList.add('hidden');
+            });
+            
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            const viewId = viewName === 'workorders' ? 'workOrdersView' :
+                          viewName === 'bids' ? 'bidsView' : 
+                          viewName === 'billing' ? 'billingView' :
+                          viewName === 'chat' ? 'chatView' : 'dashboardView';
+            
+            document.getElementById(viewId).classList.remove('hidden');
+            
+            const navItems = document.querySelectorAll('.nav-item');
+            const index = viewName === 'dashboard' ? 0 :
+                         viewName === 'workorders' ? 1 :
+                         viewName === 'bids' ? 2 :
+                         viewName === 'billing' ? 3 :
+                         viewName === 'chat' ? 4 : 0;
+            
+            navItems[index].classList.add('active');
+        }
+
+        // Bidding functionality
+        function submitBid(rfpId) {
+            const modal = document.createElement('div');
+            modal.className = 'mobile-modal';
+            modal.innerHTML = `
+                <div class="modal-content" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; border-radius: 12px; width: 90%; max-width: 400px; max-height: 80vh; overflow-y: auto; box-shadow: 0 10px 40px rgba(0,0,0,0.2); z-index: 2000;">
+                    <div class="modal-header" style="padding: 1.5rem; border-bottom: 1px solid var(--gray-200); display: flex; justify-content: space-between; align-items: center;">
+                        <h3 style="font-size: 1.25rem; font-weight: 600;">Submit Bid</h3>
+                        <button onclick="this.closest('.mobile-modal').remove()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--gray-500);">&times;</button>
+                    </div>
+                    <div style="padding: 1.5rem;">
+                        <div class="form-group">
+                            <label class="form-label">Bid Amount</label>
+                            <input type="number" class="form-input" placeholder="Enter your bid amount" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Estimated Timeline</label>
+                            <input type="text" class="form-input" placeholder="e.g., 3-5 business days" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Proposal Details</label>
+                            <textarea class="form-input" rows="4" placeholder="Describe your approach and why you're the best choice..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Attach Documents</label>
+                            <button class="btn-field secondary" style="width: 100%;">📎 Add Certifications/Portfolio</button>
+                        </div>
+                        <button class="btn-field start" onclick="confirmBid('${rfpId}')" style="width: 100%;">
+                            💼 Submit Bid
+                        </button>
+                    </div>
+                </div>
+                <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1999;" onclick="this.parentElement.remove()"></div>
+            `;
+            document.body.appendChild(modal);
+        }
+        
+        function confirmBid(rfpId) {
+            showToast('Bid submitted successfully!', 'success');
+            document.querySelector('.mobile-modal').remove();
+        }
+
+        // Work Order functions
+        function updateWorkOrder(woId) {
+            showToast(`Updating work order ${woId}...`, 'info');
+            // Would open status update modal
+        }
+        
+        function viewWorkOrder(woId) {
+            const modal = document.createElement('div');
+            modal.className = 'mobile-modal';
+            modal.innerHTML = `
+                <div class="modal-content" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; border-radius: 12px; width: 90%; max-width: 400px; max-height: 80vh; overflow-y: auto; box-shadow: 0 10px 40px rgba(0,0,0,0.2); z-index: 2000;">
+                    <div class="modal-header" style="padding: 1.5rem; border-bottom: 1px solid var(--gray-200); display: flex; justify-content: space-between; align-items: center;">
+                        <h3 style="font-size: 1.25rem; font-weight: 600;">Work Order: ${woId}</h3>
+                        <button onclick="this.closest('.mobile-modal').remove()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--gray-500);">&times;</button>
+                    </div>
+                    <div style="padding: 1.5rem;">
+                        <div style="margin-bottom: 1rem;">
+                            <div style="font-weight: 600; color: var(--gray-700); margin-bottom: 0.5rem;">Service Type</div>
+                            <div>${woId === 'WO-2024-1520' ? 'Kitchen Exhaust Cleaning' : woId === 'WO-2024-1518' ? 'Quarterly HVAC Maintenance' : 'Plumbing Repair'}</div>
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <div style="font-weight: 600; color: var(--gray-700); margin-bottom: 0.5rem;">Location</div>
+                            <div>${woId === 'WO-2024-1520' ? 'The Nice Guy Restaurant' : woId === 'WO-2024-1518' ? 'McDonald\'s - Sunset Blvd' : 'Burger King - Melrose'}</div>
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <div style="font-weight: 600; color: var(--gray-700); margin-bottom: 0.5rem;">Status</div>
+                            <div style="display: inline-block; padding: 0.25rem 0.75rem; border-radius: 12px; background: ${woId === 'WO-2024-1520' ? 'var(--warning-light)' : woId === 'WO-2024-1515' ? 'var(--success-light)' : 'var(--info-light)'}; color: ${woId === 'WO-2024-1520' ? 'var(--warning)' : woId === 'WO-2024-1515' ? 'var(--success)' : 'var(--info)'}; font-weight: 600; font-size: 0.875rem;">
+                                ${woId === 'WO-2024-1520' ? 'IN PROGRESS' : woId === 'WO-2024-1515' ? 'COMPLETED' : 'SCHEDULED'}
+                            </div>
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <div style="font-weight: 600; color: var(--gray-700); margin-bottom: 0.5rem;">Contract Value</div>
+                            <div>${woId === 'WO-2024-1520' ? '$3,500' : woId === 'WO-2024-1518' ? '$1,200' : '$875'}</div>
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <div style="font-weight: 600; color: var(--gray-700); margin-bottom: 0.5rem;">Schedule</div>
+                            <div>${woId === 'WO-2024-1520' ? 'Started: Dec 20 | Due: Dec 22' : woId === 'WO-2024-1518' ? 'Scheduled: Dec 23 at 9:00 AM' : 'Completed: Dec 18'}</div>
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <div style="font-weight: 600; color: var(--gray-700); margin-bottom: 0.5rem;">Client Contact</div>
+                            <div>John Smith - (555) 123-4567</div>
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <div style="font-weight: 600; color: var(--gray-700); margin-bottom: 0.5rem;">Work Description</div>
+                            <div style="line-height: 1.6;">${woId === 'WO-2024-1520' ? 'Complete cleaning of kitchen exhaust system including hood, ducts, and fans. Compliance inspection and certification required.' : woId === 'WO-2024-1518' ? 'Quarterly preventive maintenance for HVAC system. Check filters, clean coils, inspect belts, test controls.' : 'Emergency repair of leaking pipe in kitchen area. Replaced damaged section and tested for leaks.'}</div>
+                        </div>
+                    </div>
+                    <div style="padding: 1.5rem; border-top: 1px solid var(--gray-200);">
+                        ${woId === 'WO-2024-1520' ? '<button onclick="completeJob(\'WO-2024-1520\')" class="btn-field complete" style="width: 100%; margin-bottom: 0.5rem;">Mark Complete</button>' : woId === 'WO-2024-1518' ? '<button onclick="startWorkOrder(\'WO-2024-1518\')" class="btn-field start" style="width: 100%; margin-bottom: 0.5rem;">Start Work</button>' : '<button onclick="createInvoice(\'WO-2024-1515\')" class="btn-field start" style="width: 100%; margin-bottom: 0.5rem;">Create Invoice</button>'}
+                        <button onclick="this.closest('.mobile-modal').remove()" class="btn-field secondary" style="width: 100%;">Close</button>
+                    </div>
+                </div>
+                <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1999;" onclick="this.parentElement.remove()"></div>
+            `;
+            document.body.appendChild(modal);
+        }
+        
+        function startWorkOrder(woId) {
+            showToast(`Starting work order ${woId}...`, 'success');
+            // Would update status to in progress
+        }
+        
+        // Invoice creation
+        function createInvoice(jobId) {
+            showToast('Opening invoice creator...', 'info');
+            // Would open invoice creation modal
+        }
+        
+        function createNewInvoice() {
+            showToast('Creating new invoice...', 'info');
+            // Would open new invoice form
+        }
+        
+        function viewInvoice(invoiceId) {
+            showToast(`Loading invoice ${invoiceId}...`, 'info');
+            // Would show invoice details
+        }
+
+        function completeJob(jobId) {
+            showJobCompletionModal(jobId);
+        }
+
+        function startTimer() {
+            timerStartTime = Date.now();
+            activeJobTimer = setInterval(updateTimer, 1000);
+        }
+
+        function updateTimer() {
+            const elapsed = Date.now() - timerStartTime;
+            const hours = Math.floor(elapsed / 3600000);
+            const minutes = Math.floor((elapsed % 3600000) / 60000);
+            const seconds = Math.floor((elapsed % 60000) / 1000);
+            
+            document.getElementById('timerDisplay').textContent = 
+                `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+
+        function pauseTimer() {
+            if (activeJobTimer) {
+                clearInterval(activeJobTimer);
+                activeJobTimer = null;
+                showToast('Timer paused', 'info');
+            }
+        }
+
+        // Job completion modal
+        function showJobCompletionModal(jobId) {
+            const modal = document.createElement('div');
+            modal.className = 'mobile-modal';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>Complete Job</h3>
+                        <button class="modal-close" onclick="this.closest('.mobile-modal').remove()">×</button>
+                    </div>
+                    <div style="padding: 1.5rem;">
+                        <div class="form-group">
+                            <label class="form-label">Work Summary</label>
+                            <textarea class="form-input" placeholder="Describe the work completed..." rows="4"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Photos Required</label>
+                            <div class="photo-upload" onclick="takePhoto('completion')">
+                                <div style="font-size: 2rem; margin-bottom: 0.5rem;">+</div>
+                                <div style="font-weight: 600;">Before & After Photos</div>
+                                <div style="font-size: 0.875rem; color: var(--gray-600);">Required for completion</div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Customer Signature</label>
+                            <canvas class="signature-pad" width="300" height="150" 
+                                    style="width: 100%; height: 150px; border: 1px solid var(--gray-300); border-radius: 8px;">
+                            </canvas>
+                            <button class="btn-field secondary" onclick="clearSignature()" style="margin-top: 0.5rem;">Clear Signature</button>
+                        </div>
+                        
+                        <div class="location-info">
+                            <span class="icon" style="font-weight: bold;">GPS</span>
+                            <div>
+                                <div style="font-weight: 600;">Location Verified</div>
+                                <div style="font-size: 0.875rem; color: var(--gray-600);">GPS: 34.0522, -118.2437</div>
+                            </div>
+                        </div>
+                        
+                        <button class="btn-field complete" onclick="submitJobCompletion('${jobId}')" 
+                                style="width: 100%; margin-top: 1rem;">
+                            Submit Completion
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        function submitJobCompletion(jobId) {
+            // Validate completion requirements
+            showToast('Job completed successfully!', 'success');
+            document.querySelector('.mobile-modal').remove();
+            
+            // Stop timer if active
+            if (activeJobTimer) {
+                clearInterval(activeJobTimer);
+                activeJobTimer = null;
+                document.getElementById('activeTimer').classList.add('hidden');
+            }
+        }
+
+        // Photo functionality
+        function takePhoto(type) {
+            // In a real app, this would access the device camera
+            showToast(`Taking ${type} photo...`, 'info');
+            
+            // Simulate adding a photo
+            const photoGrid = document.getElementById('photoGrid');
+            const photo = document.createElement('div');
+            photo.className = 'photo-thumb';
+            photo.innerHTML = `
+                <img src="https://via.placeholder.com/100x100?text=${type}" alt="${type} photo">
+                <button class="remove-btn" onclick="this.parentElement.remove()">×</button>
+            `;
+            photoGrid.appendChild(photo);
+        }
+
+        // Chat functions
+        function openChat(recipient) {
+            showToast(`Opening chat with ${recipient}...`, 'info');
+            // Would open chat conversation
+        }
+        
+        function newMessage() {
+            showToast('Opening new message composer...', 'info');
+            // Would open new message modal
+        }
+
+        function addJobUpdate(jobId) {
+            const message = prompt('Enter job update:');
+            if (message) {
+                showToast('Update sent to client and dispatcher', 'success');
+            }
+        }
+
+        // Emergency
+        function emergencyCall() {
+            if (confirm('Call emergency dispatch?\n\nThis will immediately connect you with emergency support.')) {
+                showToast('Connecting to emergency dispatch...', 'error');
+                // In real app, would initiate emergency call
+            }
+        }
+
+        // Utility functions
+        function viewJobDetails(jobId) {
+            showToast(`Loading details for ${jobId}`, 'info');
+        }
+
+        function getDirections(jobId) {
+            showToast(`Opening GPS navigation for ${jobId}`, 'info');
+        }
+
+        function editProfile() {
+            showToast('Opening profile editor...', 'info');
+        }
+
+        function viewRFP(rfpId) {
+            const modal = document.createElement('div');
+            modal.className = 'mobile-modal';
+            modal.innerHTML = `
+                <div class="modal-content" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; border-radius: 12px; width: 90%; max-width: 400px; max-height: 80vh; overflow-y: auto; box-shadow: 0 10px 40px rgba(0,0,0,0.2); z-index: 2000;">
+                    <div class="modal-header" style="padding: 1.5rem; border-bottom: 1px solid var(--gray-200); display: flex; justify-content: space-between; align-items: center;">
+                        <h3 style="font-size: 1.25rem; font-weight: 600;">RFP Details: ${rfpId}</h3>
+                        <button onclick="this.closest('.mobile-modal').remove()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--gray-500);">&times;</button>
+                    </div>
+                    <div style="padding: 1.5rem;">
+                        <div style="margin-bottom: 1rem;">
+                            <div style="font-weight: 600; color: var(--gray-700); margin-bottom: 0.5rem;">Project Title</div>
+                            <div>${rfpId === 'RFP-2024-1523' ? 'HVAC System Replacement - Urgent' : 'Quarterly Plumbing Maintenance Contract'}</div>
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <div style="font-weight: 600; color: var(--gray-700); margin-bottom: 0.5rem;">Location</div>
+                            <div>${rfpId === 'RFP-2024-1523' ? 'Burger King - Downtown' : '10 Restaurant Locations'}</div>
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <div style="font-weight: 600; color: var(--gray-700); margin-bottom: 0.5rem;">Budget Range</div>
+                            <div>${rfpId === 'RFP-2024-1523' ? '$15,000 - $20,000' : '$45,000/year'}</div>
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <div style="font-weight: 600; color: var(--gray-700); margin-bottom: 0.5rem;">Deadline</div>
+                            <div>${rfpId === 'RFP-2024-1523' ? 'In 2 hours' : 'Tomorrow at 5:00 PM'}</div>
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <div style="font-weight: 600; color: var(--gray-700); margin-bottom: 0.5rem;">Scope of Work</div>
+                            <div style="line-height: 1.6;">${rfpId === 'RFP-2024-1523' ? 'Complete replacement of existing HVAC system including removal of old equipment, installation of new high-efficiency units, ductwork modifications, and commissioning.' : 'Quarterly preventive maintenance for plumbing systems across 10 restaurant locations. Includes inspection, cleaning, minor repairs, and emergency response services.'}</div>
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <div style="font-weight: 600; color: var(--gray-700); margin-bottom: 0.5rem;">Requirements</div>
+                            <ul style="margin-left: 1.5rem; line-height: 1.6;">
+                                <li>Licensed and insured contractor</li>
+                                <li>Minimum 5 years experience</li>
+                                <li>24/7 emergency response capability</li>
+                                <li>Competitive pricing</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div style="padding: 1.5rem; border-top: 1px solid var(--gray-200);">
+                        <button onclick="submitBid('${rfpId}')" class="btn-field start" style="width: 100%; margin-bottom: 0.5rem;">Submit Bid</button>
+                        <button onclick="this.closest('.mobile-modal').remove()" class="btn-field secondary" style="width: 100%;">Close</button>
+                    </div>
+                </div>
+                <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1999;" onclick="this.parentElement.remove()"></div>
+            `;
+            document.body.appendChild(modal);
+        }
+        
+        function filterPayments(period) {
+            showToast(`Filtering payments for ${period}...`, 'info');
+            // Would filter payment history
+        }
+        
+        function manageBankAccount() {
+            showToast('Opening bank account settings...', 'info');
+        }
+        
+        function addPaymentMethod() {
+            showToast('Adding payment method...', 'info');
+        }
+        
+        // Company menu functions
+        function toggleCompanyMenu() {
+            const menu = document.getElementById('companyMenu');
+            menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+        }
+        
+        // Close menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const menu = document.getElementById('companyMenu');
+            const badge = document.querySelector('.company-badge');
+            if (menu && !menu.contains(event.target) && !badge.contains(event.target)) {
+                menu.style.display = 'none';
+            }
+        });
+        
+        function viewCompanyProfile() {
+            document.getElementById('companyMenu').style.display = 'none';
+            showToast('Opening company profile...', 'info');
+        }
+        
+        function viewCertifications() {
+            closeCompanyMenu();
+            showToast('Loading certifications...', 'info');
+        }
+        
+        function viewInsurance() {
+            closeCompanyMenu();
+            showToast('Loading insurance documents...', 'info');
+        }
+        
+        function viewPerformance() {
+            showToast('Loading performance metrics...', 'info');
+        }
+        
+        // Close dropdown on menu item click
+        function closeCompanyMenu() {
+            document.getElementById('companyMenu').style.display = 'none';
+        }
+
+        function appSettings() {
+            showToast('Opening app settings...', 'info');
+        }
+
+        function signOut() {
+            if (confirm('Are you sure you want to sign out?')) {
+                // Clear session
+                localStorage.removeItem('userSession');
+                sessionStorage.removeItem('userSession');
+                // Redirect to login
+                window.location.href = 'login.html';
+            }
+        }
+
+        // Toast notification system
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                top: 80px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: ${type === 'error' ? 'var(--danger)' : 
+                           type === 'success' ? 'var(--success)' : 
+                           type === 'warning' ? 'var(--warning)' :
+                           'var(--info)'};
+                color: white;
+                padding: 0.75rem 1.5rem;
+                border-radius: 8px;
+                font-size: 0.875rem;
+                font-weight: 500;
+                z-index: 3000;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                animation: slideDown 0.3s ease;
+            `;
+            toast.textContent = message;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'slideUp 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Add CSS animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideDown {
+                from { transform: translateX(-50%) translateY(-100%); }
+                to { transform: translateX(-50%) translateY(0); }
+            }
+            @keyframes slideUp {
+                from { transform: translateX(-50%) translateY(0); }
+                to { transform: translateX(-50%) translateY(-100%); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Check authentication
+        function checkAuth() {
+            const session = localStorage.getItem('userSession') || sessionStorage.getItem('userSession');
+            if (!session) {
+                // Redirect to login
+                window.location.href = 'login.html';
+                return false;
+            }
+            
+            const userData = JSON.parse(session);
+            // Update company name from session
+            document.getElementById('companyName').textContent = userData.company || 'TechPro Services';
+            return true;
+        }
+        
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check authentication first
+            if (!checkAuth()) return;
+            
+            showView('dashboard');
+            
+            // Register service worker for PWA
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('sw.js')
+                    .then(reg => console.log('Service Worker registered', reg))
+                    .catch(err => console.error('Service Worker registration failed', err));
+            }
+            
+            // PWA install prompt
+            let deferredPrompt;
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                // Show install button or banner
+                showInstallPrompt();
+            });
+        });
+        
+        function showInstallPrompt() {
+            // You can show a custom install banner here
+            const installBanner = document.createElement('div');
+            installBanner.style.cssText = `
+                position: fixed;
+                bottom: 70px;
+                left: 1rem;
+                right: 1rem;
+                background: var(--primary);
+                color: white;
+                padding: 1rem;
+                border-radius: 8px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                z-index: 1000;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            `;
+            installBanner.innerHTML = `
+                <div>
+                    <div style="font-weight: 600;">Install Hey Spruce App</div>
+                    <div style="font-size: 0.875rem; opacity: 0.9;">Add to your home screen for quick access</div>
+                </div>
+                <button onclick="installApp()" style="background: white; color: var(--primary); border: none; padding: 0.5rem 1rem; border-radius: 6px; font-weight: 600; cursor: pointer;">Install</button>
+            `;
+            installBanner.id = 'installBanner';
+            document.body.appendChild(installBanner);
+        }
+        
+        function installApp() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('User accepted the install prompt');
+                    }
+                    deferredPrompt = null;
+                    document.getElementById('installBanner')?.remove();
+                });
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hey Spruce Icon Generator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <h2>Hey Spruce Icons - Right-click and save each size</h2>
+    
+    <!-- 192x192 Icon -->
+    <div>
+        <h3>192x192 (Main PWA Icon)</h3>
+        <canvas id="icon192" width="192" height="192"></canvas>
+    </div>
+    
+    <!-- 512x512 Icon -->
+    <div>
+        <h3>512x512 (Splash Screen)</h3>
+        <canvas id="icon512" width="512" height="512"></canvas>
+    </div>
+    
+    <!-- 144x144 Icon -->
+    <div>
+        <h3>144x144</h3>
+        <canvas id="icon144" width="144" height="144"></canvas>
+    </div>
+    
+    <script>
+        function drawIcon(canvasId, size) {
+            const canvas = document.getElementById(canvasId);
+            const ctx = canvas.getContext('2d');
+            
+            // Fill background with navy blue circle
+            ctx.fillStyle = '#1e3a5f';
+            ctx.beginPath();
+            ctx.arc(size/2, size/2, size/2, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // Set text properties
+            ctx.fillStyle = 'white';
+            ctx.textAlign = 'center';
+            ctx.font = `bold ${size * 0.28}px 'Dancing Script', cursive`;
+            
+            // Draw "Hey"
+            ctx.fillText('Hey', size/2, size * 0.42);
+            
+            // Draw "Spruce"
+            ctx.fillText('Spruce', size/2, size * 0.65);
+            
+            // Convert to PNG and create download link
+            canvas.style.border = '1px solid #ccc';
+            canvas.style.margin = '10px';
+        }
+        
+        // Generate all sizes
+        window.onload = () => {
+            drawIcon('icon192', 192);
+            drawIcon('icon512', 512);
+            drawIcon('icon144', 144);
+        };
+    </script>
+</body>
+</html>

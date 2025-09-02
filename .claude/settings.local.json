@@ -113,7 +113,11 @@
       "Bash(start \"\" \"http://localhost:3000/subcontractor-portal.html\")",
       "Bash(del vercel.json)",
       "Read(c:\\Users\\JacobShure\\OneDrive - Hwood Group\\Pictures\\Screenshots/**)",
-      "Bash(del:*)"
+      "Bash(del:*)",
+      "Bash(start \"C:\\Users\\JacobShure\\openwrench stripe\\mobile-app\\index.html\")",
+      "Bash(start \"\" \"file:///C:/Users/JacobShure/openwrench%20stripe/mobile-app/index.html\")",
+      "Bash(start http://localhost:8080/mobile-app/)",
+      "Bash(git push:*)"
     ],
     "deny": [],
     "ask": [],

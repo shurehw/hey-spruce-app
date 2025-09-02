@@ -1,0 +1,75 @@
+{
+  "name": "Hey Spruce - Client Portal",
+  "short_name": "Hey Spruce Client",
+  "description": "Facility management for restaurant chains and commercial properties",
+  "start_url": "/client-app.html",
+  "display": "standalone",
+  "background_color": "#f0f0f0",
+  "theme_color": "#10b981",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "en-US",
+  "categories": ["business", "productivity", "utilities"],
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Ccircle cx='96' cy='96' r='96' fill='%231e3a5f'/%3E%3Ctext x='96' y='75' text-anchor='middle' fill='white' font-family='serif' font-size='40' font-weight='bold'%3EHey%3C/text%3E%3Ctext x='96' y='115' text-anchor='middle' fill='white' font-family='serif' font-size='40' font-weight='bold'%3ESpruce%3C/text%3E%3C/svg%3E",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Ccircle cx='256' cy='256' r='256' fill='%231e3a5f'/%3E%3Ctext x='256' y='200' text-anchor='middle' fill='white' font-family='serif' font-size='110' font-weight='bold'%3EHey%3C/text%3E%3Ctext x='256' y='320' text-anchor='middle' fill='white' font-family='serif' font-size='110' font-weight='bold'%3ESpruce%3C/text%3E%3C/svg%3E",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Create Service Request",
+      "short_name": "New Request",
+      "description": "Quickly create a new service request",
+      "url": "/client-app.html?action=create-request",
+      "icons": [
+        {
+          "src": "/icons/shortcut-create.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Emergency Support",
+      "short_name": "Emergency",
+      "description": "Access emergency support hotline",
+      "url": "/client-app.html?action=emergency",
+      "icons": [
+        {
+          "src": "/icons/shortcut-emergency.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Messages",
+      "short_name": "Messages",
+      "description": "View messages and communications",
+      "url": "/client-app.html#messages",
+      "icons": [
+        {
+          "src": "/icons/shortcut-messages.png",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ],
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "https://partners.useopenwrench.com/"
+    }
+  ],
+  "prefer_related_applications": false,
+  "edge_side_panel": {
+    "preferred_width": 400
+  }
+}

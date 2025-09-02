@@ -6,12 +6,19 @@
     <title>Client Portal - Hey Spruce</title>
     <style>
         :root {
+            /* Layout Variables */
+            --sidebar-width: 260px;
+            --header-height: 60px;
+            
+            /* Portal Theme Colors - Client (Purple) */
             --primary: #6366f1;
             --primary-dark: #4f46e5;
             --primary-light: #e0e7ff;
             --secondary: #8b5cf6;
             --secondary-dark: #7c3aed;
             --secondary-light: #ede9fe;
+            
+            /* Status Colors */
             --success: #10b981;
             --success-light: #d1fae5;
             --warning: #f59e0b;
@@ -20,6 +27,8 @@
             --danger-light: #fee2e2;
             --info: #3b82f6;
             --info-light: #dbeafe;
+            
+            /* Gray Scale */
             --gray-50: #f9fafb;
             --gray-100: #f3f4f6;
             --gray-200: #e5e7eb;
@@ -30,7 +39,37 @@
             --gray-700: #374151;
             --gray-800: #1f2937;
             --gray-900: #111827;
-            --sidebar-width: 260px;
+            
+            /* Typography */
+            --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            --font-size-xs: 0.75rem;
+            --font-size-sm: 0.875rem;
+            --font-size-base: 1rem;
+            --font-size-lg: 1.125rem;
+            --font-size-xl: 1.25rem;
+            --font-size-2xl: 1.5rem;
+            --font-size-3xl: 1.875rem;
+            
+            /* Spacing */
+            --spacing-xs: 0.25rem;
+            --spacing-sm: 0.5rem;
+            --spacing-md: 1rem;
+            --spacing-lg: 1.5rem;
+            --spacing-xl: 2rem;
+            --spacing-2xl: 3rem;
+            
+            /* Border Radius */
+            --radius-sm: 4px;
+            --radius-md: 6px;
+            --radius-lg: 8px;
+            --radius-xl: 12px;
+            --radius-full: 9999px;
+            
+            /* Shadows */
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+            --shadow-xl: 0 20px 25px rgba(0,0,0,0.1);
         }
         
         * {
@@ -48,11 +87,193 @@
             padding: 0;
         }
         
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: white;
+            border-bottom: 1px solid var(--gray-200);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+        
+        .header-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .header-badge {
+            background: var(--primary);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+        
+        .notification-icon {
+            cursor: pointer;
+            color: var(--gray-600);
+            font-size: 1.25rem;
+            position: relative;
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: var(--danger);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        /* User Dropdown */
+        .user-dropdown {
+            position: relative;
+        }
+        
+        .user-dropdown-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            padding: 0.5rem 0.75rem;
+            border-radius: 8px;
+            transition: background 0.2s;
+            background: transparent;
+            border: none;
+            font-family: inherit;
+            font-size: inherit;
+        }
+        
+        .user-dropdown-toggle:hover {
+            background: var(--gray-100);
+        }
+        
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+        
+        .user-name {
+            font-weight: 500;
+            color: var(--gray-900);
+        }
+        
+        .dropdown-arrow {
+            font-size: 0.625rem;
+            color: var(--gray-600);
+            transition: transform 0.2s;
+        }
+        
+        .user-dropdown.active .dropdown-arrow {
+            transform: rotate(180deg);
+        }
+        
+        .user-dropdown-menu {
+            position: absolute;
+            top: calc(100% + 0.5rem);
+            right: 0;
+            background: white;
+            border: 1px solid var(--gray-200);
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 240px;
+            display: none;
+            z-index: 1000;
+        }
+        
+        .user-dropdown.active .user-dropdown-menu {
+            display: block;
+        }
+        
+        .dropdown-header {
+            padding: 1rem;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        
+        .dropdown-company {
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 0.25rem;
+        }
+        
+        .dropdown-email {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+        }
+        
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            color: var(--gray-700);
+            text-decoration: none;
+            transition: background 0.2s;
+            cursor: pointer;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            font-size: 0.875rem;
+        }
+        
+        .dropdown-item:hover {
+            background: var(--gray-50);
+        }
+        
+        .dropdown-item-icon {
+            width: 1.25rem;
+            color: var(--gray-600);
+        }
+        
+        .dropdown-divider {
+            height: 1px;
+            background: var(--gray-200);
+            margin: 0;
+        }
+        
         /* Layout */
         .app-container {
             display: flex;
             min-height: 100vh;
             background: white;
+            padding-top: 60px;
         }
         
         /* Sidebar */
@@ -608,6 +829,19 @@
             font-size: 0.75rem;
         }
         
+        .star-rating {
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+            color: #ddd;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        
+        .star-rating:hover {
+            color: #ffc107;
+        }
+        
         /* Modals */
         .modal {
             display: none;
@@ -753,18 +987,49 @@
     <script src="/common-header.js"></script>
 </head>
 <body>
-    <!-- Common Header -->
-    <div id="common-header-container"></div>
-    <script>
-        // Initialize common header for client portal
-        window.addEventListener('DOMContentLoaded', function() {
-            if (typeof insertCommonHeader === 'function') {
-                insertCommonHeader('client');
-            } else {
-                console.error('insertCommonHeader function not found');
-            }
-        });
-    </script>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-left" style="display: flex; align-items: center; gap: 1rem;">
+            <div class="header-logo">Hey Spruce</div>
+            <span class="header-badge">Client Portal</span>
+        </div>
+        <div class="header-right">
+            <div class="notification-icon">
+                🔔
+                <span class="notification-badge">3</span>
+            </div>
+            <div class="user-dropdown" id="userDropdown">
+                <button class="user-dropdown-toggle" onclick="toggleUserDropdown()">
+                    <div class="user-avatar">NR</div>
+                    <span class="user-name">Nice Restaurant Group</span>
+                    <span class="dropdown-arrow">▼</span>
+                </button>
+                <div class="user-dropdown-menu">
+                    <div class="dropdown-header">
+                        <div class="dropdown-company">Nice Restaurant Group</div>
+                        <div class="dropdown-email">admin@nicerestaurant.com</div>
+                    </div>
+                    <a href="#" class="dropdown-item" onclick="loadSection('profile'); closeUserDropdown(); return false;">
+                        <span class="dropdown-item-icon">👤</span>
+                        <span>Profile</span>
+                    </a>
+                    <a href="#" class="dropdown-item" onclick="loadSection('settings'); closeUserDropdown(); return false;">
+                        <span class="dropdown-item-icon">⚙️</span>
+                        <span>Settings</span>
+                    </a>
+                    <a href="#" class="dropdown-item" onclick="loadSection('team'); closeUserDropdown(); return false;">
+                        <span class="dropdown-item-icon">👥</span>
+                        <span>Team Management</span>
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a href="#" class="dropdown-item" onclick="alert('Logging out...'); return false;">
+                        <span class="dropdown-item-icon">🚪</span>
+                        <span>Sign Out</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
     
     <div class="app-container">
         <!-- Sidebar -->
@@ -792,6 +1057,11 @@
                         <span class="icon"></span>
                         Invoices
                     </a>
+                    <a href="#messages" class="nav-item" onclick="loadSection('messages')">
+                        <span class="icon"></span>
+                        Messages
+                        <span class="notification-badge" id="messagesBadge" style="background: var(--danger); color: white; font-size: 0.75rem; padding: 0.125rem 0.375rem; border-radius: 10px; margin-left: 0.5rem;">3</span>
+                    </a>
                 </div>
                 
                 <div class="sidebar-section">
@@ -808,10 +1078,18 @@
                         <span class="icon"></span>
                         Preferred Vendors
                     </a>
+                    <a href="#documents" class="nav-item" onclick="loadSection('documents')">
+                        <span class="icon"></span>
+                        Documents
+                    </a>
                 </div>
                 
                 <div class="sidebar-section">
                     <div class="sidebar-title">Analytics</div>
+                    <a href="#analytics" class="nav-item" onclick="loadSection('analytics')">
+                        <span class="icon">📊</span>
+                        Cross-Portal Analytics
+                    </a>
                     <a href="#reports" class="nav-item" onclick="loadSection('reports')">
                         <span class="icon"></span>
                         Reports
@@ -840,6 +1118,27 @@
         document.addEventListener('DOMContentLoaded', () => {
             loadSection('dashboard');
         });
+        
+        // User Dropdown Functions
+        function toggleUserDropdown() {
+            const dropdown = document.getElementById('userDropdown');
+            dropdown.classList.toggle('active');
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function closeDropdown(e) {
+                if (!dropdown.contains(e.target)) {
+                    dropdown.classList.remove('active');
+                    document.removeEventListener('click', closeDropdown);
+                }
+            });
+            
+            // Prevent the document click from immediately closing
+            event.stopPropagation();
+        }
+        
+        function closeUserDropdown() {
+            document.getElementById('userDropdown').classList.remove('active');
+        }
         
         function loadSection(section, param) {
             const content = document.getElementById('content');
@@ -874,6 +1173,12 @@
                 case 'invoices':
                     content.innerHTML = getInvoicesContent();
                     break;
+                case 'messages':
+                    content.innerHTML = getMessagesContent();
+                    break;
+                case 'budget':
+                    content.innerHTML = getBudgetContent();
+                    break;
                 case 'locations':
                     content.innerHTML = getLocationsContent();
                     break;
@@ -883,6 +1188,12 @@
                 case 'vendors':
                     content.innerHTML = getVendorsContent();
                     break;
+                case 'documents':
+                    content.innerHTML = getDocumentsContent();
+                    break;
+                case 'analytics':
+                    content.innerHTML = getCrossPortalAnalyticsContent();
+                    break;
                 case 'reports':
                     content.innerHTML = getReportsContent();
                     break;
@@ -891,6 +1202,12 @@
                     break;
                 case 'profile':
                     content.innerHTML = getProfileContent();
+                    break;
+                case 'settings':
+                    content.innerHTML = getSettingsContent();
+                    break;
+                case 'team':
+                    content.innerHTML = getTeamManagementContent();
                     break;
                 case 'user-admin':
                     content.innerHTML = getUserAdminContent();
@@ -1128,6 +1445,12 @@
                 <div class="header-bar">
                     <h1 class="header-title">Work Orders</h1>
                     <div class="header-actions">
+                        <button class="btn btn-secondary" onclick="showServiceHistory()">
+                            📊 Service History
+                        </button>
+                        <button class="btn btn-secondary" onclick="showRecurringServices()">
+                            ⟳ Recurring Services
+                        </button>
                         <button class="btn btn-primary" onclick="showCreateWorkOrderModal()">
                             + New Service Request
                         </button>
@@ -1189,8 +1512,9 @@
         function getWorkOrderRows() {
             const workOrders = [
                 { id: 'WO-2024-001', date: '2024-10-15', location: 'McDonald\'s - Sunset', desc: 'HVAC Not Cooling', category: 'HVAC', priority: 'Urgent', status: 'In Progress', vendor: 'ABC Maintenance', cost: '$1,250' },
-                { id: 'WO-2024-002', date: '2024-10-14', location: 'Burger King - Melrose', desc: 'Plumbing Leak', category: 'Plumbing', priority: 'Standard', status: 'Scheduled', vendor: 'XYZ Plumbing', cost: 'Pending' },
-                { id: 'WO-2024-003', date: '2024-10-13', location: 'Delilah LA', desc: 'Electrical Issue', category: 'Electrical', priority: 'Standard', status: 'Open', vendor: '-', cost: 'TBD' }
+                { id: 'WO-2024-002', date: '2024-10-14', location: 'Burger King - Melrose', desc: 'Plumbing Leak', category: 'Plumbing', priority: 'Standard', status: 'Completed', vendor: 'XYZ Plumbing', cost: '$875' },
+                { id: 'WO-2024-003', date: '2024-10-13', location: 'Delilah LA', desc: 'Electrical Issue', category: 'Electrical', priority: 'Standard', status: 'Completed', vendor: 'Elite Electric', cost: '$450' },
+                { id: 'WO-2024-004', date: '2024-10-12', location: 'The Nice Guy', desc: 'Kitchen Equipment Repair', category: 'Equipment', priority: 'Urgent', status: 'Open', vendor: '-', cost: 'TBD' }
             ];
             
             return workOrders.map(wo => `
@@ -1206,6 +1530,9 @@
                     <td>${wo.cost}</td>
                     <td>
                         <button class="btn btn-sm btn-secondary" onclick="viewWorkOrder('${wo.id}')">View</button>
+                        ${wo.status === 'Completed' ? 
+                            '<button class="btn btn-sm btn-warning" onclick="reviewWorkOrder(\'' + wo.id + '\')">📸 Review & Approve</button>' : 
+                            ''}
                     </td>
                 </tr>
             `).join('');
@@ -1970,42 +2297,704 @@
             return `
                 <div class="header-bar">
                     <h1 class="header-title">Preferred Vendors</h1>
+                    <div class="header-actions">
+                        <button class="btn btn-secondary" onclick="showVendorMetrics()">
+                            📊 Performance Metrics
+                        </button>
+                        <button class="btn btn-primary" onclick="showAddVendorModal()">
+                            + Add Vendor
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Performance Overview Cards -->
+                <div class="stats-grid" style="margin-bottom: 2rem;">
+                    <div class="stat-card">
+                        <div class="stat-value">4.7</div>
+                        <div class="stat-label">Avg Vendor Rating</div>
+                        <div class="stat-change positive">+0.2 this quarter</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">2.4h</div>
+                        <div class="stat-label">Avg Response Time</div>
+                        <div class="stat-change positive">-15% improvement</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">94%</div>
+                        <div class="stat-label">On-Time Completion</div>
+                        <div class="stat-change">Industry avg: 87%</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">12</div>
+                        <div class="stat-label">Active Vendors</div>
+                        <div class="stat-change">3 pending reviews</div>
+                    </div>
                 </div>
                 
                 <div class="table-container">
                     <div class="table-header">
                         <h3 class="table-title">Your Vendor Network</h3>
+                        <select class="form-select" style="width: 180px;" onchange="filterVendors(this.value)">
+                            <option>All Vendors</option>
+                            <option>Top Performers</option>
+                            <option>Needs Review</option>
+                            <option>New Vendors</option>
+                        </select>
                     </div>
                     <table>
                         <thead>
                             <tr>
                                 <th>Vendor</th>
                                 <th>Services</th>
-                                <th>Rating</th>
+                                <th>Performance Rating</th>
                                 <th>Jobs Completed</th>
-                                <th>Avg Response Time</th>
+                                <th>Avg Response</th>
                                 <th>Total Spend</th>
                                 <th>Status</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td><strong>ABC Maintenance</strong></td>
-                                <td>HVAC, Electrical</td>
-                                <td>4.8 Rating</td>
+                                <td>
+                                    <div>
+                                        <strong>CoolAir HVAC Services</strong>
+                                        <div style="font-size: 0.875rem; color: var(--gray-600);">Since 2022</div>
+                                    </div>
+                                </td>
+                                <td>HVAC, Refrigeration</td>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <span style="color: var(--warning);">⭐⭐⭐⭐⭐</span>
+                                        <strong>4.9</strong>
+                                        <span style="color: var(--gray-600);">(87)</span>
+                                    </div>
+                                </td>
                                 <td>87</td>
-                                <td>2.3 hours</td>
+                                <td>1.8 hours</td>
                                 <td>$145,280</td>
-                                <td><span class="status-badge completed">Preferred</span></td>
+                                <td><span class="badge badge-success">Top Performer</span></td>
+                                <td>
+                                    <button class="btn btn-sm" onclick="viewVendorDetails(1)">View</button>
+                                    <button class="btn btn-sm" onclick="rateVendor(1)">Rate</button>
+                                </td>
                             </tr>
                             <tr>
-                                <td><strong>XYZ Plumbing</strong></td>
-                                <td>Plumbing</td>
-                                <td>4.6 Rating</td>
+                                <td>
+                                    <div>
+                                        <strong>Elite Plumbing Solutions</strong>
+                                        <div style="font-size: 0.875rem; color: var(--gray-600);">Since 2023</div>
+                                    </div>
+                                </td>
+                                <td>Plumbing, Drainage</td>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <span style="color: var(--warning);">⭐⭐⭐⭐</span>
+                                        <strong>4.6</strong>
+                                        <span style="color: var(--gray-600);">(52)</span>
+                                    </div>
+                                </td>
                                 <td>52</td>
-                                <td>3.1 hours</td>
+                                <td>2.3 hours</td>
                                 <td>$87,432</td>
-                                <td><span class="status-badge completed">Preferred</span></td>
+                                <td><span class="badge badge-success">Preferred</span></td>
+                                <td>
+                                    <button class="btn btn-sm" onclick="viewVendorDetails(2)">View</button>
+                                    <button class="btn btn-sm" onclick="rateVendor(2)">Rate</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div>
+                                        <strong>Sparkle Clean Pro</strong>
+                                        <div style="font-size: 0.875rem; color: var(--gray-600);">Since 2021</div>
+                                    </div>
+                                </td>
+                                <td>Cleaning, Sanitation</td>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <span style="color: var(--warning);">⭐⭐⭐⭐</span>
+                                        <strong>4.3</strong>
+                                        <span style="color: var(--gray-600);">(124)</span>
+                                    </div>
+                                </td>
+                                <td>124</td>
+                                <td>3.1 hours</td>
+                                <td>$98,560</td>
+                                <td><span class="badge badge-warning">Review Pending</span></td>
+                                <td>
+                                    <button class="btn btn-sm" onclick="viewVendorDetails(3)">View</button>
+                                    <button class="btn btn-sm btn-primary" onclick="rateVendor(3)">Rate Now</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Recent Reviews Section -->
+                <div class="table-container" style="margin-top: 2rem;">
+                    <div class="table-header">
+                        <h3 class="table-title">Recent Vendor Reviews</h3>
+                        <button class="btn btn-secondary" onclick="viewAllReviews()">View All</button>
+                    </div>
+                    <div style="padding: 1.5rem;">
+                        <div style="border-bottom: 1px solid var(--gray-200); padding-bottom: 1rem; margin-bottom: 1rem;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                <strong>CoolAir HVAC Services</strong>
+                                <span style="color: var(--warning);">⭐⭐⭐⭐⭐</span>
+                            </div>
+                            <p style="color: var(--gray-700); margin: 0.5rem 0;">Excellent emergency response. Fixed our AC unit within 2 hours of calling. Professional and efficient service.</p>
+                            <div style="font-size: 0.875rem; color: var(--gray-600);">
+                                WO #2024-1547 • Reviewed by John Smith • Nov 25, 2024
+                            </div>
+                        </div>
+                        <div style="border-bottom: 1px solid var(--gray-200); padding-bottom: 1rem; margin-bottom: 1rem;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                <strong>Elite Plumbing Solutions</strong>
+                                <span style="color: var(--warning);">⭐⭐⭐⭐</span>
+                            </div>
+                            <p style="color: var(--gray-700); margin: 0.5rem 0;">Good work overall but arrived 30 minutes late. Fixed the issue thoroughly and cleaned up well.</p>
+                            <div style="font-size: 0.875rem; color: var(--gray-600);">
+                                WO #2024-1543 • Reviewed by Sarah Johnson • Nov 24, 2024
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function rateVendor(vendorId) {
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.innerHTML = `
+                <div class="modal-overlay" onclick="this.parentElement.remove()"></div>
+                <div class="modal-content" style="max-width: 500px;">
+                    <div class="modal-header">
+                        <h2>Rate Vendor Performance</h2>
+                        <button class="modal-close" onclick="this.closest('.modal').remove()">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <form onsubmit="event.preventDefault(); submitVendorRating();">
+                            <div class="form-group">
+                                <label>Work Order</label>
+                                <select class="form-select" required>
+                                    <option value="">Select work order...</option>
+                                    <option>WO-2024-1547 - Emergency AC Repair</option>
+                                    <option>WO-2024-1523 - Monthly Maintenance</option>
+                                    <option>WO-2024-1498 - Filter Replacement</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Overall Rating</label>
+                                <div style="display: flex; gap: 0.5rem; font-size: 1.5rem;">
+                                    <span style="cursor: pointer;" onclick="setRating(1)">⭐</span>
+                                    <span style="cursor: pointer;" onclick="setRating(2)">⭐</span>
+                                    <span style="cursor: pointer;" onclick="setRating(3)">⭐</span>
+                                    <span style="cursor: pointer;" onclick="setRating(4)">⭐</span>
+                                    <span style="cursor: pointer;" onclick="setRating(5)">⭐</span>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Rate Specific Areas</label>
+                                <div style="display: grid; gap: 0.75rem;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <span>Quality of Work</span>
+                                        <select class="form-select" style="width: 120px;">
+                                            <option>Excellent</option>
+                                            <option>Good</option>
+                                            <option>Average</option>
+                                            <option>Poor</option>
+                                        </select>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <span>Response Time</span>
+                                        <select class="form-select" style="width: 120px;">
+                                            <option>Excellent</option>
+                                            <option>Good</option>
+                                            <option>Average</option>
+                                            <option>Poor</option>
+                                        </select>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <span>Professionalism</span>
+                                        <select class="form-select" style="width: 120px;">
+                                            <option>Excellent</option>
+                                            <option>Good</option>
+                                            <option>Average</option>
+                                            <option>Poor</option>
+                                        </select>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <span>Value for Money</span>
+                                        <select class="form-select" style="width: 120px;">
+                                            <option>Excellent</option>
+                                            <option>Good</option>
+                                            <option>Average</option>
+                                            <option>Poor</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Comments (Optional)</label>
+                                <textarea class="form-input" rows="4" placeholder="Share your experience..."></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" checked>
+                                    Would you recommend this vendor?
+                                </label>
+                            </div>
+                            
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" onclick="this.closest('.modal').remove()">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Submit Rating</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+        
+        function viewVendorDetails(vendorId) {
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.innerHTML = `
+                <div class="modal-overlay" onclick="this.parentElement.remove()"></div>
+                <div class="modal-content" style="max-width: 800px;">
+                    <div class="modal-header">
+                        <h2>Vendor Performance Details</h2>
+                        <button class="modal-close" onclick="this.closest('.modal').remove()">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+                            <div>
+                                <h3>CoolAir HVAC Services</h3>
+                                <p style="color: var(--gray-600);">License #HVAC-2022-1234</p>
+                                <div style="display: flex; align-items: center; gap: 0.5rem; margin: 1rem 0;">
+                                    <span style="color: var(--warning); font-size: 1.25rem;">⭐⭐⭐⭐⭐</span>
+                                    <strong style="font-size: 1.25rem;">4.9</strong>
+                                    <span style="color: var(--gray-600);">(87 reviews)</span>
+                                </div>
+                            </div>
+                            <div>
+                                <h4>Contact Information</h4>
+                                <p style="color: var(--gray-700);">
+                                    📞 (555) 123-4567<br>
+                                    ✉️ service@coolairhvac.com<br>
+                                    🌐 www.coolairhvac.com
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem;">
+                            <div style="background: var(--gray-50); padding: 1rem; border-radius: 8px; text-align: center;">
+                                <div style="font-size: 1.5rem; font-weight: bold; color: var(--primary);">87</div>
+                                <div style="font-size: 0.875rem; color: var(--gray-600);">Jobs Completed</div>
+                            </div>
+                            <div style="background: var(--gray-50); padding: 1rem; border-radius: 8px; text-align: center;">
+                                <div style="font-size: 1.5rem; font-weight: bold; color: var(--primary);">1.8h</div>
+                                <div style="font-size: 0.875rem; color: var(--gray-600);">Avg Response</div>
+                            </div>
+                            <div style="background: var(--gray-50); padding: 1rem; border-radius: 8px; text-align: center;">
+                                <div style="font-size: 1.5rem; font-weight: bold; color: var(--primary);">96%</div>
+                                <div style="font-size: 0.875rem; color: var(--gray-600);">On-Time Rate</div>
+                            </div>
+                            <div style="background: var(--gray-50); padding: 1rem; border-radius: 8px; text-align: center;">
+                                <div style="font-size: 1.5rem; font-weight: bold; color: var(--primary);">92%</div>
+                                <div style="font-size: 0.875rem; color: var(--gray-600);">First-Fix Rate</div>
+                            </div>
+                        </div>
+                        
+                        <h4>Performance Breakdown</h4>
+                        <div style="margin-bottom: 2rem;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin: 0.75rem 0;">
+                                <span>Quality of Work</span>
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <div style="background: var(--gray-200); height: 8px; width: 200px; border-radius: 4px;">
+                                        <div style="background: var(--primary); height: 100%; width: 98%; border-radius: 4px;"></div>
+                                    </div>
+                                    <span>4.95</span>
+                                </div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin: 0.75rem 0;">
+                                <span>Response Time</span>
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <div style="background: var(--gray-200); height: 8px; width: 200px; border-radius: 4px;">
+                                        <div style="background: var(--primary); height: 100%; width: 94%; border-radius: 4px;"></div>
+                                    </div>
+                                    <span>4.7</span>
+                                </div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin: 0.75rem 0;">
+                                <span>Professionalism</span>
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <div style="background: var(--gray-200); height: 8px; width: 200px; border-radius: 4px;">
+                                        <div style="background: var(--primary); height: 100%; width: 96%; border-radius: 4px;"></div>
+                                    </div>
+                                    <span>4.8</span>
+                                </div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin: 0.75rem 0;">
+                                <span>Value for Money</span>
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <div style="background: var(--gray-200); height: 8px; width: 200px; border-radius: 4px;">
+                                        <div style="background: var(--primary); height: 100%; width: 92%; border-radius: 4px;"></div>
+                                    </div>
+                                    <span>4.6</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary" onclick="exportVendorReport(1)">Export Report</button>
+                            <button class="btn btn-primary" onclick="this.closest('.modal').remove()">Close</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+        
+        function submitVendorRating() {
+            alert('Thank you for your feedback! Your rating has been submitted.');
+            document.querySelector('.modal').remove();
+        }
+        
+        function getCrossPortalAnalyticsContent() {
+            return `
+                <div class="header-bar">
+                    <h1 class="header-title">Cross-Portal Analytics Dashboard</h1>
+                    <div class="header-actions">
+                        <select class="form-select" style="width: 150px;" onchange="updateAnalyticsPeriod(this.value)">
+                            <option value="7d">Last 7 Days</option>
+                            <option value="30d" selected>Last 30 Days</option>
+                            <option value="90d">Last 90 Days</option>
+                            <option value="1y">Last Year</option>
+                        </select>
+                        <button class="btn btn-secondary" onclick="exportAnalytics()">
+                            📊 Export Report
+                        </button>
+                        <button class="btn btn-primary" onclick="scheduleReport()">
+                            ⏰ Schedule Report
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Executive Summary Cards -->
+                <div class="stats-grid" style="margin-bottom: 2rem;">
+                    <div class="stat-card">
+                        <div class="stat-value">$127K</div>
+                        <div class="stat-label">Total Spend (30 days)</div>
+                        <div class="stat-change positive">↗ 12% vs last period</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">89%</div>
+                        <div class="stat-label">Cross-Portal Efficiency</div>
+                        <div class="stat-change positive">↗ 3% improvement</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">47</div>
+                        <div class="stat-label">Active Vendors</div>
+                        <div class="stat-change">Across all portals</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">4.6★</div>
+                        <div class="stat-label">Avg Quality Rating</div>
+                        <div class="stat-change positive">↗ 0.2 improvement</div>
+                    </div>
+                </div>
+                
+                <!-- Portal Performance Comparison -->
+                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+                    <div class="table-container">
+                        <div class="table-header">
+                            <h3 class="table-title">Portal Performance Comparison</h3>
+                        </div>
+                        <div style="padding: 2rem;">
+                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;">
+                                <!-- Client Portal Stats -->
+                                <div style="text-align: center; padding: 1.5rem; background: var(--success-light); border-radius: 8px;">
+                                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">👥</div>
+                                    <div style="font-size: 1.5rem; font-weight: 600; color: var(--success);">CLIENT</div>
+                                    <div style="font-size: 0.875rem; color: var(--gray-600); margin: 0.5rem 0;">Work Orders Created</div>
+                                    <div style="font-size: 2rem; font-weight: 700;">84</div>
+                                    <div style="font-size: 0.875rem; color: var(--success);">+18% vs last month</div>
+                                </div>
+                                
+                                <!-- Supplier Portal Stats -->
+                                <div style="text-align: center; padding: 1.5rem; background: var(--info-light); border-radius: 8px;">
+                                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">🏢</div>
+                                    <div style="font-size: 1.5rem; font-weight: 600; color: var(--info);">SUPPLIER</div>
+                                    <div style="font-size: 0.875rem; color: var(--gray-600); margin: 0.5rem 0;">Orders Completed</div>
+                                    <div style="font-size: 2rem; font-weight: 700;">76</div>
+                                    <div style="font-size: 0.875rem; color: var(--info);">90% completion rate</div>
+                                </div>
+                                
+                                <!-- Subcontractor Portal Stats -->
+                                <div style="text-align: center; padding: 1.5rem; background: var(--warning-light); border-radius: 8px;">
+                                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">🔧</div>
+                                    <div style="font-size: 1.5rem; font-weight: 600; color: var(--warning);">SUBCONTRACTOR</div>
+                                    <div style="font-size: 0.875rem; color: var(--gray-600); margin: 0.5rem 0;">Tasks Executed</div>
+                                    <div style="font-size: 2rem; font-weight: 700;">52</div>
+                                    <div style="font-size: 0.875rem; color: var(--warning);">4.8★ avg rating</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Top Metrics -->
+                    <div class="table-container">
+                        <div class="table-header">
+                            <h3 class="table-title">Key Performance Indicators</h3>
+                        </div>
+                        <div style="padding: 1.5rem;">
+                            <div style="display: grid; gap: 1rem;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: var(--gray-50); border-radius: 6px;">
+                                    <span style="font-weight: 600;">Avg Response Time</span>
+                                    <span style="color: var(--success); font-weight: 600;">2.3 hrs</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: var(--gray-50); border-radius: 6px;">
+                                    <span style="font-weight: 600;">First Call Resolution</span>
+                                    <span style="color: var(--success); font-weight: 600;">87%</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: var(--gray-50); border-radius: 6px;">
+                                    <span style="font-weight: 600;">Client Satisfaction</span>
+                                    <span style="color: var(--success); font-weight: 600;">4.6★</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: var(--gray-50); border-radius: 6px;">
+                                    <span style="font-weight: 600;">Cost Per Service</span>
+                                    <span style="color: var(--info); font-weight: 600;">$289</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: var(--gray-50); border-radius: 6px;">
+                                    <span style="font-weight: 600;">Vendor Retention</span>
+                                    <span style="color: var(--success); font-weight: 600;">94%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Communication Flow Analytics -->
+                <div class="table-container" style="margin-bottom: 2rem;">
+                    <div class="table-header">
+                        <h3 class="table-title">📡 Communication Flow Analytics</h3>
+                        <button class="btn btn-sm btn-secondary" onclick="viewDetailedFlow()">View Details</button>
+                    </div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Message Type</th>
+                                <th>Client Portal</th>
+                                <th>Supplier Portal</th>
+                                <th>Subcontractor Portal</th>
+                                <th>Total Volume</th>
+                                <th>Avg Response Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Work Order Updates</strong></td>
+                                <td>156 sent</td>
+                                <td>89 received</td>
+                                <td>52 received</td>
+                                <td style="font-weight: 600;">297</td>
+                                <td><span style="color: var(--success);">1.2 hrs</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Quote Requests</strong></td>
+                                <td>45 sent</td>
+                                <td>43 received</td>
+                                <td>28 received</td>
+                                <td style="font-weight: 600;">116</td>
+                                <td><span style="color: var(--warning);">4.8 hrs</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Status Updates</strong></td>
+                                <td>89 received</td>
+                                <td>67 sent</td>
+                                <td>45 sent</td>
+                                <td style="font-weight: 600;">201</td>
+                                <td><span style="color: var(--success);">0.8 hrs</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Document Sharing</strong></td>
+                                <td>78 initiated</td>
+                                <td>56 accessed</td>
+                                <td>34 accessed</td>
+                                <td style="font-weight: 600;">168</td>
+                                <td><span style="color: var(--info);">2.1 hrs</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Quality Assurance Analytics -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+                    <div class="table-container">
+                        <div class="table-header">
+                            <h3 class="table-title">🔍 Quality Assurance Metrics</h3>
+                        </div>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Metric</th>
+                                    <th>This Month</th>
+                                    <th>Trend</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Work Orders Reviewed</td>
+                                    <td><strong>67</strong></td>
+                                    <td><span style="color: var(--success);">↗ +23%</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Avg Quality Rating</td>
+                                    <td><strong>4.6★</strong></td>
+                                    <td><span style="color: var(--success);">↗ +0.2</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Photos Verified</td>
+                                    <td><strong>134</strong></td>
+                                    <td><span style="color: var(--success);">↗ +15%</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Rework Required</td>
+                                    <td><strong>3</strong></td>
+                                    <td><span style="color: var(--success);">↘ -40%</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Client Approvals</td>
+                                    <td><strong>94%</strong></td>
+                                    <td><span style="color: var(--success);">↗ +2%</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="table-container">
+                        <div class="table-header">
+                            <h3 class="table-title">📋 Document Workflow Metrics</h3>
+                        </div>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Document Type</th>
+                                    <th>Shared</th>
+                                    <th>Signed</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Service Contracts</td>
+                                    <td>24</td>
+                                    <td><strong>22</strong> (92%)</td>
+                                </tr>
+                                <tr>
+                                    <td>Work Orders</td>
+                                    <td>156</td>
+                                    <td><strong>149</strong> (95%)</td>
+                                </tr>
+                                <tr>
+                                    <td>Compliance Docs</td>
+                                    <td>18</td>
+                                    <td><strong>16</strong> (89%)</td>
+                                </tr>
+                                <tr>
+                                    <td>Change Orders</td>
+                                    <td>12</td>
+                                    <td><strong>11</strong> (92%)</td>
+                                </tr>
+                                <tr style="border-top: 2px solid var(--gray-200); font-weight: 600;">
+                                    <td>Total</td>
+                                    <td>210</td>
+                                    <td><strong>198</strong> (94%)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Vendor Performance Across Portals -->
+                <div class="table-container">
+                    <div class="table-header">
+                        <h3 class="table-title">🏆 Top Performing Vendors (Cross-Portal)</h3>
+                        <button class="btn btn-sm btn-secondary" onclick="exportVendorReport()">Export Vendor Report</button>
+                    </div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Vendor</th>
+                                <th>Services Delivered</th>
+                                <th>Client Rating</th>
+                                <th>Avg Response Time</th>
+                                <th>Revenue Generated</th>
+                                <th>Completion Rate</th>
+                                <th>Portals Active</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <span style="color: var(--success);">🥇</span>
+                                        <strong>TechPro Services</strong>
+                                    </div>
+                                </td>
+                                <td><strong>127</strong></td>
+                                <td><span style="color: var(--success);">4.9★</span></td>
+                                <td>1.8 hrs</td>
+                                <td>$34,580</td>
+                                <td><span style="color: var(--success);">98%</span></td>
+                                <td>
+                                    <span style="display: flex; gap: 0.25rem;">
+                                        <span style="background: var(--success); color: white; padding: 0.125rem 0.25rem; border-radius: 3px; font-size: 0.75rem;">S</span>
+                                        <span style="background: var(--info); color: white; padding: 0.125rem 0.25rem; border-radius: 3px; font-size: 0.75rem;">SC</span>
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <span style="color: var(--warning);">🥈</span>
+                                        <strong>ABC Maintenance</strong>
+                                    </div>
+                                </td>
+                                <td><strong>89</strong></td>
+                                <td><span style="color: var(--success);">4.7★</span></td>
+                                <td>2.1 hrs</td>
+                                <td>$28,940</td>
+                                <td><span style="color: var(--success);">94%</span></td>
+                                <td>
+                                    <span style="display: flex; gap: 0.25rem;">
+                                        <span style="background: var(--success); color: white; padding: 0.125rem 0.25rem; border-radius: 3px; font-size: 0.75rem;">S</span>
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <span style="color: var(--info);">🥉</span>
+                                        <strong>Elite Electric</strong>
+                                    </div>
+                                </td>
+                                <td><strong>76</strong></td>
+                                <td><span style="color: var(--success);">4.6★</span></td>
+                                <td>1.9 hrs</td>
+                                <td>$22,150</td>
+                                <td><span style="color: var(--success);">96%</span></td>
+                                <td>
+                                    <span style="display: flex; gap: 0.25rem;">
+                                        <span style="background: var(--success); color: white; padding: 0.125rem 0.25rem; border-radius: 3px; font-size: 0.75rem;">S</span>
+                                        <span style="background: var(--info); color: white; padding: 0.125rem 0.25rem; border-radius: 3px; font-size: 0.75rem;">SC</span>
+                                    </span>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -2135,6 +3124,404 @@
                             </div>
                             <button type="button" class="btn btn-primary" onclick="saveProfile()">Save Changes</button>
                         </form>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function getTeamManagementContent() {
+            return `
+                <div class="header-bar">
+                    <h1 class="header-title">Team Management</h1>
+                    <button class="btn btn-primary" onclick="openAddTeamMemberModal()">+ Add Team Member</button>
+                </div>
+                
+                <div class="table-container">
+                    <div class="table-header">
+                        <h3 class="table-title">Team Members</h3>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Permissions</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>John Doe</td>
+                                <td>john.doe@nicerestaurant.com</td>
+                                <td>Admin</td>
+                                <td>Full Access</td>
+                                <td><span class="badge badge-success">Active</span></td>
+                                <td>
+                                    <button class="btn-icon" onclick="editTeamMember('1')">✏️</button>
+                                    <button class="btn-icon" onclick="removeTeamMember('1')">🗑️</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Jane Smith</td>
+                                <td>jane.smith@nicerestaurant.com</td>
+                                <td>Manager</td>
+                                <td>Location Management</td>
+                                <td><span class="badge badge-success">Active</span></td>
+                                <td>
+                                    <button class="btn-icon" onclick="editTeamMember('2')">✏️</button>
+                                    <button class="btn-icon" onclick="removeTeamMember('2')">🗑️</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Mike Wilson</td>
+                                <td>mike.wilson@nicerestaurant.com</td>
+                                <td>Viewer</td>
+                                <td>Read Only</td>
+                                <td><span class="badge badge-success">Active</span></td>
+                                <td>
+                                    <button class="btn-icon" onclick="editTeamMember('3')">✏️</button>
+                                    <button class="btn-icon" onclick="removeTeamMember('3')">🗑️</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Sarah Johnson</td>
+                                <td>sarah.johnson@nicerestaurant.com</td>
+                                <td>Accountant</td>
+                                <td>Billing & Invoices</td>
+                                <td><span class="badge badge-warning">Pending</span></td>
+                                <td>
+                                    <button class="btn-icon" onclick="resendInvite('4')">📧</button>
+                                    <button class="btn-icon" onclick="removeTeamMember('4')">🗑️</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Add Team Member Modal -->
+                <div id="addTeamMemberModal" class="modal" style="display: none;">
+                    <div class="modal-content" style="max-width: 600px;">
+                        <div class="modal-header">
+                            <h2>Add Team Member</h2>
+                            <span class="close" onclick="closeAddTeamMemberModal()">&times;</span>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label class="form-label">First Name</label>
+                                <input type="text" class="form-input" id="teamFirstName" placeholder="Enter first name">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Last Name</label>
+                                <input type="text" class="form-input" id="teamLastName" placeholder="Enter last name">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-input" id="teamEmail" placeholder="Enter email address">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Phone</label>
+                                <input type="tel" class="form-input" id="teamPhone" placeholder="Enter phone number">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Role</label>
+                                <select class="form-input" id="teamRole" onchange="updatePermissions()">
+                                    <option value="">Select a role</option>
+                                    <option value="admin">Admin</option>
+                                    <option value="manager">Manager</option>
+                                    <option value="accountant">Accountant</option>
+                                    <option value="viewer">Viewer</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Permissions</label>
+                                <div id="permissionsList" style="display: grid; gap: 0.5rem;">
+                                    <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <input type="checkbox" id="perm1"> View Work Orders
+                                    </label>
+                                    <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <input type="checkbox" id="perm2"> Create Work Orders
+                                    </label>
+                                    <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <input type="checkbox" id="perm3"> Manage Billing
+                                    </label>
+                                    <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <input type="checkbox" id="perm4"> View Reports
+                                    </label>
+                                    <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <input type="checkbox" id="perm5"> Manage Team
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <input type="checkbox" id="sendInvite" checked>
+                                    Send invitation email
+                                </label>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary" onclick="closeAddTeamMemberModal()">Cancel</button>
+                            <button class="btn btn-primary" onclick="addTeamMember()">Add Team Member</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Quality Assurance Review Modal -->
+                <div id="qaReviewModal" class="modal" style="display: none;">
+                    <div class="modal-content" style="max-width: 900px;">
+                        <div class="modal-header">
+                            <h2>Quality Assurance Review</h2>
+                            <span class="close" onclick="closeQAReviewModal()">&times;</span>
+                        </div>
+                        <div class="modal-body">
+                            <div style="background: var(--info-light); padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                                <h4 id="qaWorkOrderTitle">Work Order: WO-2024-002</h4>
+                                <p id="qaWorkOrderDetails">Plumbing Leak - Burger King - Melrose</p>
+                                <p><strong>Completed by:</strong> XYZ Plumbing | <strong>Cost:</strong> $875</p>
+                            </div>
+                            
+                            <!-- Photo Verification Section -->
+                            <div style="margin-bottom: 2rem;">
+                                <h4 style="margin-bottom: 1rem;">📸 Before & After Photos</h4>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                                    <div>
+                                        <h5 style="margin-bottom: 0.5rem;">Before Work</h5>
+                                        <div style="border: 2px dashed var(--gray-300); border-radius: 8px; padding: 2rem; text-align: center; background: var(--gray-50);">
+                                            <img src="https://via.placeholder.com/300x200?text=Leak+Under+Sink" style="max-width: 100%; border-radius: 4px;" alt="Before photo">
+                                            <p style="margin-top: 0.5rem; font-size: 0.875rem; color: var(--gray-600);">Leak under kitchen sink</p>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h5 style="margin-bottom: 0.5rem;">After Work</h5>
+                                        <div style="border: 2px dashed var(--gray-300); border-radius: 8px; padding: 2rem; text-align: center; background: var(--gray-50);">
+                                            <img src="https://via.placeholder.com/300x200?text=Repaired+Plumbing" style="max-width: 100%; border-radius: 4px;" alt="After photo">
+                                            <p style="margin-top: 0.5rem; font-size: 0.875rem; color: var(--gray-600);">Repaired pipe connections</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Work Summary -->
+                            <div style="background: white; border: 1px solid var(--gray-200); border-radius: 8px; padding: 1.5rem; margin-bottom: 2rem;">
+                                <h4 style="margin-bottom: 1rem;">Work Completed Summary</h4>
+                                <ul style="list-style: none; padding: 0; margin: 0;">
+                                    <li style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                        <span style="color: var(--success);">✓</span>
+                                        <span>Replaced damaged pipe section under kitchen sink</span>
+                                    </li>
+                                    <li style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                        <span style="color: var(--success);">✓</span>
+                                        <span>Tightened all connection joints</span>
+                                    </li>
+                                    <li style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                        <span style="color: var(--success);">✓</span>
+                                        <span>Tested for leaks - no issues found</span>
+                                    </li>
+                                    <li style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                        <span style="color: var(--success);">✓</span>
+                                        <span>Cleaned work area</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            
+                            <!-- Quality Assessment -->
+                            <div style="margin-bottom: 2rem;">
+                                <h4 style="margin-bottom: 1rem;">Quality Assessment</h4>
+                                <div style="display: grid; gap: 1rem;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <span><strong>Work Quality:</strong></span>
+                                        <div id="workQualityRating">
+                                            <button class="star-rating" onclick="setRating('quality', 1)">★</button>
+                                            <button class="star-rating" onclick="setRating('quality', 2)">★</button>
+                                            <button class="star-rating" onclick="setRating('quality', 3)">★</button>
+                                            <button class="star-rating" onclick="setRating('quality', 4)">★</button>
+                                            <button class="star-rating" onclick="setRating('quality', 5)">★</button>
+                                        </div>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <span><strong>Timeliness:</strong></span>
+                                        <div id="timelinessRating">
+                                            <button class="star-rating" onclick="setRating('timeliness', 1)">★</button>
+                                            <button class="star-rating" onclick="setRating('timeliness', 2)">★</button>
+                                            <button class="star-rating" onclick="setRating('timeliness', 3)">★</button>
+                                            <button class="star-rating" onclick="setRating('timeliness', 4)">★</button>
+                                            <button class="star-rating" onclick="setRating('timeliness', 5)">★</button>
+                                        </div>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <span><strong>Communication:</strong></span>
+                                        <div id="communicationRating">
+                                            <button class="star-rating" onclick="setRating('communication', 1)">★</button>
+                                            <button class="star-rating" onclick="setRating('communication', 2)">★</button>
+                                            <button class="star-rating" onclick="setRating('communication', 3)">★</button>
+                                            <button class="star-rating" onclick="setRating('communication', 4)">★</button>
+                                            <button class="star-rating" onclick="setRating('communication', 5)">★</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Comments Section -->
+                            <div style="margin-bottom: 2rem;">
+                                <label class="form-label"><strong>Additional Comments (Optional)</strong></label>
+                                <textarea class="form-input" id="qaComments" rows="4" placeholder="Share any feedback about the work performed..."></textarea>
+                            </div>
+                            
+                            <!-- Approval Decision -->
+                            <div style="background: var(--gray-50); padding: 1.5rem; border-radius: 8px;">
+                                <h4 style="margin-bottom: 1rem;">Approval Decision</h4>
+                                <div style="display: flex; gap: 1rem;">
+                                    <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <input type="radio" name="approval" value="approve" id="approveWork">
+                                        <span style="color: var(--success); font-weight: 600;">✓ Approve Work</span>
+                                    </label>
+                                    <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <input type="radio" name="approval" value="request-changes" id="requestChanges">
+                                        <span style="color: var(--warning); font-weight: 600;">⚠ Request Changes</span>
+                                    </label>
+                                    <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <input type="radio" name="approval" value="reject" id="rejectWork">
+                                        <span style="color: var(--danger); font-weight: 600;">✗ Reject Work</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary" onclick="closeQAReviewModal()">Cancel</button>
+                            <button class="btn btn-primary" onclick="submitQAReview()">Submit Review</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function getSettingsContent() {
+            return `
+                <div class="header-bar">
+                    <h1 class="header-title">Settings</h1>
+                    <div class="header-actions">
+                        <button class="btn btn-primary" onclick="showMobileAppSetup()">
+                            📱 Mobile App Setup
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Mobile App Integration Status -->
+                <div style="background: linear-gradient(135deg, var(--primary-light), var(--primary)); color: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <h3 style="margin: 0 0 0.5rem 0;">Hey Spruce Mobile App</h3>
+                            <p style="margin: 0; opacity: 0.9;">Stay connected with your facilities on the go</p>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                <button class="btn btn-sm" style="background: white; color: var(--primary);" onclick="downloadApp('ios')">
+                                    🍎 Download iOS
+                                </button>
+                                <button class="btn btn-sm" style="background: white; color: var(--primary);" onclick="downloadApp('android')">
+                                    🤖 Download Android
+                                </button>
+                            </div>
+                            <div style="font-size: 0.875rem;">
+                                <span style="display: inline-flex; align-items: center; gap: 0.25rem;">
+                                    <span style="width: 8px; height: 8px; background: #4ade80; border-radius: 50%;"></span>
+                                    3 devices connected
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <div class="table-header">
+                        <h3 class="table-title">Notification Preferences</h3>
+                    </div>
+                    <div style="padding: 2rem;">
+                        <div style="display: grid; gap: 1.5rem;">
+                            <!-- Work Order Updates -->
+                            <div style="border: 1px solid var(--gray-200); border-radius: 8px; padding: 1rem;">
+                                <div style="font-weight: 600; margin-bottom: 0.5rem;">Work Order Updates</div>
+                                <div style="font-size: 0.875rem; color: var(--gray-600); margin-bottom: 1rem;">Receive notifications when work orders are created, updated, or completed</div>
+                                <div style="display: flex; gap: 1rem;">
+                                    <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <input type="checkbox" checked>
+                                        <span>Email</span>
+                                    </label>
+                                    <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <input type="checkbox" checked>
+                                        <span>Text</span>
+                                    </label>
+                                    <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <input type="checkbox">
+                                        <span>App</span>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <!-- Quote Notifications -->
+                            <div style="border: 1px solid var(--gray-200); border-radius: 8px; padding: 1rem;">
+                                <div style="font-weight: 600; margin-bottom: 0.5rem;">Quote Notifications</div>
+                                <div style="font-size: 0.875rem; color: var(--gray-600); margin-bottom: 1rem;">Get notified about new quotes, approvals, and expirations</div>
+                                <div style="display: flex; gap: 1rem;">
+                                    <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <input type="checkbox" checked>
+                                        <span>Email</span>
+                                    </label>
+                                    <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <input type="checkbox">
+                                        <span>Text</span>
+                                    </label>
+                                    <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <input type="checkbox" checked>
+                                        <span>App</span>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <!-- Invoice & Payment -->
+                            <div style="border: 1px solid var(--gray-200); border-radius: 8px; padding: 1rem;">
+                                <div style="font-weight: 600; margin-bottom: 0.5rem;">Invoice & Payment Notifications</div>
+                                <div style="font-size: 0.875rem; color: var(--gray-600); margin-bottom: 1rem;">Receive alerts for new invoices and payment confirmations</div>
+                                <div style="display: flex; gap: 1rem;">
+                                    <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <input type="checkbox" checked>
+                                        <span>Email</span>
+                                    </label>
+                                    <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <input type="checkbox">
+                                        <span>Text</span>
+                                    </label>
+                                    <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <input type="checkbox">
+                                        <span>App</span>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <!-- Emergency Alerts -->
+                            <div style="border: 1px solid var(--gray-200); border-radius: 8px; padding: 1rem;">
+                                <div style="font-weight: 600; margin-bottom: 0.5rem;">Emergency Service Alerts</div>
+                                <div style="font-size: 0.875rem; color: var(--gray-600); margin-bottom: 1rem;">Get immediate notifications for emergency service requests</div>
+                                <div style="display: flex; gap: 1rem;">
+                                    <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <input type="checkbox" checked>
+                                        <span>Email</span>
+                                    </label>
+                                    <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <input type="checkbox" checked>
+                                        <span>Text</span>
+                                    </label>
+                                    <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <input type="checkbox" checked>
+                                        <span>App</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button type="button" class="btn btn-primary" style="margin-top: 1.5rem;" onclick="saveNotificationSettings()">Save Notification Settings</button>
                     </div>
                 </div>
             `;
@@ -2455,6 +3842,1508 @@
         }
         
         // Modal Functions
+        function showRecurringServices() {
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.innerHTML = `
+                <div class="modal-overlay" onclick="this.parentElement.remove()"></div>
+                <div class="modal-content" style="max-width: 900px;">
+                    <div class="modal-header">
+                        <h2>Recurring Service Schedules</h2>
+                        <button class="modal-close" onclick="this.closest('.modal').remove()">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <div style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+                            <h3>Active Recurring Services</h3>
+                            <button class="btn btn-primary" onclick="showAddRecurringService()">+ Add Recurring Service</button>
+                        </div>
+                        
+                        <div class="recurring-services-list">
+                            <div class="recurring-service-card" style="background: white; border: 1px solid var(--gray-200); border-radius: 8px; padding: 1.5rem; margin-bottom: 1rem;">
+                                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+                                    <div>
+                                        <h4 style="margin: 0 0 0.5rem 0;">HVAC Maintenance - All Locations</h4>
+                                        <div style="display: flex; gap: 1rem; color: var(--gray-600); font-size: 0.875rem;">
+                                            <span>📅 Monthly (First Monday)</span>
+                                            <span>🏢 5 Locations</span>
+                                            <span>💰 $2,500/month</span>
+                                        </div>
+                                    </div>
+                                    <div style="display: flex; gap: 0.5rem;">
+                                        <button class="btn btn-sm" onclick="editRecurringService(1)">Edit</button>
+                                        <button class="btn btn-sm btn-danger" onclick="pauseRecurringService(1)">Pause</button>
+                                    </div>
+                                </div>
+                                <div style="background: var(--gray-50); padding: 1rem; border-radius: 4px;">
+                                    <div style="font-size: 0.875rem; color: var(--gray-700);">
+                                        <strong>Next Service:</strong> Monday, December 2, 2024<br>
+                                        <strong>Vendor:</strong> CoolAir HVAC Services<br>
+                                        <strong>Services Completed:</strong> 11 of 12 this year
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="recurring-service-card" style="background: white; border: 1px solid var(--gray-200); border-radius: 8px; padding: 1.5rem; margin-bottom: 1rem;">
+                                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+                                    <div>
+                                        <h4 style="margin: 0 0 0.5rem 0;">Deep Cleaning - Kitchen Areas</h4>
+                                        <div style="display: flex; gap: 1rem; color: var(--gray-600); font-size: 0.875rem;">
+                                            <span>📅 Weekly (Sundays)</span>
+                                            <span>🏢 3 Restaurants</span>
+                                            <span>💰 $1,200/week</span>
+                                        </div>
+                                    </div>
+                                    <div style="display: flex; gap: 0.5rem;">
+                                        <button class="btn btn-sm" onclick="editRecurringService(2)">Edit</button>
+                                        <button class="btn btn-sm btn-danger" onclick="pauseRecurringService(2)">Pause</button>
+                                    </div>
+                                </div>
+                                <div style="background: var(--gray-50); padding: 1rem; border-radius: 4px;">
+                                    <div style="font-size: 0.875rem; color: var(--gray-700);">
+                                        <strong>Next Service:</strong> Sunday, December 1, 2024<br>
+                                        <strong>Vendor:</strong> Sparkle Clean Pro<br>
+                                        <strong>Services Completed:</strong> 47 of 52 this year
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="recurring-service-card" style="background: white; border: 1px solid var(--gray-200); border-radius: 8px; padding: 1.5rem; margin-bottom: 1rem;">
+                                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+                                    <div>
+                                        <h4 style="margin: 0 0 0.5rem 0;">Pest Control Service</h4>
+                                        <div style="display: flex; gap: 1rem; color: var(--gray-600); font-size: 0.875rem;">
+                                            <span>📅 Quarterly</span>
+                                            <span>🏢 All Locations</span>
+                                            <span>💰 $3,000/quarter</span>
+                                        </div>
+                                    </div>
+                                    <div style="display: flex; gap: 0.5rem;">
+                                        <button class="btn btn-sm" onclick="editRecurringService(3)">Edit</button>
+                                        <button class="btn btn-sm btn-danger" onclick="pauseRecurringService(3)">Pause</button>
+                                    </div>
+                                </div>
+                                <div style="background: var(--gray-50); padding: 1rem; border-radius: 4px;">
+                                    <div style="font-size: 0.875rem; color: var(--gray-700);">
+                                        <strong>Next Service:</strong> January 15, 2025<br>
+                                        <strong>Vendor:</strong> SafeGuard Pest Solutions<br>
+                                        <strong>Services Completed:</strong> 3 of 4 this year
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+        
+        function showAddRecurringService() {
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.innerHTML = `
+                <div class="modal-overlay" onclick="this.parentElement.remove()"></div>
+                <div class="modal-content" style="max-width: 600px;">
+                    <div class="modal-header">
+                        <h2>Create Recurring Service Schedule</h2>
+                        <button class="modal-close" onclick="this.closest('.modal').remove()">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <form onsubmit="event.preventDefault(); saveRecurringService();">
+                            <div class="form-group">
+                                <label>Service Type</label>
+                                <select class="form-select" required>
+                                    <option value="">Select service type...</option>
+                                    <option>HVAC Maintenance</option>
+                                    <option>Cleaning Services</option>
+                                    <option>Pest Control</option>
+                                    <option>Landscaping</option>
+                                    <option>Equipment Inspection</option>
+                                    <option>Fire System Testing</option>
+                                    <option>Other</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Frequency</label>
+                                <select class="form-select" required onchange="updateFrequencyOptions(this.value)">
+                                    <option value="">Select frequency...</option>
+                                    <option value="daily">Daily</option>
+                                    <option value="weekly">Weekly</option>
+                                    <option value="biweekly">Bi-weekly</option>
+                                    <option value="monthly">Monthly</option>
+                                    <option value="quarterly">Quarterly</option>
+                                    <option value="semiannual">Semi-annual</option>
+                                    <option value="annual">Annual</option>
+                                </select>
+                            </div>
+                            
+                            <div id="frequencyOptions" style="display: none;">
+                                <div class="form-group">
+                                    <label>Schedule Details</label>
+                                    <div id="scheduleOptions"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Locations</label>
+                                <div style="max-height: 150px; overflow-y: auto; border: 1px solid var(--gray-200); border-radius: 6px; padding: 0.5rem;">
+                                    <label style="display: block; padding: 0.5rem;"><input type="checkbox" checked> All Locations</label>
+                                    <label style="display: block; padding: 0.5rem;"><input type="checkbox"> McDonald's - Sunset</label>
+                                    <label style="display: block; padding: 0.5rem;"><input type="checkbox"> Burger King - Melrose</label>
+                                    <label style="display: block; padding: 0.5rem;"><input type="checkbox"> Delilah LA</label>
+                                    <label style="display: block; padding: 0.5rem;"><input type="checkbox"> The Nice Guy</label>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Preferred Vendor</label>
+                                <select class="form-select">
+                                    <option>Auto-assign based on availability</option>
+                                    <option>CoolAir HVAC Services</option>
+                                    <option>Sparkle Clean Pro</option>
+                                    <option>SafeGuard Pest Solutions</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Budget Per Service</label>
+                                <input type="number" class="form-input" placeholder="Enter amount" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Start Date</label>
+                                <input type="date" class="form-input" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Auto-Approval</label>
+                                <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <input type="checkbox" checked>
+                                    <span>Automatically approve work orders within budget</span>
+                                </label>
+                            </div>
+                            
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" onclick="this.closest('.modal').remove()">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Create Schedule</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+        
+        function updateFrequencyOptions(frequency) {
+            const optionsDiv = document.getElementById('frequencyOptions');
+            const scheduleDiv = document.getElementById('scheduleOptions');
+            
+            if (!frequency) {
+                optionsDiv.style.display = 'none';
+                return;
+            }
+            
+            optionsDiv.style.display = 'block';
+            
+            switch(frequency) {
+                case 'weekly':
+                    scheduleDiv.innerHTML = `
+                        <select class="form-select">
+                            <option>Every Monday</option>
+                            <option>Every Tuesday</option>
+                            <option>Every Wednesday</option>
+                            <option>Every Thursday</option>
+                            <option>Every Friday</option>
+                            <option>Every Saturday</option>
+                            <option>Every Sunday</option>
+                        </select>
+                    `;
+                    break;
+                case 'monthly':
+                    scheduleDiv.innerHTML = `
+                        <select class="form-select">
+                            <option>First Monday</option>
+                            <option>Second Monday</option>
+                            <option>Third Monday</option>
+                            <option>Last Monday</option>
+                            <option>On the 1st</option>
+                            <option>On the 15th</option>
+                            <option>Last day of month</option>
+                        </select>
+                    `;
+                    break;
+                case 'quarterly':
+                    scheduleDiv.innerHTML = `
+                        <input type="text" class="form-input" placeholder="e.g., Jan 15, Apr 15, Jul 15, Oct 15">
+                    `;
+                    break;
+                default:
+                    scheduleDiv.innerHTML = `
+                        <input type="text" class="form-input" placeholder="Specify schedule details">
+                    `;
+            }
+        }
+        
+        function saveRecurringService() {
+            alert('Recurring service schedule created successfully!');
+            document.querySelector('.modal').remove();
+        }
+        
+        function editRecurringService(id) {
+            showAddRecurringService();
+        }
+        
+        function pauseRecurringService(id) {
+            if (confirm('Are you sure you want to pause this recurring service?')) {
+                alert('Service paused. You can resume it anytime from the recurring services menu.');
+            }
+        }
+        
+        function showServiceHistory() {
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.innerHTML = `
+                <div class="modal-overlay" onclick="this.parentElement.remove()"></div>
+                <div class="modal-content" style="max-width: 1000px;">
+                    <div class="modal-header">
+                        <h2>Service History Timeline</h2>
+                        <button class="modal-close" onclick="this.closest('.modal').remove()">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Filters -->
+                        <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
+                            <select class="form-select" style="width: 200px;">
+                                <option>All Locations</option>
+                                <option>McDonald's - Sunset</option>
+                                <option>Burger King - Melrose</option>
+                                <option>Delilah LA</option>
+                            </select>
+                            <select class="form-select" style="width: 150px;">
+                                <option>All Services</option>
+                                <option>HVAC</option>
+                                <option>Plumbing</option>
+                                <option>Electrical</option>
+                                <option>Cleaning</option>
+                            </select>
+                            <select class="form-select" style="width: 150px;">
+                                <option>Last 30 days</option>
+                                <option>Last 90 days</option>
+                                <option>Last 6 months</option>
+                                <option>This year</option>
+                            </select>
+                            <button class="btn btn-secondary" onclick="exportServiceHistory()">Export Report</button>
+                        </div>
+                        
+                        <!-- Timeline View Toggle -->
+                        <div style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem;">
+                            <button class="btn btn-sm btn-primary" onclick="setTimelineView('timeline')">Timeline View</button>
+                            <button class="btn btn-sm" onclick="setTimelineView('calendar')">Calendar View</button>
+                            <button class="btn btn-sm" onclick="setTimelineView('list')">List View</button>
+                        </div>
+                        
+                        <!-- Service Timeline -->
+                        <div class="service-timeline" style="position: relative; padding-left: 40px;">
+                            <!-- Timeline Line -->
+                            <div style="position: absolute; left: 15px; top: 0; bottom: 0; width: 2px; background: var(--gray-300);"></div>
+                            
+                            <!-- November 2024 -->
+                            <div style="margin-bottom: 2rem;">
+                                <h4 style="color: var(--primary); margin-bottom: 1rem;">November 2024</h4>
+                                
+                                <!-- Service Entry -->
+                                <div style="position: relative; margin-bottom: 1.5rem;">
+                                    <div style="position: absolute; left: -30px; width: 12px; height: 12px; background: var(--primary); border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.1);"></div>
+                                    <div style="background: white; border: 1px solid var(--gray-200); border-radius: 8px; padding: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem;">
+                                            <div>
+                                                <strong>Emergency AC Repair</strong>
+                                                <div style="font-size: 0.875rem; color: var(--gray-600);">Nov 28, 2024 • 2:30 PM</div>
+                                            </div>
+                                            <span class="badge badge-danger">Emergency</span>
+                                        </div>
+                                        <p style="margin: 0.5rem 0; color: var(--gray-700);">Compressor replacement at McDonald's - Sunset</p>
+                                        <div style="display: flex; gap: 1rem; font-size: 0.875rem; color: var(--gray-600);">
+                                            <span>🔧 CoolAir HVAC</span>
+                                            <span>💰 $8,500</span>
+                                            <span>⏱️ 3.5 hours</span>
+                                            <span>⭐ 5.0 rating</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Service Entry -->
+                                <div style="position: relative; margin-bottom: 1.5rem;">
+                                    <div style="position: absolute; left: -30px; width: 12px; height: 12px; background: var(--success); border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.1);"></div>
+                                    <div style="background: white; border: 1px solid var(--gray-200); border-radius: 8px; padding: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem;">
+                                            <div>
+                                                <strong>Monthly Deep Cleaning</strong>
+                                                <div style="font-size: 0.875rem; color: var(--gray-600);">Nov 25, 2024 • 10:00 PM</div>
+                                            </div>
+                                            <span class="badge badge-success">Completed</span>
+                                        </div>
+                                        <p style="margin: 0.5rem 0; color: var(--gray-700);">Kitchen deep clean at all restaurant locations</p>
+                                        <div style="display: flex; gap: 1rem; font-size: 0.875rem; color: var(--gray-600);">
+                                            <span>🧹 Sparkle Clean Pro</span>
+                                            <span>💰 $1,200</span>
+                                            <span>⏱️ 6 hours</span>
+                                            <span>⭐ 4.5 rating</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Service Entry -->
+                                <div style="position: relative; margin-bottom: 1.5rem;">
+                                    <div style="position: absolute; left: -30px; width: 12px; height: 12px; background: var(--warning); border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.1);"></div>
+                                    <div style="background: white; border: 1px solid var(--gray-200); border-radius: 8px; padding: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem;">
+                                            <div>
+                                                <strong>Preventive Maintenance</strong>
+                                                <div style="font-size: 0.875rem; color: var(--gray-600);">Nov 20, 2024 • 8:00 AM</div>
+                                            </div>
+                                            <span class="badge badge-warning">Scheduled</span>
+                                        </div>
+                                        <p style="margin: 0.5rem 0; color: var(--gray-700);">HVAC filter replacement and system check</p>
+                                        <div style="display: flex; gap: 1rem; font-size: 0.875rem; color: var(--gray-600);">
+                                            <span>🔧 CoolAir HVAC</span>
+                                            <span>💰 $450</span>
+                                            <span>⏱️ 2 hours</span>
+                                            <span>⭐ 5.0 rating</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- October 2024 -->
+                            <div style="margin-bottom: 2rem;">
+                                <h4 style="color: var(--primary); margin-bottom: 1rem;">October 2024</h4>
+                                
+                                <!-- Service Entry -->
+                                <div style="position: relative; margin-bottom: 1.5rem;">
+                                    <div style="position: absolute; left: -30px; width: 12px; height: 12px; background: var(--success); border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.1);"></div>
+                                    <div style="background: white; border: 1px solid var(--gray-200); border-radius: 8px; padding: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem;">
+                                            <div>
+                                                <strong>Quarterly Pest Control</strong>
+                                                <div style="font-size: 0.875rem; color: var(--gray-600);">Oct 15, 2024 • 6:00 AM</div>
+                                            </div>
+                                            <span class="badge badge-success">Completed</span>
+                                        </div>
+                                        <p style="margin: 0.5rem 0; color: var(--gray-700);">Pest control treatment at all locations</p>
+                                        <div style="display: flex; gap: 1rem; font-size: 0.875rem; color: var(--gray-600);">
+                                            <span>🐛 SafeGuard Pest</span>
+                                            <span>💰 $3,000</span>
+                                            <span>⏱️ 4 hours</span>
+                                            <span>⭐ 4.8 rating</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Summary Stats -->
+                        <div style="background: var(--gray-50); padding: 1.5rem; border-radius: 8px; margin-top: 2rem;">
+                            <h4 style="margin-bottom: 1rem;">Service Summary</h4>
+                            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;">
+                                <div>
+                                    <div style="font-size: 1.25rem; font-weight: bold; color: var(--primary);">47</div>
+                                    <div style="font-size: 0.875rem; color: var(--gray-600);">Total Services</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 1.25rem; font-weight: bold; color: var(--primary);">$45,280</div>
+                                    <div style="font-size: 0.875rem; color: var(--gray-600);">Total Spent</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 1.25rem; font-weight: bold; color: var(--primary);">4.7</div>
+                                    <div style="font-size: 0.875rem; color: var(--gray-600);">Avg Rating</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 1.25rem; font-weight: bold; color: var(--primary);">2.4h</div>
+                                    <div style="font-size: 0.875rem; color: var(--gray-600);">Avg Response</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+        
+        function getBudgetContent() {
+            return `
+                <div class="header-bar">
+                    <h1 class="header-title">Budget & Approvals</h1>
+                    <div class="header-actions">
+                        <button class="btn btn-secondary" onclick="showBudgetSettings()">
+                            ⚙️ Settings
+                        </button>
+                        <button class="btn btn-primary" onclick="showAddBudgetModal()">
+                            + Add Budget
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Budget Overview Cards -->
+                <div class="stats-grid" style="margin-bottom: 2rem;">
+                    <div class="stat-card">
+                        <div class="stat-value">$125,000</div>
+                        <div class="stat-label">Annual Budget</div>
+                        <div class="stat-change positive">+15% vs last year</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">$87,420</div>
+                        <div class="stat-label">Spent YTD</div>
+                        <div class="stat-change">70% of budget</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">$37,580</div>
+                        <div class="stat-label">Remaining</div>
+                        <div class="stat-change">1 month left</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">5</div>
+                        <div class="stat-label">Pending Approvals</div>
+                        <div class="stat-change negative">Requires attention</div>
+                    </div>
+                </div>
+                
+                <!-- Pending Approvals -->
+                <div class="table-container" style="margin-bottom: 2rem;">
+                    <div class="table-header">
+                        <h3 class="table-title">Pending Approvals</h3>
+                        <button class="btn btn-secondary" onclick="approveAll()">Approve All</button>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Request Date</th>
+                                <th>Work Order</th>
+                                <th>Vendor</th>
+                                <th>Description</th>
+                                <th>Amount</th>
+                                <th>Budget Category</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Nov 28, 2024</td>
+                                <td><a href="#" style="color: var(--primary);">#WO-2024-1547</a></td>
+                                <td>CoolAir HVAC</td>
+                                <td>Emergency AC Repair - Compressor replacement</td>
+                                <td style="font-weight: 600; color: var(--warning);">$8,500</td>
+                                <td>Emergency Repairs</td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary" onclick="approveRequest(1)">Approve</button>
+                                    <button class="btn btn-sm" onclick="viewRequestDetails(1)">Details</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Nov 27, 2024</td>
+                                <td><a href="#" style="color: var(--primary);">#WO-2024-1543</a></td>
+                                <td>Elite Plumbing</td>
+                                <td>Kitchen pipe replacement</td>
+                                <td style="font-weight: 600;">$3,200</td>
+                                <td>Plumbing</td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary" onclick="approveRequest(2)">Approve</button>
+                                    <button class="btn btn-sm" onclick="viewRequestDetails(2)">Details</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Budget Categories -->
+                <div class="table-container">
+                    <div class="table-header">
+                        <h3 class="table-title">Budget Categories</h3>
+                        <select class="form-select" style="width: 200px;" onchange="filterBudgetPeriod(this.value)">
+                            <option>This Year</option>
+                            <option>This Quarter</option>
+                            <option>This Month</option>
+                            <option>Last Year</option>
+                        </select>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Category</th>
+                                <th>Annual Budget</th>
+                                <th>Spent</th>
+                                <th>Remaining</th>
+                                <th>% Used</th>
+                                <th>Status</th>
+                                <th>Auto-Approve Limit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="font-weight: 600;">HVAC Maintenance</td>
+                                <td>$30,000</td>
+                                <td>$24,500</td>
+                                <td>$5,500</td>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <div style="background: var(--gray-200); height: 8px; width: 100px; border-radius: 4px; overflow: hidden;">
+                                            <div style="background: var(--warning); height: 100%; width: 82%;"></div>
+                                        </div>
+                                        <span>82%</span>
+                                    </div>
+                                </td>
+                                <td><span class="badge badge-warning">High Usage</span></td>
+                                <td>$2,000</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 600;">Cleaning Services</td>
+                                <td>$25,000</td>
+                                <td>$18,750</td>
+                                <td>$6,250</td>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <div style="background: var(--gray-200); height: 8px; width: 100px; border-radius: 4px; overflow: hidden;">
+                                            <div style="background: var(--primary); height: 100%; width: 75%;"></div>
+                                        </div>
+                                        <span>75%</span>
+                                    </div>
+                                </td>
+                                <td><span class="badge badge-success">On Track</span></td>
+                                <td>$1,500</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 600;">Emergency Repairs</td>
+                                <td>$20,000</td>
+                                <td>$19,200</td>
+                                <td>$800</td>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <div style="background: var(--gray-200); height: 8px; width: 100px; border-radius: 4px; overflow: hidden;">
+                                            <div style="background: var(--danger); height: 100%; width: 96%;"></div>
+                                        </div>
+                                        <span>96%</span>
+                                    </div>
+                                </td>
+                                <td><span class="badge badge-danger">Over Budget</span></td>
+                                <td>$5,000</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 600;">Electrical</td>
+                                <td>$15,000</td>
+                                <td>$8,500</td>
+                                <td>$6,500</td>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <div style="background: var(--gray-200); height: 8px; width: 100px; border-radius: 4px; overflow: hidden;">
+                                            <div style="background: var(--primary); height: 100%; width: 57%;"></div>
+                                        </div>
+                                        <span>57%</span>
+                                    </div>
+                                </td>
+                                <td><span class="badge badge-success">On Track</span></td>
+                                <td>$1,000</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+        
+        function showBudgetSettings() {
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.innerHTML = `
+                <div class="modal-overlay" onclick="this.parentElement.remove()"></div>
+                <div class="modal-content" style="max-width: 600px;">
+                    <div class="modal-header">
+                        <h2>Budget & Approval Settings</h2>
+                        <button class="modal-close" onclick="this.closest('.modal').remove()">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <form onsubmit="event.preventDefault(); saveBudgetSettings();">
+                            <div class="form-group">
+                                <label>Approval Workflow</label>
+                                <select class="form-select">
+                                    <option>Single Approver</option>
+                                    <option>Multi-level Approval</option>
+                                    <option>Department-based</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Auto-Approval Threshold</label>
+                                <input type="number" class="form-input" value="1000" placeholder="Maximum amount for auto-approval">
+                                <small style="color: var(--gray-600);">Work orders under this amount are automatically approved</small>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Budget Alert Threshold</label>
+                                <select class="form-select">
+                                    <option>75% of budget used</option>
+                                    <option>80% of budget used</option>
+                                    <option>90% of budget used</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Approval Notifications</label>
+                                <label style="display: block; margin: 0.5rem 0;"><input type="checkbox" checked> Email notifications for pending approvals</label>
+                                <label style="display: block; margin: 0.5rem 0;"><input type="checkbox" checked> Text alerts for urgent approvals</label>
+                                <label style="display: block; margin: 0.5rem 0;"><input type="checkbox"> Daily digest of approval requests</label>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Fiscal Year Start</label>
+                                <select class="form-select">
+                                    <option>January 1</option>
+                                    <option>April 1</option>
+                                    <option>July 1</option>
+                                    <option>October 1</option>
+                                </select>
+                            </div>
+                            
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" onclick="this.closest('.modal').remove()">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Save Settings</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+        
+        function showAddBudgetModal() {
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.innerHTML = `
+                <div class="modal-overlay" onclick="this.parentElement.remove()"></div>
+                <div class="modal-content" style="max-width: 500px;">
+                    <div class="modal-header">
+                        <h2>Add Budget Category</h2>
+                        <button class="modal-close" onclick="this.closest('.modal').remove()">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <form onsubmit="event.preventDefault(); saveBudgetCategory();">
+                            <div class="form-group">
+                                <label>Category Name</label>
+                                <input type="text" class="form-input" placeholder="e.g., Landscaping" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Annual Budget</label>
+                                <input type="number" class="form-input" placeholder="Enter amount" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Auto-Approve Limit</label>
+                                <input type="number" class="form-input" placeholder="Maximum auto-approval amount">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Assigned Locations</label>
+                                <select class="form-select" multiple style="height: 120px;">
+                                    <option selected>All Locations</option>
+                                    <option>McDonald's - Sunset</option>
+                                    <option>Burger King - Melrose</option>
+                                    <option>Delilah LA</option>
+                                </select>
+                            </div>
+                            
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" onclick="this.closest('.modal').remove()">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Add Category</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+        
+        function approveRequest(id) {
+            alert('Work order approved successfully!');
+        }
+        
+        function viewRequestDetails(id) {
+            alert('Opening work order details...');
+        }
+        
+        function approveAll() {
+            if (confirm('Are you sure you want to approve all pending requests?')) {
+                alert('All pending requests have been approved.');
+            }
+        }
+        
+        function saveBudgetSettings() {
+            alert('Budget settings saved successfully!');
+            document.querySelector('.modal').remove();
+        }
+        
+        function saveBudgetCategory() {
+            alert('Budget category added successfully!');
+            document.querySelector('.modal').remove();
+        }
+        
+        function getDocumentsContent() {
+            return `
+                <div class="header-bar">
+                    <h1 class="header-title">Document Management</h1>
+                    <div class="header-actions">
+                        <button class="btn btn-secondary" onclick="showPendingSignatures()">
+                            ✍️ Pending Signatures (2)
+                        </button>
+                        <button class="btn btn-secondary" onclick="showDocumentCategories()">
+                            📁 Categories
+                        </button>
+                        <button class="btn btn-primary" onclick="showUploadDocumentModal()">
+                            ↑ Upload Document
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Document Workflow Status -->
+                <div class=\"stats-grid\" style=\"margin-bottom: 2rem;\">
+                    <div class=\"stat-card\">
+                        <div class=\"stat-value\">358</div>
+                        <div class=\"stat-label\">Total Documents</div>
+                        <div class=\"stat-change\">12 added this month</div>
+                    </div>
+                    <div class=\"stat-card\">
+                        <div class=\"stat-value\">2</div>
+                        <div class=\"stat-label\">Awaiting Signature</div>
+                        <div class=\"stat-change negative\">Action required</div>
+                    </div>
+                    <div class=\"stat-card\">
+                        <div class=\"stat-value\">5</div>
+                        <div class=\"stat-label\">Shared with Vendors</div>
+                        <div class=\"stat-change\">Cross-portal access</div>
+                    </div>
+                    <div class=\"stat-card\">
+                        <div class=\"stat-value\">15</div>
+                        <div class=\"stat-label\">Contracts Active</div>
+                        <div class=\"stat-change positive\">All digitally signed</div>
+                    </div>
+                </div>
+                
+                <!-- Search and Filters -->
+                <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem; align-items: center;">
+                    <input type="search" class="form-input" placeholder="Search documents..." style="flex: 1; max-width: 400px;">
+                    <select class="form-select" style="width: 180px;">
+                        <option>All Categories</option>
+                        <option>Contracts</option>
+                        <option>Invoices</option>
+                        <option>Work Orders</option>
+                        <option>Insurance</option>
+                        <option>Compliance</option>
+                        <option>Reports</option>
+                    </select>
+                    <select class="form-select" style="width: 150px;">
+                        <option>All Locations</option>
+                        <option>McDonald's - Sunset</option>
+                        <option>Burger King - Melrose</option>
+                        <option>Delilah LA</option>
+                    </select>
+                    <select class="form-select" style="width: 150px;">
+                        <option>Last 30 days</option>
+                        <option>Last 90 days</option>
+                        <option>Last 6 months</option>
+                        <option>This year</option>
+                        <option>All time</option>
+                    </select>
+                </div>
+                
+                <!-- Document Categories Grid -->
+                <div class="action-grid" style="margin-bottom: 2rem;">
+                    <div class="action-card" onclick="filterDocumentCategory('contracts')">
+                        <div class="action-icon">📝</div>
+                        <div class="action-title">Contracts</div>
+                        <div class="action-description">24 documents</div>
+                    </div>
+                    <div class="action-card" onclick="filterDocumentCategory('invoices')">
+                        <div class="action-icon">💰</div>
+                        <div class="action-title">Invoices</div>
+                        <div class="action-description">156 documents</div>
+                    </div>
+                    <div class="action-card" onclick="filterDocumentCategory('work-orders')">
+                        <div class="action-icon">🔧</div>
+                        <div class="action-title">Work Orders</div>
+                        <div class="action-description">89 documents</div>
+                    </div>
+                    <div class="action-card" onclick="filterDocumentCategory('insurance')">
+                        <div class="action-icon">🛟</div>
+                        <div class="action-title">Insurance</div>
+                        <div class="action-description">12 documents</div>
+                    </div>
+                    <div class="action-card" onclick="filterDocumentCategory('compliance')">
+                        <div class="action-icon">✅</div>
+                        <div class="action-title">Compliance</div>
+                        <div class="action-description">35 documents</div>
+                    </div>
+                    <div class="action-card" onclick="filterDocumentCategory('reports')">
+                        <div class="action-icon">📊</div>
+                        <div class="action-title">Reports</div>
+                        <div class="action-description">42 documents</div>
+                    </div>
+                </div>
+                
+                <!-- Recent Documents Table -->
+                <div class="table-container">
+                    <div class="table-header">
+                        <h3 class="table-title">Recent Documents</h3>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button class="btn btn-sm" onclick="toggleDocumentView()">Grid View</button>
+                            <button class="btn btn-secondary" onclick="exportDocuments()">Export List</button>
+                        </div>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 40px;"><input type="checkbox" onclick="selectAllDocuments(this)"></th>
+                                <th>Document Name</th>
+                                <th>Category</th>
+                                <th>Location</th>
+                                <th>Uploaded By</th>
+                                <th>Date</th>
+                                <th>Size</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="checkbox" class="doc-select"></td>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <span style="color: var(--primary);">📄</span>
+                                        <a href="#" style="color: var(--primary); text-decoration: none;">Service Agreement - CoolAir HVAC.pdf</a>
+                                    </div>
+                                </td>
+                                <td><span class="badge">Contract</span></td>
+                                <td>All Locations</td>
+                                <td>John Smith</td>
+                                <td>Nov 28, 2024</td>
+                                <td>2.4 MB</td>
+                                <td>
+                                    <button class="btn btn-sm" onclick="viewDocument(1)">View</button>
+                                    <button class="btn btn-sm" onclick="downloadDocument(1)">Download</button>
+                                    <button class="btn btn-sm" onclick="shareDocument(1)">Share</button>
+                                    <button class="btn btn-sm btn-warning" onclick="requestSignature(1)">✍️ Request Signature</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="doc-select"></td>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <span style="color: var(--primary);">📄</span>
+                                        <a href="#" style="color: var(--primary); text-decoration: none;">Insurance Certificate 2024.pdf</a>
+                                    </div>
+                                </td>
+                                <td><span class="badge">Insurance</span></td>
+                                <td>McDonald's - Sunset</td>
+                                <td>Sarah Johnson</td>
+                                <td>Nov 27, 2024</td>
+                                <td>1.8 MB</td>
+                                <td>
+                                    <button class="btn btn-sm" onclick="viewDocument(2)">View</button>
+                                    <button class="btn btn-sm" onclick="downloadDocument(2)">Download</button>
+                                    <button class="btn btn-sm" onclick="shareDocument(2)">Share</button>
+                                    <button class="btn btn-sm btn-warning" onclick="requestSignature(2)">✍️ Request Signature</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="doc-select"></td>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <span style="color: var(--primary);">📊</span>
+                                        <a href="#" style="color: var(--primary); text-decoration: none;">Monthly Maintenance Report.xlsx</a>
+                                    </div>
+                                </td>
+                                <td><span class="badge">Report</span></td>
+                                <td>All Locations</td>
+                                <td>Mike Wilson</td>
+                                <td>Nov 25, 2024</td>
+                                <td>456 KB</td>
+                                <td>
+                                    <button class="btn btn-sm" onclick="viewDocument(3)">View</button>
+                                    <button class="btn btn-sm" onclick="downloadDocument(3)">Download</button>
+                                    <button class="btn btn-sm" onclick="shareDocument(3)">Share</button>
+                                    <button class="btn btn-sm btn-warning" onclick="requestSignature(3)">✍️ Request Signature</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="doc-select"></td>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <span style="color: var(--primary);">📄</span>
+                                        <a href="#" style="color: var(--primary); text-decoration: none;">Fire Safety Compliance Certificate.pdf</a>
+                                    </div>
+                                </td>
+                                <td><span class="badge">Compliance</span></td>
+                                <td>Delilah LA</td>
+                                <td>Amanda Brown</td>
+                                <td>Nov 24, 2024</td>
+                                <td>892 KB</td>
+                                <td>
+                                    <button class="btn btn-sm" onclick="viewDocument(4)">View</button>
+                                    <button class="btn btn-sm" onclick="downloadDocument(4)">Download</button>
+                                    <button class="btn btn-sm" onclick="shareDocument(4)">Share</button>
+                                    <button class="btn btn-sm btn-warning" onclick="requestSignature(4)">✍️ Request Signature</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Bulk Actions Bar -->
+                <div id="bulkActionsBar" style="display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--gray-900); color: white; padding: 1rem 2rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 1000;">
+                    <span id="selectedCount">0 documents selected</span>
+                    <button class="btn btn-sm" style="margin-left: 1rem;" onclick="bulkDownload()">Download All</button>
+                    <button class="btn btn-sm" onclick="bulkShare()">Share</button>
+                    <button class="btn btn-sm btn-danger" onclick="bulkDelete()">Delete</button>
+                    <button class="btn btn-sm" onclick="clearSelection()">Clear</button>
+                </div>
+            `;
+        }
+        
+        function showUploadDocumentModal() {
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.innerHTML = `
+                <div class="modal-overlay" onclick="this.parentElement.remove()"></div>
+                <div class="modal-content" style="max-width: 600px;">
+                    <div class="modal-header">
+                        <h2>Upload Document</h2>
+                        <button class="modal-close" onclick="this.closest('.modal').remove()">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <form onsubmit="event.preventDefault(); uploadDocument();">
+                            <div class="form-group">
+                                <label>Select Files</label>
+                                <div style="border: 2px dashed var(--gray-300); border-radius: 8px; padding: 2rem; text-align: center; cursor: pointer;" onclick="document.getElementById('fileInput').click()">
+                                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">📁</div>
+                                    <p>Click to browse or drag and drop files here</p>
+                                    <p style="font-size: 0.875rem; color: var(--gray-600);">PDF, DOC, DOCX, XLS, XLSX, JPG, PNG (Max 10MB)</p>
+                                    <input type="file" id="fileInput" multiple style="display: none;" onchange="showSelectedFiles(this)">
+                                </div>
+                                <div id="selectedFiles" style="margin-top: 1rem;"></div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Document Category</label>
+                                <select class="form-select" required>
+                                    <option value="">Select category...</option>
+                                    <option>Contract</option>
+                                    <option>Invoice</option>
+                                    <option>Work Order</option>
+                                    <option>Insurance</option>
+                                    <option>Compliance</option>
+                                    <option>Report</option>
+                                    <option>Other</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Related Location</label>
+                                <select class="form-select">
+                                    <option>All Locations</option>
+                                    <option>McDonald's - Sunset</option>
+                                    <option>Burger King - Melrose</option>
+                                    <option>Delilah LA</option>
+                                    <option>The Nice Guy</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Description (Optional)</label>
+                                <textarea class="form-input" rows="3" placeholder="Add a description..."></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Tags (Optional)</label>
+                                <input type="text" class="form-input" placeholder="Enter tags separated by commas">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox">
+                                    Notify relevant team members
+                                </label>
+                            </div>
+                            
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" onclick="this.closest('.modal').remove()">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Upload</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+        
+        function showDocumentCategories() {
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.innerHTML = `
+                <div class="modal-overlay" onclick="this.parentElement.remove()"></div>
+                <div class="modal-content" style="max-width: 500px;">
+                    <div class="modal-header">
+                        <h2>Document Categories</h2>
+                        <button class="modal-close" onclick="this.closest('.modal').remove()">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <div style="margin-bottom: 1rem;">
+                            <button class="btn btn-primary btn-sm" onclick="addDocumentCategory()">+ Add Category</button>
+                        </div>
+                        <div style="max-height: 400px; overflow-y: auto;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; border-bottom: 1px solid var(--gray-200);">
+                                <span>Contracts</span>
+                                <span style="color: var(--gray-600);">24 documents</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; border-bottom: 1px solid var(--gray-200);">
+                                <span>Invoices</span>
+                                <span style="color: var(--gray-600);">156 documents</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; border-bottom: 1px solid var(--gray-200);">
+                                <span>Work Orders</span>
+                                <span style="color: var(--gray-600);">89 documents</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; border-bottom: 1px solid var(--gray-200);">
+                                <span>Insurance</span>
+                                <span style="color: var(--gray-600);">12 documents</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; border-bottom: 1px solid var(--gray-200);">
+                                <span>Compliance</span>
+                                <span style="color: var(--gray-600);">35 documents</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem;">
+                                <span>Reports</span>
+                                <span style="color: var(--gray-600);">42 documents</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+        
+        function showSelectedFiles(input) {
+            const filesDiv = document.getElementById('selectedFiles');
+            filesDiv.innerHTML = '';
+            if (input.files.length > 0) {
+                filesDiv.innerHTML = '<strong>Selected files:</strong><ul style="margin: 0.5rem 0;">';
+                for (let file of input.files) {
+                    filesDiv.innerHTML += `<li>${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)</li>`;
+                }
+                filesDiv.innerHTML += '</ul>';
+            }
+        }
+        
+        function uploadDocument() {
+            alert('Document uploaded successfully!');
+            document.querySelector('.modal').remove();
+        }
+        
+        function viewDocument(id) {
+            alert('Opening document viewer...');
+        }
+        
+        function downloadDocument(id) {
+            alert('Downloading document...');
+        }
+        
+        function shareDocument(id) {
+            alert('Opening share dialog...');
+        }
+        
+        function selectAllDocuments(checkbox) {
+            const checkboxes = document.querySelectorAll('.doc-select');
+            checkboxes.forEach(cb => cb.checked = checkbox.checked);
+            updateBulkActionsBar();
+        }
+        
+        function updateBulkActionsBar() {
+            const selected = document.querySelectorAll('.doc-select:checked').length;
+            const bar = document.getElementById('bulkActionsBar');
+            const count = document.getElementById('selectedCount');
+            
+            if (selected > 0) {
+                bar.style.display = 'block';
+                count.textContent = `${selected} documents selected`;
+            } else {
+                bar.style.display = 'none';
+            }
+        }
+        
+        function filterDocumentCategory(category) {
+            alert(`Filtering by ${category}...`);
+        }
+        
+        function showMobileAppSetup() {
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.innerHTML = `
+                <div class="modal-overlay" onclick="this.parentElement.remove()"></div>
+                <div class="modal-content" style="max-width: 700px;">
+                    <div class="modal-header">
+                        <h2>Mobile App Setup & Management</h2>
+                        <button class="modal-close" onclick="this.closest('.modal').remove()">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- App Download Section -->
+                        <div style="background: var(--gray-50); padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
+                            <h3 style="margin-top: 0;">Download Hey Spruce Mobile App</h3>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
+                                <div style="text-align: center;">
+                                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150' viewBox='0 0 150 150'%3E%3Crect width='150' height='150' fill='%23f0f0f0'/%3E%3Ctext x='75' y='75' text-anchor='middle' dy='.3em' font-family='Arial' font-size='14' fill='%23666'%3EQR Code iOS%3C/text%3E%3C/svg%3E" alt="iOS QR Code" style="border: 1px solid var(--gray-300); border-radius: 8px;">
+                                    <div style="margin-top: 0.5rem;">
+                                        <button class="btn btn-primary btn-sm" onclick="sendAppLink('ios')">📧 Email iOS Link</button>
+                                    </div>
+                                </div>
+                                <div style="text-align: center;">
+                                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150' viewBox='0 0 150 150'%3E%3Crect width='150' height='150' fill='%23f0f0f0'/%3E%3Ctext x='75' y='75' text-anchor='middle' dy='.3em' font-family='Arial' font-size='14' fill='%23666'%3EQR Code Android%3C/text%3E%3C/svg%3E" alt="Android QR Code" style="border: 1px solid var(--gray-300); border-radius: 8px;">
+                                    <div style="margin-top: 0.5rem;">
+                                        <button class="btn btn-primary btn-sm" onclick="sendAppLink('android')">📧 Email Android Link</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Connected Devices -->
+                        <h3>Connected Devices</h3>
+                        <div style="margin-bottom: 2rem;">
+                            <table style="width: 100%;">
+                                <thead>
+                                    <tr style="border-bottom: 1px solid var(--gray-200);">
+                                        <th style="padding: 0.75rem; text-align: left;">Device</th>
+                                        <th style="padding: 0.75rem; text-align: left;">User</th>
+                                        <th style="padding: 0.75rem; text-align: left;">Last Active</th>
+                                        <th style="padding: 0.75rem; text-align: left;">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr style="border-bottom: 1px solid var(--gray-100);">
+                                        <td style="padding: 0.75rem;">
+                                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                                <span>📱</span>
+                                                <div>
+                                                    <div>iPhone 14 Pro</div>
+                                                    <div style="font-size: 0.75rem; color: var(--gray-600);">iOS 17.1</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td style="padding: 0.75rem;">John Smith</td>
+                                        <td style="padding: 0.75rem;">
+                                            <span style="display: flex; align-items: center; gap: 0.25rem;">
+                                                <span style="width: 6px; height: 6px; background: #4ade80; border-radius: 50%;"></span>
+                                                Active now
+                                            </span>
+                                        </td>
+                                        <td style="padding: 0.75rem;">
+                                            <button class="btn btn-sm" onclick="revokeDevice(1)">Revoke</button>
+                                        </td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid var(--gray-100);">
+                                        <td style="padding: 0.75rem;">
+                                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                                <span>📱</span>
+                                                <div>
+                                                    <div>Samsung Galaxy S23</div>
+                                                    <div style="font-size: 0.75rem; color: var(--gray-600);">Android 14</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td style="padding: 0.75rem;">Sarah Johnson</td>
+                                        <td style="padding: 0.75rem;">2 hours ago</td>
+                                        <td style="padding: 0.75rem;">
+                                            <button class="btn btn-sm" onclick="revokeDevice(2)">Revoke</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 0.75rem;">
+                                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                                <span>💻</span>
+                                                <div>
+                                                    <div>iPad Pro</div>
+                                                    <div style="font-size: 0.75rem; color: var(--gray-600);">iPadOS 17.1</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td style="padding: 0.75rem;">Mike Wilson</td>
+                                        <td style="padding: 0.75rem;">Yesterday</td>
+                                        <td style="padding: 0.75rem;">
+                                            <button class="btn btn-sm" onclick="revokeDevice(3)">Revoke</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <!-- App Features -->
+                        <h3>Mobile App Features</h3>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2rem;">
+                            <label style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem; border: 1px solid var(--gray-200); border-radius: 6px;">
+                                <input type="checkbox" checked>
+                                <div>
+                                    <div style="font-weight: 500;">Push Notifications</div>
+                                    <div style="font-size: 0.75rem; color: var(--gray-600);">Receive real-time updates</div>
+                                </div>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem; border: 1px solid var(--gray-200); border-radius: 6px;">
+                                <input type="checkbox" checked>
+                                <div>
+                                    <div style="font-weight: 500;">Offline Mode</div>
+                                    <div style="font-size: 0.75rem; color: var(--gray-600);">Access data without internet</div>
+                                </div>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem; border: 1px solid var(--gray-200); border-radius: 6px;">
+                                <input type="checkbox" checked>
+                                <div>
+                                    <div style="font-weight: 500;">Photo Uploads</div>
+                                    <div style="font-size: 0.75rem; color: var(--gray-600);">Attach photos to work orders</div>
+                                </div>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem; border: 1px solid var(--gray-200); border-radius: 6px;">
+                                <input type="checkbox" checked>
+                                <div>
+                                    <div style="font-weight: 500;">Quick Actions</div>
+                                    <div style="font-size: 0.75rem; color: var(--gray-600);">Create requests with one tap</div>
+                                </div>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem; border: 1px solid var(--gray-200); border-radius: 6px;">
+                                <input type="checkbox">
+                                <div>
+                                    <div style="font-weight: 500;">Biometric Login</div>
+                                    <div style="font-size: 0.75rem; color: var(--gray-600);">Use Face ID or fingerprint</div>
+                                </div>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem; border: 1px solid var(--gray-200); border-radius: 6px;">
+                                <input type="checkbox" checked>
+                                <div>
+                                    <div style="font-weight: 500;">Location Services</div>
+                                    <div style="font-size: 0.75rem; color: var(--gray-600);">Auto-detect facility location</div>
+                                </div>
+                            </label>
+                        </div>
+                        
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary" onclick="this.closest('.modal').remove()">Close</button>
+                            <button class="btn btn-primary" onclick="saveMobileSettings()">Save Settings</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+        
+        function sendAppLink(platform) {
+            const email = prompt(`Enter email address to send ${platform} app link:`);
+            if (email) {
+                alert(`App download link sent to ${email}`);
+            }
+        }
+        
+        function revokeDevice(deviceId) {
+            if (confirm('Are you sure you want to revoke access for this device?')) {
+                alert('Device access revoked successfully.');
+            }
+        }
+        
+        function saveMobileSettings() {
+            alert('Mobile app settings saved successfully!');
+            document.querySelector('.modal').remove();
+        }
+        
+        function downloadApp(platform) {
+            alert(`Opening ${platform} app store...`);
+        }
+        
+        function getMessagesContent() {
+            return `
+                <div class="header-bar">
+                    <h1 class="header-title">Messages & Communications</h1>
+                    <div class="header-actions">
+                        <button class="btn btn-secondary" onclick="showCommunicationSettings()">
+                            ⚙️ Settings
+                        </button>
+                        <button class="btn btn-primary" onclick="startNewConversation()">
+                            + New Message
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Communication Overview -->
+                <div class="stats-grid" style="margin-bottom: 2rem;">
+                    <div class="stat-card">
+                        <div class="stat-value">12</div>
+                        <div class="stat-label">Active Conversations</div>
+                        <div class="stat-change">3 unread</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">2</div>
+                        <div class="stat-label">Urgent Messages</div>
+                        <div class="stat-change negative">Requires attention</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">15min</div>
+                        <div class="stat-label">Avg Response Time</div>
+                        <div class="stat-change positive">Industry leading</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">24/7</div>
+                        <div class="stat-label">Support Available</div>
+                        <div class="stat-change">Emergency hotline</div>
+                    </div>
+                </div>
+                
+                <!-- Messages Interface -->
+                <div style="display: grid; grid-template-columns: 350px 1fr; gap: 1rem; height: 600px;">
+                    <!-- Conversation List -->
+                    <div class="table-container" style="height: 100%; margin: 0;">
+                        <div class="table-header">
+                            <h3 class="table-title">Conversations</h3>
+                            <select class="form-select" style="width: 120px;" onchange="filterConversations(this.value)">
+                                <option>All</option>
+                                <option>Unread</option>
+                                <option>Urgent</option>
+                                <option>Archived</option>
+                            </select>
+                        </div>
+                        <div style="padding: 0; height: calc(100% - 60px); overflow-y: auto;">
+                            <!-- Conversation Item 1 -->
+                            <div class="conversation-item" onclick="openConversation('wo-2024-1523')" style="padding: 1rem; border-bottom: 1px solid var(--gray-200); cursor: pointer; background: var(--primary-light);">
+                                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+                                    <div style="width: 40px; height: 40px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">CS</div>
+                                    <div style="flex: 1;">
+                                        <div style="font-weight: 600;">CoolAir HVAC Services</div>
+                                        <div style="font-size: 0.75rem; color: var(--gray-600);">WO #2024-1523 • 2 min ago</div>
+                                    </div>
+                                    <span class="notification-badge" style="background: var(--danger); color: white; font-size: 0.75rem; padding: 0.125rem 0.375rem; border-radius: 10px;">2</span>
+                                </div>
+                                <div style="font-size: 0.875rem; color: var(--gray-700);">"We're running 15 minutes late due to traffic. ETA now 3:15 PM."</div>
+                            </div>
+                            
+                            <!-- Conversation Item 2 -->
+                            <div class="conversation-item" onclick="openConversation('wo-2024-1519')" style="padding: 1rem; border-bottom: 1px solid var(--gray-200); cursor: pointer;">
+                                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+                                    <div style="width: 40px; height: 40px; background: var(--warning); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">EP</div>
+                                    <div style="flex: 1;">
+                                        <div style="font-weight: 600;">Elite Plumbing Solutions</div>
+                                        <div style="font-size: 0.75rem; color: var(--gray-600);">WO #2024-1519 • 1 hour ago</div>
+                                    </div>
+                                </div>
+                                <div style="font-size: 0.875rem; color: var(--gray-700);">"Job completed. Please review the work and provide feedback when convenient."</div>
+                            </div>
+                            
+                            <!-- Conversation Item 3 -->
+                            <div class="conversation-item" onclick="openConversation('urgent-repair')" style="padding: 1rem; border-bottom: 1px solid var(--gray-200); cursor: pointer;">
+                                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+                                    <div style="width: 40px; height: 40px; background: var(--danger); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">UR</div>
+                                    <div style="flex: 1;">
+                                        <div style="font-weight: 600;">🚨 Urgent Repair Team</div>
+                                        <div style="font-size: 0.75rem; color: var(--gray-600);">Emergency • 3 hours ago</div>
+                                    </div>
+                                    <span class="notification-badge" style="background: var(--danger); color: white; font-size: 0.75rem; padding: 0.125rem 0.375rem; border-radius: 10px;">1</span>
+                                </div>
+                                <div style="font-size: 0.875rem; color: var(--gray-700);">"Emergency electrical issue resolved. Full report attached."</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Chat Interface -->
+                    <div class="table-container" style="height: 100%; margin: 0; display: flex; flex-direction: column;">
+                        <!-- Chat Header -->
+                        <div class="table-header" style="flex-shrink: 0;">
+                            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                <div style="width: 32px; height: 32px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 0.875rem;">CS</div>
+                                <div>
+                                    <div style="font-weight: 600;">CoolAir HVAC Services</div>
+                                    <div style="font-size: 0.75rem; color: var(--gray-600);">WO #2024-1523 • HVAC Repair</div>
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <button class="btn btn-sm" onclick="showWorkOrderDetails('2024-1523')">View WO</button>
+                                <button class="btn btn-sm" onclick="callVendor()">📞 Call</button>
+                                <button class="btn btn-sm" onclick="emailVendor()">✉️ Email</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Chat Messages -->
+                        <div id="chatMessages" style="flex: 1; padding: 1rem; overflow-y: auto; background: var(--gray-50);">
+                            <!-- Message from vendor -->
+                            <div style="margin-bottom: 1rem;">
+                                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+                                    <div style="width: 24px; height: 24px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 0.75rem; font-weight: bold;">CS</div>
+                                    <span style="font-size: 0.875rem; font-weight: 600;">CoolAir HVAC</span>
+                                    <span style="font-size: 0.75rem; color: var(--gray-600);">2:45 PM</span>
+                                </div>
+                                <div style="background: white; padding: 0.75rem; border-radius: 0 12px 12px 12px; margin-left: 32px; border-left: 3px solid var(--primary);">
+                                    Good afternoon! We're en route to your location for the HVAC repair. Our technician Mike will be there in approximately 20 minutes. He has all the necessary parts for the compressor replacement.
+                                </div>
+                            </div>
+                            
+                            <!-- Message from client -->
+                            <div style="margin-bottom: 1rem;">
+                                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem; justify-content: flex-end;">
+                                    <span style="font-size: 0.75rem; color: var(--gray-600);">2:47 PM</span>
+                                    <span style="font-size: 0.875rem; font-weight: 600;">You</span>
+                                </div>
+                                <div style="background: var(--primary); color: white; padding: 0.75rem; border-radius: 12px 0 12px 12px; margin-right: 32px; margin-left: auto; max-width: 80%;">
+                                    Perfect! Please have Mike use the service entrance on the side of the building. The main entrance is blocked for deliveries.
+                                </div>
+                            </div>
+                            
+                            <!-- System message -->
+                            <div style="margin-bottom: 1rem; text-align: center;">
+                                <div style="background: var(--gray-200); color: var(--gray-700); padding: 0.5rem 1rem; border-radius: 20px; display: inline-block; font-size: 0.875rem;">
+                                    📍 Technician location shared • 3:05 PM
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Message Input -->
+                        <div style="padding: 1rem; border-top: 1px solid var(--gray-200); background: white; flex-shrink: 0;">
+                            <div style="display: flex; gap: 0.5rem; align-items: end;">
+                                <button class="btn btn-sm" onclick="attachFile()" title="Attach file">
+                                    📎
+                                </button>
+                                <button class="btn btn-sm" onclick="takePhoto()" title="Take photo">
+                                    📷
+                                </button>
+                                <textarea id="messageInput" class="form-input" rows="2" placeholder="Type your message..." style="flex: 1; resize: none;" onkeypress="if(event.key==='Enter' && !event.shiftKey) { event.preventDefault(); sendMessage(); }"></textarea>
+                                <button class="btn btn-primary" onclick="sendMessage()">
+                                    Send
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Quick Actions -->
+                <div class="action-grid" style="margin-top: 2rem;">
+                    <div class="action-card" onclick="emergencyContact()">
+                        <div class="action-icon">🚨</div>
+                        <div class="action-title">Emergency Contact</div>
+                        <div class="action-description">24/7 support hotline</div>
+                    </div>
+                    <div class="action-card" onclick="scheduleCall()">
+                        <div class="action-icon">📞</div>
+                        <div class="action-title">Schedule Call</div>
+                        <div class="action-description">Book consultation</div>
+                    </div>
+                    <div class="action-card" onclick="viewAllMessages()">
+                        <div class="action-icon">📧</div>
+                        <div class="action-title">Message History</div>
+                        <div class="action-description">View past conversations</div>
+                    </div>
+                    <div class="action-card" onclick="broadcastMessage()">
+                        <div class="action-icon">📢</div>
+                        <div class="action-title">Broadcast</div>
+                        <div class="action-description">Message all vendors</div>
+                    </div>
+                </div>
+            `;
+        }
+        
         function showCreateWorkOrderModal() {
             const modal = document.createElement('div');
             modal.className = 'modal active';
@@ -3010,12 +5899,172 @@
             showToast('Profile saved successfully', 'success');
         }
         
+        function saveNotificationSettings() {
+            showToast('Notification preferences saved successfully', 'success');
+        }
+        
+        // Team Management Functions
+        function openAddTeamMemberModal() {
+            const modal = document.getElementById('addTeamMemberModal');
+            if (modal) {
+                modal.style.display = 'block';
+            }
+        }
+        
+        function closeAddTeamMemberModal() {
+            const modal = document.getElementById('addTeamMemberModal');
+            if (modal) {
+                modal.style.display = 'none';
+                // Reset form
+                document.getElementById('teamFirstName').value = '';
+                document.getElementById('teamLastName').value = '';
+                document.getElementById('teamEmail').value = '';
+                document.getElementById('teamPhone').value = '';
+                document.getElementById('teamRole').value = '';
+                document.querySelectorAll('#permissionsList input[type="checkbox"]').forEach(cb => cb.checked = false);
+            }
+        }
+        
+        function updatePermissions() {
+            const role = document.getElementById('teamRole').value;
+            const checkboxes = document.querySelectorAll('#permissionsList input[type="checkbox"]');
+            
+            // Reset all checkboxes
+            checkboxes.forEach(cb => cb.checked = false);
+            
+            // Set permissions based on role
+            switch(role) {
+                case 'admin':
+                    checkboxes.forEach(cb => cb.checked = true);
+                    break;
+                case 'manager':
+                    document.getElementById('perm1').checked = true;
+                    document.getElementById('perm2').checked = true;
+                    document.getElementById('perm4').checked = true;
+                    break;
+                case 'accountant':
+                    document.getElementById('perm1').checked = true;
+                    document.getElementById('perm3').checked = true;
+                    document.getElementById('perm4').checked = true;
+                    break;
+                case 'viewer':
+                    document.getElementById('perm1').checked = true;
+                    document.getElementById('perm4').checked = true;
+                    break;
+            }
+        }
+        
+        function addTeamMember() {
+            const firstName = document.getElementById('teamFirstName').value;
+            const lastName = document.getElementById('teamLastName').value;
+            const email = document.getElementById('teamEmail').value;
+            
+            if (!firstName || !lastName || !email) {
+                showToast('Please fill in all required fields', 'error');
+                return;
+            }
+            
+            showToast(`Team member ${firstName} ${lastName} added successfully`, 'success');
+            closeAddTeamMemberModal();
+        }
+        
+        function editTeamMember(id) {
+            showToast('Opening edit form for team member', 'info');
+        }
+        
+        function removeTeamMember(id) {
+            if (confirm('Are you sure you want to remove this team member?')) {
+                showToast('Team member removed successfully', 'success');
+            }
+        }
+        
+        function resendInvite(id) {
+            showToast('Invitation email resent successfully', 'success');
+        }
+        
         function markAllRead() {
             showToast('All notifications marked as read', 'success');
         }
         
         function addPaymentMethod() {
             showToast('Opening payment method form...', 'info');
+        }
+        
+        // Quality Assurance Functions
+        function reviewWorkOrder(workOrderId) {
+            document.getElementById('qaWorkOrderTitle').textContent = `Work Order: ${workOrderId}`;
+            document.getElementById('qaReviewModal').style.display = 'block';
+        }
+        
+        function closeQAReviewModal() {
+            document.getElementById('qaReviewModal').style.display = 'none';
+            // Reset form
+            document.querySelectorAll('#qaReviewModal input[type="radio"]').forEach(radio => radio.checked = false);
+            document.getElementById('qaComments').value = '';
+            // Reset star ratings
+            document.querySelectorAll('.star-rating').forEach(star => {
+                star.style.color = '#ddd';
+            });
+        }
+        
+        function setRating(category, rating) {
+            const container = document.getElementById(category + 'Rating');
+            const stars = container.querySelectorAll('.star-rating');
+            
+            stars.forEach((star, index) => {
+                if (index < rating) {
+                    star.style.color = '#ffc107';
+                } else {
+                    star.style.color = '#ddd';
+                }
+            });
+        }
+        
+        function submitQAReview() {
+            const approval = document.querySelector('input[name="approval"]:checked');
+            if (!approval) {
+                showToast('Please select an approval decision', 'error');
+                return;
+            }
+            
+            const decision = approval.value;
+            let message = '';
+            
+            switch(decision) {
+                case 'approve':
+                    message = 'Work order approved successfully!';
+                    break;
+                case 'request-changes':
+                    message = 'Change request submitted to vendor';
+                    break;
+                case 'reject':
+                    message = 'Work order rejected. Vendor will be notified.';
+                    break;
+            }
+            
+            showToast(message, decision === 'approve' ? 'success' : 'warning');
+            closeQAReviewModal();
+        }
+        
+        // Cross-Portal Analytics Functions
+        function updateAnalyticsPeriod(period) {
+            showToast(`Analytics updated for ${period} period`, 'info');
+        }
+        
+        function exportAnalytics() {
+            showToast('Exporting analytics report...', 'info');
+        }
+        
+        function scheduleReport() {
+            showToast('Opening report scheduling options...', 'info');
+        }
+        
+        function viewDetailedFlow() {
+            showToast('Loading detailed communication flow analysis...', 'info');
+        }
+        
+        function exportVendorReport() {
+            showToast('Exporting vendor performance report...', 'info');
         }
         
         // User Administration Functions

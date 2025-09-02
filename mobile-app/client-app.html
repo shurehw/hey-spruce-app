@@ -882,15 +882,18 @@
             <div style="font-size: 0.7rem;">Orders</div>
             <span class="notification-badge" style="position: absolute; top: 0.25rem; right: 0.5rem;">12</span>
         </a>
-        <a class="nav-item" onclick="showView('vendors')">
-            <svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                <circle cx="9" cy="7" r="4"></circle>
-                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-            </svg>
-            <div style="font-size: 0.7rem;">Vendors</div>
+        
+        <!-- Center Plus Button -->
+        <a class="nav-item nav-center-btn" onclick="createServiceRequest()" style="position: relative;">
+            <div class="center-button" style="position: absolute; top: -20px; left: 50%; transform: translateX(-50%); width: 56px; height: 56px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4); border: 3px solid white;">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+            </div>
+            <div style="font-size: 0.7rem; margin-top: 20px;">Create</div>
         </a>
+        
         <a class="nav-item" onclick="showView('invoices')">
             <svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>

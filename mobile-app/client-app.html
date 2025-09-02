@@ -146,6 +146,17 @@
         
         .nav-item.active {
             color: var(--primary);
+            background: var(--primary-light);
+        }
+        
+        .nav-item.active::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--primary);
         }
         
         .nav-item .icon {
@@ -197,17 +208,24 @@
         }
         
         .btn-mobile.primary {
-            background: var(--primary);
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             color: white;
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.25);
         }
         
         .btn-mobile.primary:hover {
-            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
         }
         
         .btn-mobile.secondary {
-            background: var(--gray-200);
-            color: var(--gray-700);
+            background: white;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+        
+        .btn-mobile.secondary:hover {
+            background: var(--primary-light);
         }
         
         .btn-mobile.danger {
@@ -989,6 +1007,16 @@
                 // Redirect to login
                 window.location.href = 'login.html';
             }
+        }
+        
+        // Location menu toggle
+        function toggleLocationMenu() {
+            const locations = ['All Locations', 'McDonald\'s - Sunset', 'Burger King - Melrose', 'Delilah LA', 'The Nice Guy'];
+            const currentLocation = document.getElementById('locationName').textContent;
+            const currentIndex = locations.indexOf(currentLocation);
+            const nextIndex = (currentIndex + 1) % locations.length;
+            document.getElementById('locationName').textContent = locations[nextIndex];
+            showToast(`Switched to ${locations[nextIndex]}`, 'info');
         }
         
         // Toast notification system

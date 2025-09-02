@@ -435,21 +435,25 @@
             setTimeout(() => {
                 // For demo, accept any email/password
                 if (email && password) {
-                    // Store user session
+                    // Store user session with expiration
                     const userData = {
                         email: email,
                         userType: selectedUserType,
                         company: selectedUserType === 'vendor' ? 'TechPro Services' : 
                                 selectedUserType === 'client' ? 'McDonald\'s - Sunset Blvd' : 
                                 'Hey Spruce Admin',
-                        timestamp: new Date().toISOString()
+                        timestamp: new Date().toISOString(),
+                        // Set expiration: 30 days if remember me, 24 hours if not
+                        expiresAt: new Date(Date.now() + (remember ? 30 * 24 * 60 * 60 * 1000 : 24 * 60 * 60 * 1000)).toISOString(),
+                        rememberMe: remember
                     };
                     
-                    if (remember) {
-                        localStorage.setItem('userSession', JSON.stringify(userData));
-                    } else {
-                        sessionStorage.setItem('userSession', JSON.stringify(userData));
-                    }
+                    // Always use localStorage for persistence
+                    localStorage.setItem('userSession', JSON.stringify(userData));
+                    
+                    // Store auth token separately for API calls (in production, this would be a JWT)
+                    localStorage.setItem('authToken', btoa(email + ':' + Date.now()));
+                    localStorage.setItem('sessionExpiry', userData.expiresAt);
                     
                     // Redirect based on user type
                     switch(selectedUserType) {
@@ -485,21 +489,64 @@
         
         // Check for existing session on load
         window.addEventListener('DOMContentLoaded', () => {
-            const session = localStorage.getItem('userSession') || sessionStorage.getItem('userSession');
+            const session = localStorage.getItem('userSession');
             if (session) {
                 const userData = JSON.parse(session);
-                // Auto-redirect if session exists
-                switch(userData.userType) {
-                    case 'vendor':
-                        window.location.href = 'subcontractor-app.html';
-                        break;
-                    case 'client':
-                        window.location.href = 'client-app.html';
-                        break;
-                    case 'admin':
-                        window.location.href = '../supplier-portal.html';
-                        break;
+                const expiry = new Date(userData.expiresAt);
+                const now = new Date();
+                
+                // Check if session is still valid
+                if (expiry > now) {
+                    // Extend session if user is active (refresh expiration)
+                    if (userData.rememberMe) {
+                        userData.expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
+                    } else {
+                        userData.expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
+                    }
+                    localStorage.setItem('userSession', JSON.stringify(userData));
+                    localStorage.setItem('sessionExpiry', userData.expiresAt);
+                    
+                    // Auto-redirect if session is valid
+                    switch(userData.userType) {
+                        case 'vendor':
+                            window.location.href = 'subcontractor-app.html';
+                            break;
+                        case 'client':
+                            window.location.href = 'client-app.html';
+                            break;
+                            case 'admin':
+                            window.location.href = '../supplier-portal.html';
+                            break;
+                    }
+                } else {
+                    // Session expired, clear it
+                    localStorage.removeItem('userSession');
+                    localStorage.removeItem('authToken');
+                    localStorage.removeItem('sessionExpiry');
+                    // Show message
+                    const errorMsg = document.getElementById('errorMessage');
+                    if (errorMsg) {
+                        errorMsg.textContent = 'Your session has expired. Please sign in again.';
+                        errorMsg.classList.add('show');
+                    }
                 }
+            }
+            
+            // Pre-fill email if it was remembered
+            const lastEmail = localStorage.getItem('lastEmail');
+            if (lastEmail) {
+                document.getElementById('email').value = lastEmail;
+                document.getElementById('remember').checked = true;
+            }
+        });
+        
+        // Save email for next time if remember me is checked
+        document.getElementById('remember').addEventListener('change', function() {
+            const email = document.getElementById('email').value;
+            if (this.checked && email) {
+                localStorage.setItem('lastEmail', email);
+            } else {
+                localStorage.removeItem('lastEmail');
             }
         });
     </script>

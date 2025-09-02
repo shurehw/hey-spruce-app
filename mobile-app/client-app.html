@@ -484,17 +484,73 @@
                 </svg>
                 <span class="notification-badge" id="notificationCount">3</span>
             </button>
-            <div class="location-badge" onclick="toggleLocationMenu()" style="cursor: pointer; background: var(--gray-100); padding: 0.5rem 0.75rem; border-radius: 6px; font-size: 0.875rem; font-weight: 500; display: flex; align-items: center; max-width: 150px;">
-                <span id="locationName" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">All Locations</span>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left: 0.25rem; flex-shrink: 0;">
-                    <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
+            <div class="location-selector" style="position: relative;">
+                <div class="location-badge" onclick="toggleLocationMenu()" style="cursor: pointer; background: var(--gray-100); padding: 0.5rem 0.75rem; border-radius: 6px; font-size: 0.875rem; font-weight: 500; display: flex; align-items: center; min-width: 120px; max-width: 180px;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem; flex-shrink: 0;">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                        <circle cx="12" cy="10" r="3"></circle>
+                    </svg>
+                    <span id="locationName" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1;">All Locations</span>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left: 0.5rem; flex-shrink: 0;">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </div>
             </div>
             <div class="user-menu" onclick="toggleUserMenu()" style="cursor: pointer; padding: 0.375rem; border-radius: 6px; display: flex; align-items: center; position: relative;">
                 <div style="width: 28px; height: 28px; border-radius: 4px; background: var(--primary); display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 0.75rem;">
                     JD
                 </div>
             </div>
+        </div>
+    </div>
+    
+    <!-- Location Dropdown Menu -->
+    <div id="locationDropdownMenu" style="display: none; position: fixed; top: 60px; right: 280px; background: white; border: 1px solid var(--gray-200); border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 220px; z-index: 1001;">
+        <div style="padding: 0.75rem; border-bottom: 1px solid var(--gray-200);">
+            <div style="font-weight: 600; color: var(--gray-700); font-size: 0.875rem;">Select Location</div>
+        </div>
+        <div style="max-height: 300px; overflow-y: auto;">
+            <a onclick="selectLocation('all', 'All Locations')" style="display: flex; align-items: center; padding: 0.75rem 1rem; color: var(--gray-700); text-decoration: none; transition: all 0.2s; cursor: pointer; border-left: 3px solid transparent;" onmouseover="this.style.background='var(--gray-50)'; this.style.borderLeftColor='var(--primary)'" onmouseout="this.style.background='transparent'; this.style.borderLeftColor='transparent'">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.75rem;">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M2 12h20"></path>
+                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                </svg>
+                <span>All Locations</span>
+            </a>
+            <a onclick="selectLocation('mcdonalds-sunset', 'McDonald\'s - Sunset')" style="display: flex; align-items: center; padding: 0.75rem 1rem; color: var(--gray-700); text-decoration: none; transition: all 0.2s; cursor: pointer; border-left: 3px solid transparent;" onmouseover="this.style.background='var(--gray-50)'; this.style.borderLeftColor='var(--primary)'" onmouseout="this.style.background='transparent'; this.style.borderLeftColor='transparent'">
+                <div style="width: 16px; height: 16px; border-radius: 4px; background: #FFC72C; margin-right: 0.75rem;"></div>
+                <span>McDonald's - Sunset Blvd</span>
+            </a>
+            <a onclick="selectLocation('burgerking-melrose', 'Burger King - Melrose')" style="display: flex; align-items: center; padding: 0.75rem 1rem; color: var(--gray-700); text-decoration: none; transition: all 0.2s; cursor: pointer; border-left: 3px solid transparent;" onmouseover="this.style.background='var(--gray-50)'; this.style.borderLeftColor='var(--primary)'" onmouseout="this.style.background='transparent'; this.style.borderLeftColor='transparent'">
+                <div style="width: 16px; height: 16px; border-radius: 4px; background: #0050AA; margin-right: 0.75rem;"></div>
+                <span>Burger King - Melrose</span>
+            </a>
+            <a onclick="selectLocation('delilah', 'Delilah LA')" style="display: flex; align-items: center; padding: 0.75rem 1rem; color: var(--gray-700); text-decoration: none; transition: all 0.2s; cursor: pointer; border-left: 3px solid transparent;" onmouseover="this.style.background='var(--gray-50)'; this.style.borderLeftColor='var(--primary)'" onmouseout="this.style.background='transparent'; this.style.borderLeftColor='transparent'">
+                <div style="width: 16px; height: 16px; border-radius: 4px; background: #E91E63; margin-right: 0.75rem;"></div>
+                <span>Delilah LA</span>
+            </a>
+            <a onclick="selectLocation('niceguy', 'The Nice Guy')" style="display: flex; align-items: center; padding: 0.75rem 1rem; color: var(--gray-700); text-decoration: none; transition: all 0.2s; cursor: pointer; border-left: 3px solid transparent;" onmouseover="this.style.background='var(--gray-50)'; this.style.borderLeftColor='var(--primary)'" onmouseout="this.style.background='transparent'; this.style.borderLeftColor='transparent'">
+                <div style="width: 16px; height: 16px; border-radius: 4px; background: #9C27B0; margin-right: 0.75rem;"></div>
+                <span>The Nice Guy</span>
+            </a>
+            <a onclick="selectLocation('poppy', 'Poppy')" style="display: flex; align-items: center; padding: 0.75rem 1rem; color: var(--gray-700); text-decoration: none; transition: all 0.2s; cursor: pointer; border-left: 3px solid transparent;" onmouseover="this.style.background='var(--gray-50)'; this.style.borderLeftColor='var(--primary)'" onmouseout="this.style.background='transparent'; this.style.borderLeftColor='transparent'">
+                <div style="width: 16px; height: 16px; border-radius: 4px; background: #FF6B6B; margin-right: 0.75rem;"></div>
+                <span>Poppy</span>
+            </a>
+            <a onclick="selectLocation('bootsy', 'Bootsy Bellows')" style="display: flex; align-items: center; padding: 0.75rem 1rem; color: var(--gray-700); text-decoration: none; transition: all 0.2s; cursor: pointer; border-left: 3px solid transparent;" onmouseover="this.style.background='var(--gray-50)'; this.style.borderLeftColor='var(--primary)'" onmouseout="this.style.background='transparent'; this.style.borderLeftColor='transparent'">
+                <div style="width: 16px; height: 16px; border-radius: 4px; background: #4CAF50; margin-right: 0.75rem;"></div>
+                <span>Bootsy Bellows</span>
+            </a>
+        </div>
+        <div style="padding: 0.75rem; border-top: 1px solid var(--gray-200);">
+            <a onclick="manageLocations()" style="display: flex; align-items: center; justify-content: center; padding: 0.5rem; color: var(--primary); text-decoration: none; font-weight: 500; font-size: 0.875rem; cursor: pointer;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <path d="M12 1v6m0 6v6m11-11h-6m-6 0H1"></path>
+                </svg>
+                Manage All Locations
+            </a>
         </div>
     </div>
     
@@ -1111,12 +1167,21 @@
             menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
         }
         
-        // Close menu when clicking outside
+        // Close menus when clicking outside
         document.addEventListener('click', function(event) {
-            const menu = document.getElementById('userDropdownMenu');
+            const userMenu = document.getElementById('userDropdownMenu');
             const userMenuBtn = document.querySelector('.user-menu');
-            if (menu && !menu.contains(event.target) && !userMenuBtn.contains(event.target)) {
-                menu.style.display = 'none';
+            const locationMenu = document.getElementById('locationDropdownMenu');
+            const locationBtn = document.querySelector('.location-badge');
+            
+            // Close user menu if clicking outside
+            if (userMenu && !userMenu.contains(event.target) && !userMenuBtn.contains(event.target)) {
+                userMenu.style.display = 'none';
+            }
+            
+            // Close location menu if clicking outside
+            if (locationMenu && !locationMenu.contains(event.target) && !locationBtn.contains(event.target)) {
+                locationMenu.style.display = 'none';
             }
         });
         
@@ -1132,12 +1197,34 @@
         
         // Location menu toggle
         function toggleLocationMenu() {
-            const locations = ['All Locations', 'McDonald\'s - Sunset', 'Burger King - Melrose', 'Delilah LA', 'The Nice Guy'];
-            const currentLocation = document.getElementById('locationName').textContent;
-            const currentIndex = locations.indexOf(currentLocation);
-            const nextIndex = (currentIndex + 1) % locations.length;
-            document.getElementById('locationName').textContent = locations[nextIndex];
-            showToast(`Switched to ${locations[nextIndex]}`, 'info');
+            const locationMenu = document.getElementById('locationDropdownMenu');
+            const userMenu = document.getElementById('userDropdownMenu');
+            
+            // Close user menu if open
+            if (userMenu) userMenu.style.display = 'none';
+            
+            // Toggle location menu
+            locationMenu.style.display = locationMenu.style.display === 'none' ? 'block' : 'none';
+        }
+        
+        function selectLocation(locationId, locationName) {
+            document.getElementById('locationName').textContent = locationName;
+            document.getElementById('locationDropdownMenu').style.display = 'none';
+            showToast(`Switched to ${locationName}`, 'info');
+            
+            // In a real app, this would filter data based on location
+            filterDataByLocation(locationId);
+        }
+        
+        function filterDataByLocation(locationId) {
+            // Update dashboard stats and work orders based on selected location
+            if (locationId === 'all') {
+                // Show all data
+                console.log('Showing all locations data');
+            } else {
+                // Filter by specific location
+                console.log(`Filtering by location: ${locationId}`);
+            }
         }
         
         // Toast notification system

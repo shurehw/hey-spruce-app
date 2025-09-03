@@ -9138,6 +9138,19 @@ Spruce - Professional Service Management
         }
         
         function editTeamMember(id) {
+            // Find the row that contains this team member
+            const row = document.querySelector(`button[onclick="editTeamMember('${id}')"]`).closest('tr');
+            const cells = row.cells;
+            
+            // Extract data from the row
+            const fullName = cells[0].textContent.trim();
+            const nameParts = fullName.split(' ');
+            const firstName = nameParts[0] || '';
+            const lastName = nameParts.slice(1).join(' ') || '';
+            const email = cells[1].textContent.trim();
+            const role = cells[2].textContent.trim();
+            const department = cells[3].textContent.trim();
+            
             const modal = document.createElement('div');
             modal.className = 'modal';
             modal.innerHTML = `
@@ -9151,29 +9164,31 @@ Spruce - Professional Service Management
                             <div class="form-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
                                 <div class="form-group">
                                     <label>First Name</label>
-                                    <input type="text" id="editFirstName" required value="John">
+                                    <input type="text" id="editFirstName" required value="${firstName}">
                                 </div>
                                 <div class="form-group">
                                     <label>Last Name</label>
-                                    <input type="text" id="editLastName" required value="Doe">
+                                    <input type="text" id="editLastName" required value="${lastName}">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label>Email Address</label>
-                                <input type="email" id="editEmail" required value="john.doe@example.com">
+                                <input type="email" id="editEmail" required value="${email}">
                             </div>
                             <div class="form-group">
                                 <label>Role</label>
                                 <select id="editRole" required>
-                                    <option value="Administrator">Administrator</option>
-                                    <option value="Manager">Manager</option>
-                                    <option value="Technician">Technician</option>
-                                    <option value="Viewer">Viewer</option>
+                                    <option value="Administrator" ${role === 'Admin' || role === 'Administrator' ? 'selected' : ''}>Administrator</option>
+                                    <option value="Manager" ${role === 'Manager' || role === 'Vendor Manager' ? 'selected' : ''}>Manager</option>
+                                    <option value="Technician" ${role === 'Technician' ? 'selected' : ''}>Technician</option>
+                                    <option value="Viewer" ${role === 'Viewer' ? 'selected' : ''}>Viewer</option>
+                                    <option value="Coordinator" ${role === 'Coordinator' ? 'selected' : ''}>Coordinator</option>
+                                    <option value="Analyst" ${role === 'Analyst' ? 'selected' : ''}>Analyst</option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label>Department</label>
-                                <input type="text" id="editDepartment" value="Operations">
+                                <input type="text" id="editDepartment" value="${department}">
                             </div>
                             <div class="form-actions">
                                 <button type="button" class="btn btn-secondary" onclick="this.closest('.modal').remove()">Cancel</button>

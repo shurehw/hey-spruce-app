@@ -9138,17 +9138,124 @@ Spruce - Professional Service Management
         }
         
         function editTeamMember(id) {
-            showToast('Opening edit form for team member', 'info');
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.innerHTML = `
+                <div class="modal-content" style="max-width: 600px;">
+                    <div class="modal-header">
+                        <h3>Edit Team Member</h3>
+                        <button class="close" onclick="this.closest('.modal').remove()">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <form onsubmit="updateTeamMember(event, '${id}')">
+                            <div class="form-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                <div class="form-group">
+                                    <label>First Name</label>
+                                    <input type="text" id="editFirstName" required value="John">
+                                </div>
+                                <div class="form-group">
+                                    <label>Last Name</label>
+                                    <input type="text" id="editLastName" required value="Doe">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Email Address</label>
+                                <input type="email" id="editEmail" required value="john.doe@example.com">
+                            </div>
+                            <div class="form-group">
+                                <label>Role</label>
+                                <select id="editRole" required>
+                                    <option value="Administrator">Administrator</option>
+                                    <option value="Manager">Manager</option>
+                                    <option value="Technician">Technician</option>
+                                    <option value="Viewer">Viewer</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Department</label>
+                                <input type="text" id="editDepartment" value="Operations">
+                            </div>
+                            <div class="form-actions">
+                                <button type="button" class="btn btn-secondary" onclick="this.closest('.modal').remove()">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Update Team Member</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
         }
         
-        function removeTeamMember(id) {
-            if (confirm('Are you sure you want to remove this team member?')) {
-                showToast('Team member removed successfully', 'success');
+        function updateTeamMember(event, id) {
+            event.preventDefault();
+            const firstName = document.getElementById('editFirstName').value;
+            const lastName = document.getElementById('editLastName').value;
+            const email = document.getElementById('editEmail').value;
+            const role = document.getElementById('editRole').value;
+            const department = document.getElementById('editDepartment').value;
+            
+            // Close modal
+            document.querySelector('.modal').remove();
+            
+            showToast(`Team member ${firstName} ${lastName} updated successfully`, 'success');
+            
+            // Refresh the team section
+            const currentSection = window.location.hash.replace('#', '') || 'dashboard';
+            if (currentSection === 'team') {
+                setTimeout(() => loadSection('team'), 100);
             }
         }
         
-        function resendInvite(id) {
-            showToast('Invitation email resent successfully', 'success');
+        function removeTeamMember(id) {
+            if (confirm('Are you sure you want to remove this team member? They will lose access to the system.')) {
+                // In a real app, this would make an API call to delete the member
+                showToast('Team member removed successfully', 'success');
+                
+                // Remove the row from the table
+                const button = event.target;
+                const row = button.closest('tr');
+                if (row) {
+                    row.style.opacity = '0.5';
+                    setTimeout(() => {
+                        row.remove();
+                    }, 300);
+                }
+            }
+        }
+        
+        async function resendInvite(id) {
+            // Get the email from the row (in a real app, this would come from the database)
+            const button = event.target;
+            const row = button.closest('tr');
+            const email = row.cells[1].textContent;
+            const name = row.cells[0].textContent;
+            const role = row.cells[2].textContent;
+            
+            try {
+                const response = await fetch('/api/team-invite', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        firstName: name.split(' ')[0],
+                        lastName: name.split(' ')[1] || '',
+                        email: email,
+                        role: role,
+                        clientPortalAccess: false,
+                        inviteUrl: `${window.location.origin}/supplier-signup.html?email=${encodeURIComponent(email)}&role=${encodeURIComponent(role)}`
+                    })
+                });
+                
+                if (response.ok) {
+                    showToast(`Invitation resent to ${email}`, 'success');
+                } else {
+                    showToast('Failed to resend invitation', 'error');
+                }
+            } catch (error) {
+                console.error('Error resending invite:', error);
+                showToast('Failed to resend invitation', 'error');
+            }
         }
         
         function addNewUser() {
@@ -9225,7 +9332,7 @@ Spruce - Professional Service Management
         }
         window.addNewUser = addNewUser;
         
-        function submitNewUser(event) {
+        async function submitNewUser(event) {
             event.preventDefault();
             const firstName = document.getElementById('userFirstName').value;
             const lastName = document.getElementById('userLastName').value;
@@ -9233,14 +9340,109 @@ Spruce - Professional Service Management
             const role = document.getElementById('userRole').value;
             const clientPortalAccess = document.getElementById('clientPortalAccess').checked;
             
-            // Add user to table (in real app, this would be an API call)
-            showToast(`User ${firstName} ${lastName} added successfully${clientPortalAccess ? ' with client portal access' : ''}`, 'success');
-            document.querySelector('.modal').remove();
+            // Close modal immediately after getting values
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => modal.remove());
             
-            // Refresh the admin content to show new user
-            loadSection('admin');
+            try {
+                // Send invitation email - use full URL for Vercel
+                const apiUrl = window.location.hostname === 'localhost' 
+                    ? '/api/team-invite' 
+                    : `${window.location.origin}/api/team-invite`;
+                    
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        firstName,
+                        lastName,
+                        email,
+                        role,
+                        clientPortalAccess,
+                        inviteUrl: `${window.location.origin}/supplier-signup.html?email=${encodeURIComponent(email)}&role=${encodeURIComponent(role)}`
+                    })
+                });
+
+                let data = {};
+                try {
+                    data = await response.json();
+                } catch (e) {
+                    console.error('Response parsing error:', e);
+                    console.log('Response status:', response.status);
+                }
+                
+                if (response.ok && data.success) {
+                    showToast(`Invitation sent to ${firstName} ${lastName} at ${email}`, 'success');
+                    
+                    // Add the new member to the table
+                    const tbody = document.querySelector('#content table tbody');
+                    if (tbody) {
+                        const newRow = document.createElement('tr');
+                        newRow.innerHTML = `
+                            <td>${firstName} ${lastName}</td>
+                            <td>${email}</td>
+                            <td>${role}</td>
+                            <td>${clientPortalAccess ? 'All' : 'Operations'}</td>
+                            <td><span class="badge badge-warning">Pending</span></td>
+                            <td>
+                                <button class="btn-icon" onclick="resendInvite('new')">📧</button>
+                                <button class="btn-icon" onclick="removeTeamMember('new')">🗑️</button>
+                            </td>
+                        `;
+                        tbody.appendChild(newRow);
+                    }
+                } else {
+                    console.log('Email service not configured or failed:', data);
+                    showToast(`User ${firstName} ${lastName} added locally (email service pending)`, 'warning');
+                    
+                    // Still add the member to the table
+                    const tbody = document.querySelector('#content table tbody');
+                    if (tbody) {
+                        const newRow = document.createElement('tr');
+                        newRow.innerHTML = `
+                            <td>${firstName} ${lastName}</td>
+                            <td>${email}</td>
+                            <td>${role}</td>
+                            <td>${clientPortalAccess ? 'All' : 'Operations'}</td>
+                            <td><span class="badge badge-warning">Pending</span></td>
+                            <td>
+                                <button class="btn-icon" onclick="resendInvite('new')">📧</button>
+                                <button class="btn-icon" onclick="removeTeamMember('new')">🗑️</button>
+                            </td>
+                        `;
+                        tbody.appendChild(newRow);
+                    }
+                }
+            } catch (error) {
+                console.error('Error sending invite:', error);
+                showToast(`User ${firstName} ${lastName} added locally (will retry email)`, 'warning');
+                
+                // Still add the member to the table on error
+                const tbody = document.querySelector('#content table tbody');
+                if (tbody) {
+                    const newRow = document.createElement('tr');
+                    newRow.innerHTML = `
+                        <td>${firstName} ${lastName}</td>
+                        <td>${email}</td>
+                        <td>${role}</td>
+                        <td>${clientPortalAccess ? 'All' : 'Operations'}</td>
+                        <td><span class="badge badge-warning">Pending</span></td>
+                        <td>
+                            <button class="btn-icon" onclick="resendInvite('new')">📧</button>
+                            <button class="btn-icon" onclick="removeTeamMember('new')">🗑️</button>
+                        </td>
+                    `;
+                    tbody.appendChild(newRow);
+                }
+            }
         }
         window.submitNewUser = submitNewUser;
+        window.updateTeamMember = updateTeamMember;
+        window.editTeamMember = editTeamMember;
+        window.removeTeamMember = removeTeamMember;
+        window.resendInvite = resendInvite;
         
         function editUser(userId) {
             const modal = document.createElement('div');

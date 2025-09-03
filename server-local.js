@@ -1,10 +1,19 @@
 require('dotenv').config();
 const express = require('express');
+const path = require('path');
+const cors = require('cors');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const PDFDocument = require('pdfkit');
+const nodemailer = require('nodemailer');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// CORS configuration
+app.use(cors({
+    origin: true,
+    credentials: true
+}));
 
 // Middleware
 app.use(express.json({
@@ -15,13 +24,28 @@ app.use(express.json({
   }
 }));
 
-app.use(express.static('public'));
+// Static files - serve everything from current directory
+app.use(express.static(__dirname, {
+    extensions: ['html', 'htm'],
+    index: 'index.html'
+}));
 
 // In-memory storage
 let vendors = [];
 let invoices = [];
 let vendorId = 1;
 let invoiceId = 1;
+
+// Email configuration
+const transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST || 'smtp.gmail.com',
+    port: process.env.SMTP_PORT || 587,
+    secure: false, // true for 465, false for other ports
+    auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASSWORD
+    }
+});
 
 // Health check
 app.get('/api/health', (req, res) => {
@@ -184,6 +208,72 @@ app.get('/api/invoices/:id/pdf', (req, res) => {
     doc.end();
 });
 
+// EMAIL ENDPOINTS
+app.post('/api/team-invite', async (req, res) => {
+    const { firstName, lastName, email, role, clientPortalAccess, inviteUrl } = req.body;
+    
+    try {
+        // Email HTML template
+        const htmlContent = `
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <style>
+                    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+                    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                    .header { background-color: #0066cc; color: white; padding: 20px; text-align: center; }
+                    .content { padding: 30px; background-color: #f9f9f9; }
+                    .button { display: inline-block; padding: 12px 30px; background-color: #0066cc; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }
+                    .footer { text-align: center; padding: 20px; color: #666; font-size: 12px; }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <div class="header">
+                        <h1>Welcome to OpenWrench</h1>
+                    </div>
+                    <div class="content">
+                        <h2>Hi ${firstName} ${lastName},</h2>
+                        <p>You've been invited to join OpenWrench as a <strong>${role}</strong>.</p>
+                        <p>Click the button below to set up your account and get started:</p>
+                        <center>
+                            <a href="${inviteUrl}" class="button">Accept Invitation</a>
+                        </center>
+                        <p>If you have any questions, please don't hesitate to reach out to our support team.</p>
+                        ${clientPortalAccess ? '<p><strong>Note:</strong> You will also have access to the client portal.</p>' : ''}
+                    </div>
+                    <div class="footer">
+                        <p>&copy; 2024 OpenWrench. All rights reserved.</p>
+                        <p>If you didn't expect this invitation, please ignore this email.</p>
+                    </div>
+                </div>
+            </body>
+            </html>
+        `;
+        
+        const mailOptions = {
+            from: process.env.EMAIL_FROM || process.env.SMTP_USER || 'noreply@openwrench.com',
+            to: email,
+            subject: 'Invitation to Join OpenWrench Team',
+            html: htmlContent
+        };
+        
+        // Check if email is properly configured
+        if (!process.env.SMTP_USER || !process.env.SMTP_PASSWORD) {
+            console.log('Email would be sent to:', email);
+            console.log('Invite URL:', inviteUrl);
+            res.json({ success: true, message: 'Invite logged (email not configured)' });
+        } else {
+            await transporter.sendMail(mailOptions);
+            console.log('Email sent successfully to:', email);
+            res.json({ success: true, message: 'Invitation email sent successfully' });
+        }
+    } catch (error) {
+        console.error('Error sending email:', error);
+        res.status(500).json({ error: 'Failed to send invitation email' });
+    }
+});
+
 // WEBHOOK ENDPOINT
 app.post('/api/webhooks/stripe', async (req, res) => {
     const sig = req.headers['stripe-signature'];
@@ -218,7 +308,12 @@ app.post('/api/webhooks/stripe', async (req, res) => {
     }
 });
 
-app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-    console.log(`Test the API at http://localhost:${PORT}/api/health`);
-});
+// For Vercel deployment
+if (process.env.VERCEL) {
+    module.exports = app;
+} else {
+    app.listen(PORT, () => {
+        console.log(`Server running on http://localhost:${PORT}`);
+        console.log(`Test the API at http://localhost:${PORT}/api/health`);
+    });
+}

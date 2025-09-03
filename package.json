@@ -2,10 +2,9 @@
   "name": "openwrench-stripe",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "node server.js",
+    "start": "node server-local.js",
+    "dev": "node server-local.js",
     "deploy": "vercel",
     "deploy:prod": "vercel --prod",
     "test": "node test-all-features.js",

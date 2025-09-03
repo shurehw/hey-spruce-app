@@ -135,7 +135,8 @@
       "Bash(start \"\" \"https://openwrench-portal-fwbbnvikg-jacob-shures-projects.vercel.app/supplier-portal.html\")",
       "Bash(start \"\" \"https://openwrench-portal-1ucit3ajq-jacob-shures-projects.vercel.app/supplier-portal.html\")",
       "Bash(start \"\" \"https://openwrench-portal-mdusrgrbi-jacob-shures-projects.vercel.app/supplier-portal.html\")",
-      "Bash(start \"\" \"https://openwrench-portal-386w6mbda-jacob-shures-projects.vercel.app/supplier-portal.html\")"
+      "Bash(start \"\" \"https://openwrench-portal-386w6mbda-jacob-shures-projects.vercel.app/supplier-portal.html\")",
+      "Bash(start \"\" \"https://openwrench-portal-n0afl4aps-jacob-shures-projects.vercel.app/\")"
     ],
     "deny": [],
     "ask": [],

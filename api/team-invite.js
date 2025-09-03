@@ -28,38 +28,52 @@ module.exports = async (req, res) => {
     const { firstName, lastName, email, role, clientPortalAccess, inviteUrl } = req.body;
     
     try {
-        // Email HTML template
+        // Email HTML template with Hey Spruce branding
         const htmlContent = `
             <!DOCTYPE html>
             <html>
             <head>
                 <style>
-                    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-                    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-                    .header { background-color: #0066cc; color: white; padding: 20px; text-align: center; }
-                    .content { padding: 30px; background-color: #f9f9f9; }
-                    .button { display: inline-block; padding: 12px 30px; background-color: #0066cc; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }
-                    .footer { text-align: center; padding: 20px; color: #666; font-size: 12px; }
+                    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; }
+                    .container { max-width: 600px; margin: 0 auto; background: white; }
+                    .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 40px 20px; text-align: center; }
+                    .logo { font-size: 36px; font-weight: bold; margin-bottom: 10px; }
+                    .content { padding: 40px 30px; background-color: #ffffff; }
+                    .button { display: inline-block; padding: 14px 32px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-decoration: none; border-radius: 8px; margin: 25px 0; font-weight: 600; font-size: 16px; }
+                    .button:hover { opacity: 0.9; }
+                    .footer { text-align: center; padding: 30px 20px; color: #666; font-size: 12px; background-color: #f8f9fa; }
+                    h2 { color: #333; margin-bottom: 20px; }
+                    p { margin: 15px 0; color: #555; }
                 </style>
             </head>
             <body>
                 <div class="container">
                     <div class="header">
-                        <h1>Welcome to OpenWrench</h1>
+                        <div class="logo">🌲 Hey Spruce</div>
+                        <h1 style="margin: 0; font-size: 24px; font-weight: 300;">Welcome to the Spruce Portal</h1>
                     </div>
                     <div class="content">
                         <h2>Hi ${firstName} ${lastName},</h2>
-                        <p>You've been invited to join OpenWrench as a <strong>${role}</strong>.</p>
+                        <p>You've been invited to join the Hey Spruce Supplier Portal as a <strong>${role}</strong>.</p>
                         <p>Click the button below to set up your account and get started:</p>
                         <center>
                             <a href="${inviteUrl}" class="button">Accept Invitation</a>
                         </center>
-                        <p>If you have any questions, please don't hesitate to reach out to our support team.</p>
+                        <p>Once you accept, you'll have access to:</p>
+                        <ul style="color: #555; text-align: left; max-width: 400px; margin: 20px auto;">
+                            <li>Manage work orders and service requests</li>
+                            <li>Track equipment and maintenance schedules</li>
+                            <li>Submit proposals and invoices</li>
+                            <li>Communicate with the Hey Spruce team</li>
+                        </ul>
                         ${clientPortalAccess ? '<p><strong>Note:</strong> You will also have access to the client portal.</p>' : ''}
+                        <p>If you have any questions, please contact us at <a href="tel:877-253-2646" style="color: #667eea;">877-253-2646</a></p>
                     </div>
                     <div class="footer">
-                        <p>&copy; 2024 OpenWrench. All rights reserved.</p>
-                        <p>If you didn't expect this invitation, please ignore this email.</p>
+                        <p style="margin: 5px 0;"><strong>Hey Spruce</strong></p>
+                        <p style="margin: 5px 0;">Property Maintenance Solutions</p>
+                        <p style="margin: 15px 0; color: #999;">&copy; 2024 Hey Spruce. All rights reserved.</p>
+                        <p style="margin: 5px 0; color: #999; font-size: 11px;">If you didn't expect this invitation, please ignore this email.</p>
                     </div>
                 </div>
             </body>
@@ -67,9 +81,9 @@ module.exports = async (req, res) => {
         `;
         
         const mailOptions = {
-            from: process.env.EMAIL_FROM || process.env.SMTP_USER || 'noreply@openwrench.com',
+            from: process.env.EMAIL_FROM || process.env.SMTP_USER || 'noreply@heyspruce.com',
             to: email,
-            subject: 'Invitation to Join OpenWrench Team',
+            subject: 'Invitation to Join Hey Spruce Supplier Portal',
             html: htmlContent
         };
         

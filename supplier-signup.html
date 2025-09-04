@@ -13,7 +13,7 @@
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #1e3a5f;
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -31,15 +31,32 @@
         }
         
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #1e3a5f;
             color: white;
             padding: 40px 30px;
             text-align: center;
         }
         
-        .logo {
-            font-size: 48px;
-            margin-bottom: 10px;
+        .logo-circle {
+            width: 120px;
+            height: 120px;
+            background: #1e3a5f;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 4px solid white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .logo-text {
+            font-family: 'Brush Script MT', cursive, 'Segoe Script', 'Lucida Handwriting', sans-serif;
+            font-size: 28px;
+            color: white;
+            text-align: center;
+            line-height: 1.2;
+            font-weight: normal;
         }
         
         .header h1 {
@@ -58,11 +75,11 @@
         }
         
         .welcome-message {
-            background-color: #f0f4ff;
+            background-color: #e8f0f7;
             padding: 15px;
             border-radius: 8px;
             margin-bottom: 30px;
-            color: #4a5568;
+            color: #1e3a5f;
         }
         
         .form-group {
@@ -94,8 +111,8 @@
         input[type="password"]:focus,
         input[type="tel"]:focus {
             outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            border-color: #1e3a5f;
+            box-shadow: 0 0 0 3px rgba(30, 58, 95, 0.1);
         }
         
         input[readonly] {
@@ -127,13 +144,14 @@
         }
         
         .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #1e3a5f;
             color: white;
         }
         
         .btn-primary:hover {
+            background: #2a4d7a;
             transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 10px 25px rgba(30, 58, 95, 0.3);
         }
         
         .footer {
@@ -149,8 +167,9 @@
         }
         
         .footer a {
-            color: #667eea;
+            color: #1e3a5f;
             text-decoration: none;
+            font-weight: 600;
         }
         
         .footer a:hover {
@@ -181,9 +200,11 @@
 <body>
     <div class="signup-container">
         <div class="header">
-            <div class="logo">🌲</div>
-            <h1>Hey Spruce</h1>
-            <p>Complete Your Registration</p>
+            <div class="logo-circle">
+                <div class="logo-text">Hey<br>Spruce</div>
+            </div>
+            <h1 style="margin: 0; font-size: 24px; font-weight: 300;">Welcome to the Spruce Portal</h1>
+            <p style="margin-top: 10px; opacity: 0.9;">Complete Your Registration</p>
         </div>
         
         <div class="form-container" id="signupForm">

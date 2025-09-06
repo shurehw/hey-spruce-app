@@ -1,18 +1,21 @@
 {
-  "framework": null,
-  "buildCommand": "",
-  "outputDirectory": ".",
   "functions": {
-    "api/**/*.js": {
+    "api/*.js": {
       "maxDuration": 10
     }
   },
-  "rewrites": [
+  "crons": [
     {
-      "source": "/api/(.*)",
-      "destination": "/api/$1"
+      "path": "/api/notifications-enhanced/cron-appointments",
+      "schedule": "0 8 * * *"
+    },
+    {
+      "path": "/api/notifications-enhanced/cron-contracts",
+      "schedule": "0 9 * * *"
+    },
+    {
+      "path": "/api/notifications-enhanced/cron-quotes",
+      "schedule": "0 10 * * *"
     }
-  ],
-  "cleanUrls": true,
-  "trailingSlash": false
+  ]
 }

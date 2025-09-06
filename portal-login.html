@@ -418,6 +418,8 @@
             }
         }
     </style>
+    <!-- Supabase Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
     <!-- Background shapes -->
@@ -534,7 +536,73 @@
     </div>
     
     <script>
-        function handleLogin(event) {
+        // Initialize Supabase
+        const SUPABASE_URL = 'https://uokmehjqcxmcoavnszid.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVva21laGpxY3htY29hdm5zemlkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzY4NzgzNzksImV4cCI6MjA1MjQ1NDM3OX0.VmJTh44H1VCCRhLQFPMiXomWNQOQzLqvxqxQw0JX9qo';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // Check if user is already logged in
+        async function checkExistingSession() {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session) {
+                // Get user profile to determine portal
+                const { data: profile } = await supabase
+                    .from('user_profiles')
+                    .select('role')
+                    .eq('id', session.user.id)
+                    .single();
+                
+                if (profile) {
+                    redirectToPortal(profile.role);
+                }
+            }
+        }
+
+        // Redirect based on role
+        function redirectToPortal(role) {
+            const lastPortal = localStorage.getItem('lastPortal');
+            
+            // Use last portal if valid for this role
+            if (lastPortal && canAccessPortal(role, lastPortal)) {
+                switch(lastPortal) {
+                    case 'client':
+                        window.location.href = '/client-portal.html';
+                        break;
+                    case 'admin':
+                        window.location.href = '/supplier-portal.html';
+                        break;
+                    case 'subcontractor':
+                        window.location.href = '/subcontractor-portal.html';
+                        break;
+                }
+            } else {
+                // Default redirects based on role
+                switch(role) {
+                    case 'client':
+                        window.location.href = '/client-portal.html';
+                        break;
+                    case 'admin':
+                        window.location.href = '/supplier-portal.html';
+                        break;
+                    case 'subcontractor':
+                        window.location.href = '/subcontractor-portal.html';
+                        break;
+                    default:
+                        console.error('Unknown role:', role);
+                }
+            }
+        }
+
+        function canAccessPortal(role, portal) {
+            const portalRoleMap = {
+                'client': ['client', 'admin'],
+                'admin': ['admin'],
+                'subcontractor': ['subcontractor', 'admin']
+            };
+            return portalRoleMap[portal]?.includes(role) || false;
+        }
+
+        async function handleLogin(event) {
             event.preventDefault();
             
             const portal = document.querySelector('input[name="portal"]:checked').value;
@@ -546,43 +614,89 @@
             document.getElementById('errorMessage').style.display = 'none';
             document.getElementById('successMessage').style.display = 'none';
             
-            // Store login info if remember is checked
-            if (remember) {
-                localStorage.setItem('rememberedEmail', email);
-                localStorage.setItem('rememberedPortal', portal);
-            } else {
-                localStorage.removeItem('rememberedEmail');
-                localStorage.removeItem('rememberedPortal');
-            }
-            
-            // Show success message
+            // Show loading message
             const successMsg = document.getElementById('successMessage');
             successMsg.textContent = 'Logging in...';
             successMsg.style.display = 'block';
             
-            // Simulate login and redirect based on portal type
-            setTimeout(() => {
-                // In production, this would validate credentials with the server
-                localStorage.setItem('userEmail', email);
-                localStorage.setItem('userPortal', portal);
-                localStorage.setItem('isLoggedIn', 'true');
-                
-                // Redirect to appropriate portal
-                switch(portal) {
-                    case 'client':
-                        window.location.href = '/client-portal.html';
-                        break;
-                    case 'admin':
-                        window.location.href = '/supplier-portal.html';
-                        break;
-                    case 'subcontractor':
-                        window.location.href = '/subcontractor-portal.html';
-                        break;
+            try {
+                // Authenticate with Supabase
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email,
+                    password
+                });
+
+                if (error) throw error;
+
+                // Check user profile and permissions
+                const { data: profile, error: profileError } = await supabase
+                    .from('user_profiles')
+                    .select('*')
+                    .eq('id', data.user.id)
+                    .single();
+
+                if (profileError) {
+                    // If no profile exists, create one
+                    const { data: newProfile, error: createError } = await supabase
+                        .from('user_profiles')
+                        .insert({
+                            id: data.user.id,
+                            email: email,
+                            full_name: email.split('@')[0],
+                            role: portal === 'admin' ? 'admin' : portal
+                        })
+                        .select()
+                        .single();
+
+                    if (createError) throw createError;
+                    profile = newProfile;
                 }
-            }, 1000);
+
+                // Verify portal access
+                if (!canAccessPortal(profile.role, portal)) {
+                    // Sign out if no access
+                    await supabase.auth.signOut();
+                    throw new Error(`Your account does not have access to the ${portal} portal.`);
+                }
+
+                // Store preferences if remember is checked
+                if (remember) {
+                    localStorage.setItem('rememberedEmail', email);
+                    localStorage.setItem('rememberedPortal', portal);
+                } else {
+                    localStorage.removeItem('rememberedEmail');
+                    localStorage.removeItem('rememberedPortal');
+                }
+
+                // Store portal preference
+                localStorage.setItem('lastPortal', portal);
+
+                // Redirect to appropriate portal
+                successMsg.textContent = 'Login successful! Redirecting...';
+                setTimeout(() => {
+                    switch(portal) {
+                        case 'client':
+                            window.location.href = '/client-portal.html';
+                            break;
+                        case 'admin':
+                            window.location.href = '/supplier-portal.html';
+                            break;
+                        case 'subcontractor':
+                            window.location.href = '/subcontractor-portal.html';
+                            break;
+                    }
+                }, 500);
+
+            } catch (error) {
+                console.error('Login error:', error);
+                const errorMsg = document.getElementById('errorMessage');
+                errorMsg.textContent = error.message || 'Invalid email or password. Please try again.';
+                errorMsg.style.display = 'block';
+                successMsg.style.display = 'none';
+            }
         }
         
-        function showForgotPassword(event) {
+        async function showForgotPassword(event) {
             event.preventDefault();
             const email = document.getElementById('email').value;
             
@@ -593,14 +707,26 @@
                 return;
             }
             
-            const successMsg = document.getElementById('successMessage');
-            successMsg.textContent = `Password reset instructions have been sent to ${email}`;
-            successMsg.style.display = 'block';
-            
-            // Hide after 5 seconds
-            setTimeout(() => {
-                successMsg.style.display = 'none';
-            }, 5000);
+            try {
+                const { error } = await supabase.auth.resetPasswordForEmail(email, {
+                    redirectTo: `${window.location.origin}/reset-password.html`
+                });
+                
+                if (error) throw error;
+                
+                const successMsg = document.getElementById('successMessage');
+                successMsg.textContent = `Password reset instructions have been sent to ${email}`;
+                successMsg.style.display = 'block';
+                
+                // Hide after 5 seconds
+                setTimeout(() => {
+                    successMsg.style.display = 'none';
+                }, 5000);
+            } catch (error) {
+                const errorMsg = document.getElementById('errorMessage');
+                errorMsg.textContent = 'Error sending reset email: ' + error.message;
+                errorMsg.style.display = 'block';
+            }
         }
         
         function showSignupOptions(event) {
@@ -631,8 +757,12 @@
             }, 7000);
         }
         
-        // Load remembered credentials on page load
-        window.addEventListener('DOMContentLoaded', () => {
+        // Load remembered credentials on page load and check existing session
+        window.addEventListener('DOMContentLoaded', async () => {
+            // Check for existing session first
+            await checkExistingSession();
+            
+            // Then load remembered credentials
             const rememberedEmail = localStorage.getItem('rememberedEmail');
             const rememberedPortal = localStorage.getItem('rememberedPortal');
             

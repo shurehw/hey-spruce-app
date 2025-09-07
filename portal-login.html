@@ -3,12 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hey Spruce Portal - Login</title>
+    <title>Spruce App Portal - Login</title>
+    <meta name="version" content="2.0.1">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+        }
+        
+        html {
+            overflow-y: scroll;
+            height: 100%;
         }
         
         :root {
@@ -26,13 +32,10 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            position: relative;
-            overflow: hidden;
+            background-attachment: fixed;
+            min-height: 100%;
+            padding: 40px 20px;
+            overflow-y: auto;
         }
         
         /* Animated background shapes */
@@ -87,6 +90,7 @@
             grid-template-columns: 1fr 1fr;
             position: relative;
             z-index: 1;
+            margin: 0 auto;
         }
         
         .login-left {
@@ -400,9 +404,16 @@
         }
         
         @media (max-width: 768px) {
+            body {
+                padding: 20px 15px;
+                min-height: 100vh;
+            }
+            
             .login-container {
                 grid-template-columns: 1fr;
                 max-width: 400px;
+                margin-top: 20px;
+                margin-bottom: 20px;
             }
             
             .login-right {
@@ -431,10 +442,31 @@
         <div class="login-left">
             <div class="brand">
                 <div class="logo">🌲</div>
-                <h1>Hey Spruce</h1>
+                <h1>Spruce App</h1>
             </div>
             
             <p class="tagline">Property Maintenance Solutions Portal</p>
+            
+            <!-- Demo Credentials -->
+            <div class="demo-credentials" style="background: #fef3c7; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #f59e0b;">
+                <h4 style="color: #92400e; margin-bottom: 10px; font-size: 14px;">ℹ️ Login Information</h4>
+                <div style="font-size: 13px; color: #713f12; line-height: 1.6;">
+                    <p style="margin-bottom: 10px;"><strong>Use your existing account or create one in Supabase.</strong></p>
+                    <details style="margin-top: 10px;">
+                        <summary style="cursor: pointer; font-weight: 600;">Setup Demo Accounts (Optional)</summary>
+                        <div style="margin-top: 10px; padding-left: 10px;">
+                            <p>1. Check DEMO-SETUP-GUIDE.md for instructions</p>
+                            <p>2. Run diagnose-setup.sql to check your database</p>
+                            <p>3. Create users in Supabase Dashboard</p>
+                            <div style="margin-top: 8px; padding: 8px; background: #fff; border-radius: 4px;">
+                                <div class="demo-cred" data-email="demo.client@heyspruce.com" data-password="demo123" data-portal="client" style="cursor: pointer; padding: 2px 0;"><strong>Client:</strong> demo.client@heyspruce.com / demo123</div>
+                                <div class="demo-cred" data-email="demo.admin@heyspruce.com" data-password="demo123" data-portal="admin" style="cursor: pointer; padding: 2px 0;"><strong>Admin:</strong> demo.admin@heyspruce.com / demo123</div>
+                                <div class="demo-cred" data-email="demo.sub@heyspruce.com" data-password="demo123" data-portal="subcontractor" style="cursor: pointer; padding: 2px 0;"><strong>Sub:</strong> demo.sub@heyspruce.com / demo123</div>
+                            </div>
+                        </div>
+                    </details>
+                </div>
+            </div>
             
             <div class="error-message" id="errorMessage"></div>
             <div class="success-message" id="successMessage"></div>
@@ -481,8 +513,8 @@
                 
                 <div class="remember-forgot">
                     <label>
-                        <input type="checkbox" id="remember">
-                        Remember me
+                        <input type="checkbox" id="remember" checked>
+                        Keep me signed in
                     </label>
                     <a href="#" onclick="showForgotPassword(event)">Forgot password?</a>
                 </div>
@@ -495,7 +527,7 @@
             </div>
             
             <div class="signup-link">
-                New to Hey Spruce? <a href="#" onclick="showSignupOptions(event)">Request Access</a>
+                New to Spruce App? <a href="#" onclick="showSignupOptions(event)">Request Access</a>
             </div>
         </div>
         
@@ -538,7 +570,7 @@
     <script>
         // Initialize Supabase
         const SUPABASE_URL = 'https://uokmehjqcxmcoavnszid.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVva21laGpxY3htY29hdm5zemlkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzY4NzgzNzksImV4cCI6MjA1MjQ1NDM3OX0.VmJTh44H1VCCRhLQFPMiXomWNQOQzLqvxqxQw0JX9qo';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVva21laGpxY3htY29hdm5zemlkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYxODI1MDUsImV4cCI6MjA3MTc1ODUwNX0.K19tHO1YrS-HRBleEAWgOANCPglR9rerBCmE5abY1Rg';
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         // Check if user is already logged in
@@ -547,7 +579,7 @@
             if (session) {
                 // Get user profile to determine portal
                 const { data: profile } = await supabase
-                    .from('user_profiles')
+                    .from('users')
                     .select('role')
                     .eq('id', session.user.id)
                     .single();
@@ -630,7 +662,7 @@
 
                 // Check user profile and permissions
                 const { data: profile, error: profileError } = await supabase
-                    .from('user_profiles')
+                    .from('users')
                     .select('*')
                     .eq('id', data.user.id)
                     .single();
@@ -638,7 +670,7 @@
                 if (profileError) {
                     // If no profile exists, create one
                     const { data: newProfile, error: createError } = await supabase
-                        .from('user_profiles')
+                        .from('users')
                         .insert({
                             id: data.user.id,
                             email: email,
@@ -774,6 +806,22 @@
             if (rememberedPortal) {
                 document.getElementById(rememberedPortal).checked = true;
             }
+            
+            // Auto-fill demo credentials on click
+            const demoCreds = document.querySelectorAll('.demo-cred');
+            demoCreds.forEach(cred => {
+                cred.addEventListener('click', () => {
+                    document.getElementById('email').value = cred.dataset.email;
+                    document.getElementById('password').value = cred.dataset.password;
+                    document.querySelector(`input[value="${cred.dataset.portal}"]`).checked = true;
+                    // Highlight the clicked credential
+                    cred.style.background = '#e6fffa';
+                    setTimeout(() => cred.style.background = '', 1000);
+                });
+                // Add hover effect
+                cred.addEventListener('mouseenter', () => cred.style.background = '#f0f4f8');
+                cred.addEventListener('mouseleave', () => cred.style.background = '');
+            });
         });
     </script>
 </body>

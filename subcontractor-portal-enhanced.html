@@ -3586,7 +3586,9 @@
                 initializeTableEnhancements();
                 initializeFormValidation();
                 initializePWA();
-            }, 100);
+                // Show enhancement welcome message
+                showToast('✨ Enhanced features active: Table sorting, Form validation, PWA support', 'success', 6000);
+            }, 1000);
         });
     </script>
 </body>

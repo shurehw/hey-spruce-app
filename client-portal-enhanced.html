@@ -1122,6 +1122,14 @@
         // Initialize dashboard on load
         document.addEventListener('DOMContentLoaded', () => {
             loadSection('dashboard');
+            // Initialize global enhancements
+            setTimeout(() => {
+                initializeTableEnhancements();
+                initializeFormValidation();
+                initializePWA();
+                // Show enhancement welcome message
+                showToast('✨ Enhanced features active: Table sorting, Charts, Form validation, PWA support', 'success', 6000);
+            }, 1000);
         });
         
         // User Dropdown Functions
@@ -1164,10 +1172,12 @@
                     setTimeout(() => {
                         initializeRoleBasedVisibility();
                         renderDashboardCharts();
-                    }, 10);
+                        initializeTableEnhancements();
+                    }, 100);
                     break;
                 case 'work-orders':
                     content.innerHTML = getWorkOrdersContent();
+                    setTimeout(() => initializeTableEnhancements(), 100);
                     break;
                 case 'service-calendar':
                     content.innerHTML = getServiceCalendarContent();

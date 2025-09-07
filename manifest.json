@@ -1,0 +1,156 @@
+{
+  "name": "Spruce App Portal",
+  "short_name": "Spruce App",
+  "description": "Comprehensive facility management and service portal",
+  "start_url": "/portal-login.html",
+  "display": "standalone",
+  "background_color": "#0b1210",
+  "theme_color": "#2fbf71",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "en-US",
+  "categories": ["business", "productivity", "utilities"],
+  
+  "icons": [
+    {
+      "src": "icons/icon-72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "badge"
+    },
+    {
+      "src": "icons/icon-96.png",
+      "sizes": "96x96",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-128.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-144.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-152.png",
+      "sizes": "152x152",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-384.png",
+      "sizes": "384x384",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  
+  "screenshots": [
+    {
+      "src": "screenshots/desktop-home.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "platform": "wide"
+    },
+    {
+      "src": "screenshots/mobile-home.png", 
+      "sizes": "390x844",
+      "type": "image/png",
+      "platform": "narrow"
+    }
+  ],
+  
+  "shortcuts": [
+    {
+      "name": "Client Portal",
+      "short_name": "Client",
+      "description": "Access client dashboard and services",
+      "url": "/enhanced-client-portal.html",
+      "icons": [{ "src": "icons/client-shortcut.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Supplier Portal", 
+      "short_name": "Supplier",
+      "description": "Manage work orders and technicians",
+      "url": "/enhanced-supplier-portal.html",
+      "icons": [{ "src": "icons/supplier-shortcut.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Subcontractor Portal",
+      "short_name": "Contractor", 
+      "description": "Find jobs and track earnings",
+      "url": "/enhanced-subcontractor-portal.html",
+      "icons": [{ "src": "icons/sub-shortcut.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "New Work Order",
+      "short_name": "New Order",
+      "description": "Create a new service request",
+      "url": "/enhanced-supplier-portal.html?action=new-work-order",
+      "icons": [{ "src": "icons/new-order-shortcut.png", "sizes": "96x96" }]
+    }
+  ],
+  
+  "share_target": {
+    "action": "/share-handler",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url",
+      "files": [
+        {
+          "name": "files",
+          "accept": ["image/*", "application/pdf", ".doc", ".docx"]
+        }
+      ]
+    }
+  },
+  
+  "protocol_handlers": [
+    {
+      "protocol": "mailto",
+      "url": "/compose?to=%s"
+    }
+  ],
+  
+  "related_applications": [
+    {
+      "platform": "play",
+      "url": "https://play.google.com/store/apps/details?id=com.spruceapp.portal",
+      "id": "com.spruceapp.portal"
+    },
+    {
+      "platform": "itunes",
+      "url": "https://apps.apple.com/app/spruce-app-portal/id123456789"
+    }
+  ],
+  
+  "prefer_related_applications": false,
+  
+  "launch_handler": {
+    "client_mode": "navigate-existing"
+  },
+  
+  "handle_links": "preferred",
+  
+  "capture_links": "existing-client-navigate",
+  
+  "display_override": ["window-controls-overlay", "minimal-ui", "standalone", "browser"],
+  
+  "edge_side_panel": {
+    "preferred_width": 400
+  }
+}

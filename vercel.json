@@ -1,21 +1,35 @@
 {
-  "functions": {
-    "api/*.js": {
-      "maxDuration": 10
+  "framework": null,
+  "outputDirectory": ".",
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/portal-login.html"
+    },
+    {
+      "source": "/client-portal",
+      "destination": "/client-portal.html"
+    },
+    {
+      "source": "/supplier-portal", 
+      "destination": "/supplier-portal.html"
+    },
+    {
+      "source": "/subcontractor-portal",
+      "destination": "/subcontractor-portal.html"
     }
-  },
-  "crons": [
+  ],
+  "headers": [
     {
-      "path": "/api/notifications-enhanced/cron-appointments",
-      "schedule": "0 8 * * *"
-    },
-    {
-      "path": "/api/notifications-enhanced/cron-contracts",
-      "schedule": "0 9 * * *"
-    },
-    {
-      "path": "/api/notifications-enhanced/cron-quotes",
-      "schedule": "0 10 * * *"
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600"
+        }
+      ]
     }
   ]
 }

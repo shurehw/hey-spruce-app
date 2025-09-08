@@ -6803,11 +6803,248 @@ United States</textarea>
         }
 
         function getQuotesClientContent() {
-            return `<div><h1>Client Quotes</h1><p>Quotes for clients</p></div>`;
+            return `
+                <div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                        <h2 style="font-size: 1.875rem; font-weight: 700;">Client Quotes</h2>
+                        <button class="btn btn-primary" onclick="loadSection('proposal-builder')">+ Create Quote</button>
+                    </div>
+                    
+                    <!-- Status Tabs -->
+                    <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem; border-bottom: 2px solid var(--gray-200);">
+                        <button class="quote-tab active" onclick="filterQuotes('all')" style="padding: 0.75rem 0; background: none; border: none; border-bottom: 2px solid var(--primary); color: var(--gray-900); cursor: pointer; font-weight: 500; margin-bottom: -2px;">
+                            All <span style="color: var(--gray-500); font-size: 0.875rem;">(12)</span>
+                        </button>
+                        <button class="quote-tab" onclick="filterQuotes('draft')" style="padding: 0.75rem 0; background: none; border: none; border-bottom: 2px solid transparent; color: var(--gray-600); cursor: pointer; font-weight: 500; margin-bottom: -2px;">
+                            Draft <span style="color: var(--gray-500); font-size: 0.875rem;">(3)</span>
+                        </button>
+                        <button class="quote-tab" onclick="filterQuotes('sent')" style="padding: 0.75rem 0; background: none; border: none; border-bottom: 2px solid transparent; color: var(--gray-600); cursor: pointer; font-weight: 500; margin-bottom: -2px;">
+                            Sent <span style="color: var(--gray-500); font-size: 0.875rem;">(4)</span>
+                        </button>
+                        <button class="quote-tab" onclick="filterQuotes('approved')" style="padding: 0.75rem 0; background: none; border: none; border-bottom: 2px solid transparent; color: var(--gray-600); cursor: pointer; font-weight: 500; margin-bottom: -2px;">
+                            Approved <span style="color: var(--gray-500); font-size: 0.875rem;">(3)</span>
+                        </button>
+                        <button class="quote-tab" onclick="filterQuotes('rejected')" style="padding: 0.75rem 0; background: none; border: none; border-bottom: 2px solid transparent; color: var(--gray-600); cursor: pointer; font-weight: 500; margin-bottom: -2px;">
+                            Rejected <span style="color: var(--gray-500); font-size: 0.875rem;">(2)</span>
+                        </button>
+                    </div>
+                    
+                    <div class="table-container">
+                        <div class="table-header">
+                            <h3 class="table-title">Client Quotes</h3>
+                            <div style="display: flex; gap: 0.75rem;">
+                                <input type="text" placeholder="Search quotes..." style="padding: 0.5rem 1rem; border: 1px solid var(--gray-300); border-radius: 6px;">
+                                <select style="padding: 0.5rem 1rem; border: 1px solid var(--gray-300); border-radius: 6px;">
+                                    <option>All Services</option>
+                                    <option>HVAC</option>
+                                    <option>Plumbing</option>
+                                    <option>Electrical</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div style="padding: 1.5rem;">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Quote #</th>
+                                        <th>Client</th>
+                                        <th>Property</th>
+                                        <th>Service</th>
+                                        <th>Amount</th>
+                                        <th>Status</th>
+                                        <th>Date</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Q-2024-001</strong></td>
+                                        <td>Building A Management</td>
+                                        <td>123 Main St</td>
+                                        <td>HVAC Maintenance</td>
+                                        <td>$4,500</td>
+                                        <td><span class="status-badge success">Approved</span></td>
+                                        <td>Jan 10, 2024</td>
+                                        <td>
+                                            <button class="btn btn-secondary btn-sm">View</button>
+                                            <button class="btn btn-primary btn-sm">Convert to WO</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Q-2024-002</strong></td>
+                                        <td>Property Manager LLC</td>
+                                        <td>456 Oak Ave</td>
+                                        <td>Plumbing Repair</td>
+                                        <td>$2,800</td>
+                                        <td><span class="status-badge warning">Sent</span></td>
+                                        <td>Jan 11, 2024</td>
+                                        <td>
+                                            <button class="btn btn-secondary btn-sm">View</button>
+                                            <button class="btn btn-secondary btn-sm">Follow Up</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Q-2024-003</strong></td>
+                                        <td>Retail Complex</td>
+                                        <td>789 Commerce Dr</td>
+                                        <td>Electrical Upgrade</td>
+                                        <td>$12,000</td>
+                                        <td><span class="status-badge info">Draft</span></td>
+                                        <td>Jan 12, 2024</td>
+                                        <td>
+                                            <button class="btn btn-secondary btn-sm">Edit</button>
+                                            <button class="btn btn-primary btn-sm">Send</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            `;
         }
 
         function getQuotesSubcontractorContent() {
-            return `<div><h1>Subcontractor Quotes</h1><p>Quotes for subcontractors</p></div>`;
+            return `
+                <div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                        <h2 style="font-size: 1.875rem; font-weight: 700;">Subcontractor Quotes</h2>
+                        <div style="display: flex; gap: 1rem;">
+                            <button class="btn btn-secondary" onclick="exportQuotes()">Export</button>
+                            <button class="btn btn-primary" onclick="reviewQuotes()">Review Queue (5)</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Status Overview Cards -->
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem;">
+                        <div class="stat-card">
+                            <div class="stat-title">Pending Review</div>
+                            <div class="stat-value">8</div>
+                            <div class="stat-change positive">+3 this week</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-title">Approved</div>
+                            <div class="stat-value">15</div>
+                            <div class="stat-change">Ready for client</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-title">Needs Revision</div>
+                            <div class="stat-value">3</div>
+                            <div class="stat-change negative">Action required</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-title">Total Value</div>
+                            <div class="stat-value">$48,500</div>
+                            <div class="stat-change">This month</div>
+                        </div>
+                    </div>
+                    
+                    <div class="table-container">
+                        <div class="table-header">
+                            <h3 class="table-title">Quotes from Subcontractors</h3>
+                            <div style="display: flex; gap: 0.75rem;">
+                                <select style="padding: 0.5rem 1rem; border: 1px solid var(--gray-300); border-radius: 6px;">
+                                    <option>All Subcontractors</option>
+                                    <option>Johnson Electric</option>
+                                    <option>Mike's Plumbing</option>
+                                    <option>HVAC Pro Services</option>
+                                </select>
+                                <select style="padding: 0.5rem 1rem; border: 1px solid var(--gray-300); border-radius: 6px;">
+                                    <option>All Status</option>
+                                    <option>Pending Review</option>
+                                    <option>Approved</option>
+                                    <option>Needs Revision</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div style="padding: 1.5rem;">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Quote #</th>
+                                        <th>Subcontractor</th>
+                                        <th>For RFP</th>
+                                        <th>Service</th>
+                                        <th>Bid Amount</th>
+                                        <th>Margin</th>
+                                        <th>Status</th>
+                                        <th>Submitted</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>SQ-2024-001</strong></td>
+                                        <td>Johnson Electric</td>
+                                        <td>RFP-2024-005</td>
+                                        <td>Electrical Maintenance</td>
+                                        <td>$3,200</td>
+                                        <td>22%</td>
+                                        <td><span class="status-badge warning">Pending Review</span></td>
+                                        <td>2 hours ago</td>
+                                        <td>
+                                            <button class="btn btn-secondary btn-sm">Review</button>
+                                            <button class="btn btn-primary btn-sm">Approve</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>SQ-2024-002</strong></td>
+                                        <td>Mike's Plumbing</td>
+                                        <td>RFP-2024-006</td>
+                                        <td>Emergency Repair</td>
+                                        <td>$1,800</td>
+                                        <td>18%</td>
+                                        <td><span class="status-badge success">Approved</span></td>
+                                        <td>1 day ago</td>
+                                        <td>
+                                            <button class="btn btn-secondary btn-sm">View</button>
+                                            <button class="btn btn-primary btn-sm">Send to Client</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>SQ-2024-003</strong></td>
+                                        <td>HVAC Pro Services</td>
+                                        <td>RFP-2024-004</td>
+                                        <td>System Replacement</td>
+                                        <td>$15,000</td>
+                                        <td>25%</td>
+                                        <td><span class="status-badge danger">Needs Revision</span></td>
+                                        <td>2 days ago</td>
+                                        <td>
+                                            <button class="btn btn-secondary btn-sm">View Notes</button>
+                                            <button class="btn btn-secondary btn-sm">Request Changes</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>SQ-2024-004</strong></td>
+                                        <td>Johnson Electric</td>
+                                        <td>RFP-2024-007</td>
+                                        <td>Panel Upgrade</td>
+                                        <td>$4,500</td>
+                                        <td>20%</td>
+                                        <td><span class="status-badge warning">Pending Review</span></td>
+                                        <td>3 hours ago</td>
+                                        <td>
+                                            <button class="btn btn-secondary btn-sm">Review</button>
+                                            <button class="btn btn-primary btn-sm">Approve</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- Quick Actions -->
+                    <div class="card" style="margin-top: 2rem;">
+                        <h3 style="margin-bottom: 1rem;">Quick Actions</h3>
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
+                            <button class="btn btn-secondary" onclick="bulkApprove()">Bulk Approve Selected</button>
+                            <button class="btn btn-secondary" onclick="compareQuotes()">Compare Quotes</button>
+                            <button class="btn btn-secondary" onclick="setMarginRules()">Set Margin Rules</button>
+                        </div>
+                    </div>
+                </div>
+            `;
         }
 
         function getProposalBuilderContent() {

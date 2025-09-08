@@ -1,104 +1,89 @@
-# OpenWrench Stripe Integration
+# Hey Spruce Portal System
 
-## Setup Complete! 🎉
+A comprehensive multi-portal system for Hey Spruce property management platform.
 
-Your Stripe integration is now fully operational with all core features working.
-
-## Running the Application
+## 🚀 Quick Start
 
 ```bash
-# Start the server
-node server-final.js
+# Install dependencies
+npm install
 
-# Or use the original server with modular routes
-node server.js
+# Run locally
+npm run dev
+
+# Deploy to production
+npm run deploy:prod
 ```
 
-The server will run on http://localhost:3000
-
-## Features Implemented
-
-✅ **Payment Processing**
-- Create payment intents
-- Create checkout sessions
-- Process payments via Stripe
-
-✅ **Invoice Management**
-- Create and manage invoices
-- Generate PDF invoices
-- Track invoice status
-
-✅ **Vendor Management**
-- Add and manage vendors
-- Track vendor information
-
-✅ **Webhook Handling**
-- Secure webhook endpoint at `/api/webhooks/stripe`
-- Handles payment events
-- Signature verification
-
-## API Endpoints
-
-- `GET /api/health` - Health check
-- `GET /api/vendors` - List vendors
-- `POST /api/vendors` - Create vendor
-- `GET /api/invoices` - List invoices
-- `POST /api/invoices` - Create invoice
-- `GET /api/invoices/:id/pdf` - Generate PDF
-- `POST /api/payment/create-intent` - Create payment intent
-- `POST /api/payment/create-checkout` - Create checkout session
-- `POST /api/webhooks/stripe` - Stripe webhook endpoint
-
-## Testing
-
-Run the test suite:
-```bash
-node test-all-features.js
-```
-
-Test webhooks:
-```bash
-node test-webhook.js
-```
-
-## Next Steps
-
-1. **Update OpenWrench API URL**
-   - Edit `.env` file
-   - Replace `OPENWRENCH_API_URL` with your actual API endpoint
-
-2. **Configure Stripe Dashboard**
-   - Add webhook endpoint: `https://yourdomain.com/api/webhooks/stripe`
-   - Add webhook secret to `.env`
-
-3. **Test with Stripe CLI**
-   ```bash
-   stripe listen --forward-to localhost:3000/api/webhooks/stripe
-   ```
-
-4. **Deploy to Production**
-   - Update environment variables
-   - Use HTTPS for webhook endpoint
-   - Enable production Stripe keys
-
-## Files Structure
+## 📁 Project Structure
 
 ```
-openwrench-stripe/
-├── server-final.js       # Complete server with all endpoints
-├── server.js            # Modular server
-├── api/                 # API route modules
-│   ├── payment-simple.js
-│   ├── vendors-simple.js
-│   ├── invoices-simple.js
-│   └── webhooks.js
-├── public/              # Web interface
-│   └── index.html
-├── test-all-features.js # Complete test suite
-├── test-webhook.js      # Webhook testing
-└── .env                 # Configuration (keys hidden)
+/
+├── api/                 # API endpoints (serverless functions)
+├── scripts/             # JavaScript files (UI components, features)
+├── styles/              # CSS stylesheets
+├── mobile-app/          # Mobile application (PWA)
+├── docs/                # Documentation
+├── archive/             # Archived files (SQL, old versions)
+├── email-templates/     # Email templates
+├── public/              # Static assets
+├── uploads/             # User uploads
+└── utils/               # Utility functions
 ```
 
-## Support
+## 🌐 Main Portals
 
-Your integration is ready for testing with Stripe's test mode. The implementation handles all essential payment flows and can be extended as needed.
+- **Client Portal** (`client-portal.html`) - For property owners
+- **Supplier Portal** (`supplier-portal.html`) - For suppliers/vendors
+- **Subcontractor Portal** (`subcontractor-portal.html`) - For subcontractors
+- **Login** (`portal-login.html`) - Unified login page
+
+## 🔧 Configuration
+
+1. Copy `.env.example` to `.env`
+2. Add your API keys and configuration
+3. Update `vercel.json` for deployment settings
+
+## 📚 Documentation
+
+- Setup guides in `/docs/setup/`
+- API documentation in `/docs/api/`
+- User manuals in `/docs/user-manuals/`
+
+## 🚀 Deployment
+
+The app is deployed on Vercel:
+- Production: https://heyspruceapp.vercel.app
+
+## 🛠️ Technologies
+
+- Frontend: HTML5, CSS3, JavaScript (Vanilla)
+- Backend: Node.js (Serverless Functions)
+- Database: Supabase (PostgreSQL)
+- Authentication: Supabase Auth
+- Payments: Stripe
+- Hosting: Vercel
+
+## 📱 Features
+
+- ✅ Global search (Ctrl+K)
+- ✅ Breadcrumb navigation
+- ✅ Responsive design
+- ✅ PWA support
+- ✅ Real-time notifications
+- ✅ File uploads
+- ✅ Payment processing
+- ✅ Multi-role authentication
+
+## 🔐 Environment Variables
+
+Required environment variables:
+- `SUPABASE_URL`
+- `SUPABASE_ANON_KEY`
+- `STRIPE_PUBLISHABLE_KEY`
+- `STRIPE_SECRET_KEY`
+- `APP_URL`
+
+## 📞 Support
+
+For issues or questions, contact: support@heyspruce.com

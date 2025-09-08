@@ -252,7 +252,7 @@ app.post('/api/team-invite', async (req, res) => {
         `;
         
         const mailOptions = {
-            from: process.env.EMAIL_FROM || process.env.SMTP_USER || 'noreply@openwrench.com',
+            from: process.env.EMAIL_FROM || process.env.SMTP_USER || 'noreply@heyspruce.com',
             to: email,
             subject: 'Invitation to Join OpenWrench Team',
             html: htmlContent

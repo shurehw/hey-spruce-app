@@ -161,7 +161,15 @@
       "Bash(npm run:*)",
       "WebFetch(domain:heyspruceapp-h3bka4aa3-shureprint.vercel.app)",
       "Bash(git remote add:*)",
-      "Bash(git remote set-url:*)"
+      "Bash(git remote set-url:*)",
+      "Bash(awk:*)",
+      "Bash(move:*)",
+      "Bash(start \"\" \"http://localhost:3000/admin-portal.html\")",
+      "Read(//c//**)",
+      "Bash(git rm:*)",
+      "Bash(start \"\" \"https://heyspruceapp-eijqjgp6p-shureprint.vercel.app/client-portal.html\")",
+      "Bash(start \"\" \"https://heyspruceapp-eijqjgp6p-shureprint.vercel.app/admin-portal.html\")",
+      "Bash(start \"\" \"https://heyspruceapp-eijqjgp6p-shureprint.vercel.app/subcontractor-portal.html\")"
     ],
     "deny": [],
     "ask": [],

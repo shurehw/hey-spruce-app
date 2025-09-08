@@ -1206,6 +1206,100 @@
         }
         window.showCreateWorkOrderModal = showCreateWorkOrderModal;
         
+        // Messaging Functions
+        function selectConversation(conversationId) {
+            console.log('Selecting conversation:', conversationId);
+            
+            // Update active state
+            document.querySelectorAll('.conversation-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+            
+            // Here you would load conversation details from backend
+            // For now, just update the header
+            const conversationHeaders = {
+                '1': { name: 'Johnson Electric', role: 'Subcontractor', status: 'Online' },
+                '2': { name: 'Property Manager - Building A', role: 'Client', status: 'Away' },
+                '3': { name: "Mike's Plumbing Co.", role: 'Subcontractor', status: 'Offline' },
+                '4': { name: 'System Notifications', role: 'Automated', status: 'Active' }
+            };
+            
+            const header = conversationHeaders[conversationId];
+            if (header) {
+                const headerElement = document.querySelector('#messagesContainer').parentElement.querySelector('div:first-child');
+                if (headerElement) {
+                    headerElement.querySelector('div:first-child').textContent = header.name;
+                    headerElement.querySelector('div:last-child').textContent = `${header.role} • ${header.status}`;
+                }
+            }
+        }
+        window.selectConversation = selectConversation;
+        
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            const messagesContainer = document.getElementById('messagesContainer');
+            
+            // Remove typing indicator if present
+            const typingIndicator = messagesContainer.querySelector('.typing-indicator');
+            if (typingIndicator) {
+                typingIndicator.remove();
+            }
+            
+            // Add sent message
+            const messageHtml = `
+                <div style="display: flex; justify-content: flex-end; margin-bottom: 1rem;">
+                    <div style="max-width: 70%;">
+                        <div style="background: var(--primary); color: white; padding: 0.75rem; border-radius: 8px;">
+                            <div style="font-size: 0.875rem;">${message}</div>
+                        </div>
+                        <div style="font-size: 0.6rem; color: var(--gray-500); margin-top: 0.25rem; text-align: right;">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})} • Sending...</div>
+                    </div>
+                </div>
+            `;
+            
+            messagesContainer.insertAdjacentHTML('beforeend', messageHtml);
+            
+            // Clear input
+            input.value = '';
+            
+            // Scroll to bottom
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            
+            // Simulate received message after delay
+            setTimeout(() => {
+                const responses = [
+                    "Thanks for the update! I'll get right on that.",
+                    "Understood. I'll send you the details shortly.",
+                    "Perfect timing! We were just about to start.",
+                    "Got it. Let me check with the team and get back to you."
+                ];
+                const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+                
+                const receivedHtml = `
+                    <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+                        <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--secondary); display: flex; align-items: center; justify-content: center; color: white; font-size: 0.75rem; flex-shrink: 0;">
+                            JE
+                        </div>
+                        <div style="max-width: 70%;">
+                            <div style="background: white; padding: 0.75rem; border-radius: 8px; box-shadow: var(--shadow-sm);">
+                                <div style="font-size: 0.875rem;">${randomResponse}</div>
+                            </div>
+                            <div style="font-size: 0.6rem; color: var(--gray-500); margin-top: 0.25rem;">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+                        </div>
+                    </div>
+                `;
+                
+                messagesContainer.insertAdjacentHTML('beforeend', receivedHtml);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }, 2000);
+        }
+        window.sendMessage = sendMessage;
+        
         function updateServiceTypes(category) {
             const serviceTypeSelect = document.getElementById('serviceTypeSelect');
             const serviceTypes = {
@@ -5292,6 +5386,290 @@ Spruce - Professional Service Management
             `;
         }
 
+        function getMessagesContent() {
+            return `
+                <div class="header-bar">
+                    <h1 class="header-title">Messages & Communications</h1>
+                    <div class="header-actions">
+                        <button class="btn btn-secondary" onclick="showCommunicationSettings()">
+                            <span>⚙️</span> Settings
+                        </button>
+                        <button class="btn btn-primary" onclick="showNewMessageModal()">
+                            <span>✉️</span> New Message
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="card" style="padding: 0;">
+                    <div style="display: flex; height: 600px;">
+                        <!-- Conversations List -->
+                        <div style="width: 350px; border-right: 1px solid var(--gray-200); overflow-y: auto;">
+                            <div style="padding: 0.75rem; border-bottom: 1px solid var(--gray-200);">
+                                <input type="text" placeholder="Search conversations..." 
+                                    style="width: 100%; padding: 0.5rem; border: 1px solid var(--gray-300); border-radius: 6px;">
+                            </div>
+                            
+                            <!-- Conversation Items -->
+                            <div id="conversationsList">
+                                <div class="conversation-item active" onclick="selectConversation('1')" 
+                                    style="padding: 0.75rem; border-bottom: 1px solid var(--gray-100); cursor: pointer; background: var(--primary-light);">
+                                    <div style="display: flex; justify-content: space-between; align-items: start;">
+                                        <div>
+                                            <div style="font-weight: 600; color: var(--gray-900);">Johnson Electric</div>
+                                            <div style="font-size: 0.75rem; color: var(--gray-600); margin-top: 0.25rem;">Subcontractor</div>
+                                            <div style="font-size: 0.75rem; color: var(--gray-600); margin-top: 0.25rem;">Update on HVAC project...</div>
+                                        </div>
+                                        <div style="text-align: right;">
+                                            <div style="font-size: 0.6rem; color: var(--gray-500);">10:30 AM</div>
+                                            <div style="background: var(--danger); color: white; border-radius: 10px; padding: 2px 6px; font-size: 0.6rem; margin-top: 0.25rem;">3</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="conversation-item" onclick="selectConversation('2')" 
+                                    style="padding: 0.75rem; border-bottom: 1px solid var(--gray-100); cursor: pointer;">
+                                    <div style="display: flex; justify-content: space-between; align-items: start;">
+                                        <div>
+                                            <div style="font-weight: 600; color: var(--gray-900);">Property Manager - Building A</div>
+                                            <div style="font-size: 0.75rem; color: var(--gray-600); margin-top: 0.25rem;">Client</div>
+                                            <div style="font-size: 0.75rem; color: var(--gray-600); margin-top: 0.25rem;">Emergency request approved</div>
+                                        </div>
+                                        <div style="font-size: 0.6rem; color: var(--gray-500);">Yesterday</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="conversation-item" onclick="selectConversation('3')" 
+                                    style="padding: 0.75rem; border-bottom: 1px solid var(--gray-100); cursor: pointer;">
+                                    <div style="display: flex; justify-content: space-between; align-items: start;">
+                                        <div>
+                                            <div style="font-weight: 600; color: var(--gray-900);">Mike's Plumbing Co.</div>
+                                            <div style="font-size: 0.75rem; color: var(--gray-600); margin-top: 0.25rem;">Subcontractor</div>
+                                            <div style="font-size: 0.75rem; color: var(--gray-600); margin-top: 0.25rem;">Quote submitted for review</div>
+                                        </div>
+                                        <div style="font-size: 0.6rem; color: var(--gray-500);">2 days ago</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="conversation-item" onclick="selectConversation('4')" 
+                                    style="padding: 0.75rem; border-bottom: 1px solid var(--gray-100); cursor: pointer;">
+                                    <div style="display: flex; justify-content: space-between; align-items: start;">
+                                        <div>
+                                            <div style="font-weight: 600; color: var(--gray-900);">System Notifications</div>
+                                            <div style="font-size: 0.75rem; color: var(--gray-600); margin-top: 0.25rem;">Automated</div>
+                                            <div style="font-size: 0.75rem; color: var(--gray-600); margin-top: 0.25rem;">5 new work orders created</div>
+                                        </div>
+                                        <div style="font-size: 0.6rem; color: var(--gray-500);">3 days ago</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Message Thread -->
+                        <div style="flex: 1; display: flex; flex-direction: column;">
+                            <!-- Message Header -->
+                            <div style="padding: 0.75rem; border-bottom: 1px solid var(--gray-200); background: white;">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div>
+                                        <div style="font-weight: 600;">Johnson Electric</div>
+                                        <div style="font-size: 0.75rem; color: var(--gray-600);">Subcontractor • Online</div>
+                                    </div>
+                                    <div style="display: flex; gap: 0.5rem;">
+                                        <button style="padding: 0.5rem; background: none; border: 1px solid var(--gray-300); border-radius: 6px; cursor: pointer;">📞</button>
+                                        <button style="padding: 0.5rem; background: none; border: 1px solid var(--gray-300); border-radius: 6px; cursor: pointer;">📹</button>
+                                        <button style="padding: 0.5rem; background: none; border: 1px solid var(--gray-300); border-radius: 6px; cursor: pointer;">📎</button>
+                                        <button style="padding: 0.5rem; background: none; border: 1px solid var(--gray-300); border-radius: 6px; cursor: pointer;">ℹ️</button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Messages Container -->
+                            <div id="messagesContainer" style="flex: 1; overflow-y: auto; padding: 1rem; background: var(--gray-50);">
+                                <!-- Received Message -->
+                                <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+                                    <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--secondary); display: flex; align-items: center; justify-content: center; color: white; font-size: 0.75rem; flex-shrink: 0;">
+                                        JE
+                                    </div>
+                                    <div style="max-width: 70%;">
+                                        <div style="background: white; padding: 0.75rem; border-radius: 8px; box-shadow: var(--shadow-sm);">
+                                            <div style="font-size: 0.875rem;">Good morning! I wanted to update you on the HVAC maintenance project at Building A.</div>
+                                        </div>
+                                        <div style="font-size: 0.6rem; color: var(--gray-500); margin-top: 0.25rem;">10:15 AM</div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Sent Message -->
+                                <div style="display: flex; justify-content: flex-end; margin-bottom: 1rem;">
+                                    <div style="max-width: 70%;">
+                                        <div style="background: var(--primary); color: white; padding: 0.75rem; border-radius: 8px;">
+                                            <div style="font-size: 0.875rem;">Good morning! Please go ahead with the update.</div>
+                                        </div>
+                                        <div style="font-size: 0.6rem; color: var(--gray-500); margin-top: 0.25rem; text-align: right;">10:20 AM • Read</div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Received Message with Attachment -->
+                                <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+                                    <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--secondary); display: flex; align-items: center; justify-content: center; color: white; font-size: 0.75rem; flex-shrink: 0;">
+                                        JE
+                                    </div>
+                                    <div style="max-width: 70%;">
+                                        <div style="background: white; padding: 0.75rem; border-radius: 8px; box-shadow: var(--shadow-sm);">
+                                            <div style="font-size: 0.875rem;">We've completed the inspection of all units. I'm attaching the detailed report.</div>
+                                            <div style="margin-top: 0.5rem; padding: 0.5rem; background: var(--gray-100); border-radius: 4px; display: flex; align-items: center; gap: 0.5rem;">
+                                                <span>📄</span>
+                                                <span style="font-size: 0.75rem;">HVAC_Inspection_Report.pdf</span>
+                                                <span style="font-size: 0.6rem; color: var(--gray-600);">(2.3 MB)</span>
+                                            </div>
+                                        </div>
+                                        <div style="font-size: 0.6rem; color: var(--gray-500); margin-top: 0.25rem;">10:25 AM</div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Typing Indicator -->
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--secondary); display: flex; align-items: center; justify-content: center; color: white; font-size: 0.75rem; flex-shrink: 0;">
+                                        JE
+                                    </div>
+                                    <div style="background: white; padding: 0.75rem; border-radius: 8px; box-shadow: var(--shadow-sm);">
+                                        <div style="display: flex; gap: 0.25rem;">
+                                            <div style="width: 8px; height: 8px; background: var(--gray-400); border-radius: 50%; animation: pulse 1.4s infinite;"></div>
+                                            <div style="width: 8px; height: 8px; background: var(--gray-400); border-radius: 50%; animation: pulse 1.4s infinite 0.2s;"></div>
+                                            <div style="width: 8px; height: 8px; background: var(--gray-400); border-radius: 50%; animation: pulse 1.4s infinite 0.4s;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Message Input -->
+                            <div style="padding: 0.75rem; border-top: 1px solid var(--gray-200); background: white;">
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <button style="padding: 0.5rem; background: none; border: none; cursor: pointer; color: var(--gray-600);">📎</button>
+                                    <input type="text" id="messageInput" placeholder="Type a message..." 
+                                        style="flex: 1; padding: 0.5rem; border: 1px solid var(--gray-300); border-radius: 6px;"
+                                        onkeypress="if(event.key === 'Enter') sendMessage()">
+                                    <button style="padding: 0.5rem; background: none; border: none; cursor: pointer; color: var(--gray-600);">😊</button>
+                                    <button onclick="sendMessage()" style="padding: 0.5rem 1rem; background: var(--primary); color: white; border: none; border-radius: 6px; cursor: pointer;">Send</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <style>
+                    @keyframes pulse {
+                        0%, 60%, 100% {
+                            opacity: 0.3;
+                        }
+                        30% {
+                            opacity: 1;
+                        }
+                    }
+                    
+                    .conversation-item:hover {
+                        background: var(--gray-50) !important;
+                    }
+                    
+                    .conversation-item.active {
+                        background: var(--primary-light) !important;
+                    }
+                </style>
+            `;
+        }
+
+        function getNotificationsContent() {
+            return `
+                <div class="header-bar">
+                    <h1 class="header-title">Notifications</h1>
+                    <div class="header-actions">
+                        <button class="btn btn-secondary" onclick="markAllAsRead()">
+                            <span>✓</span> Mark All Read
+                        </button>
+                        <button class="btn btn-secondary" onclick="showNotificationSettings()">
+                            <span>⚙️</span> Settings
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div style="border-bottom: 1px solid var(--gray-200); padding-bottom: 1rem; margin-bottom: 1rem;">
+                        <div style="display: flex; gap: 1rem;">
+                            <button class="btn btn-primary">All</button>
+                            <button class="btn btn-secondary">Unread (5)</button>
+                            <button class="btn btn-secondary">Work Orders</button>
+                            <button class="btn btn-secondary">Messages</button>
+                            <button class="btn btn-secondary">System</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Notification Items -->
+                    <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                        <!-- Unread Notification -->
+                        <div style="display: flex; gap: 1rem; padding: 1rem; background: var(--primary-light); border-radius: 8px; border-left: 4px solid var(--primary);">
+                            <div style="width: 40px; height: 40px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                <span style="color: white;">🔧</span>
+                            </div>
+                            <div style="flex: 1;">
+                                <div style="display: flex; justify-content: space-between; align-items: start;">
+                                    <div>
+                                        <div style="font-weight: 600; color: var(--gray-900);">New Work Order Created</div>
+                                        <div style="font-size: 0.875rem; color: var(--gray-600); margin-top: 0.25rem;">
+                                            Emergency HVAC repair request for Building A, Unit 305
+                                        </div>
+                                        <div style="font-size: 0.75rem; color: var(--gray-500); margin-top: 0.5rem;">
+                                            10 minutes ago
+                                        </div>
+                                    </div>
+                                    <button class="btn btn-sm btn-secondary">View</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Read Notification -->
+                        <div style="display: flex; gap: 1rem; padding: 1rem; background: white; border-radius: 8px; border: 1px solid var(--gray-200);">
+                            <div style="width: 40px; height: 40px; background: var(--gray-200); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                <span>💬</span>
+                            </div>
+                            <div style="flex: 1;">
+                                <div style="display: flex; justify-content: space-between; align-items: start;">
+                                    <div>
+                                        <div style="font-weight: 600; color: var(--gray-900);">New Message from Johnson Electric</div>
+                                        <div style="font-size: 0.875rem; color: var(--gray-600); margin-top: 0.25rem;">
+                                            "Project update: We've completed the initial assessment..."
+                                        </div>
+                                        <div style="font-size: 0.75rem; color: var(--gray-500); margin-top: 0.5rem;">
+                                            2 hours ago • Read
+                                        </div>
+                                    </div>
+                                    <button class="btn btn-sm btn-secondary">Reply</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- System Notification -->
+                        <div style="display: flex; gap: 1rem; padding: 1rem; background: var(--warning-light); border-radius: 8px; border-left: 4px solid var(--warning);">
+                            <div style="width: 40px; height: 40px; background: var(--warning); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                <span style="color: white;">⚠️</span>
+                            </div>
+                            <div style="flex: 1;">
+                                <div style="display: flex; justify-content: space-between; align-items: start;">
+                                    <div>
+                                        <div style="font-weight: 600; color: var(--gray-900);">Payment Reminder</div>
+                                        <div style="font-size: 0.875rem; color: var(--gray-600); margin-top: 0.25rem;">
+                                            Invoice #2024-001 is due in 3 days
+                                        </div>
+                                        <div style="font-size: 0.75rem; color: var(--gray-500); margin-top: 0.5rem;">
+                                            1 day ago
+                                        </div>
+                                    </div>
+                                    <button class="btn btn-sm btn-primary">Pay Now</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
         async function getWorkOrdersContent() {
             // Show loading state
             let content = `
@@ -6471,6 +6849,12 @@ United States</textarea>
                 case 'inbox':
                     content.innerHTML = getInboxContent();
                     break;
+                case 'messages':
+                    content.innerHTML = getMessagesContent();
+                    break;
+                case 'notifications':
+                    content.innerHTML = getNotificationsContent();
+                    break;
                 case 'work-orders':
                     // Work orders is async now
                     getWorkOrdersContent().then(html => {
@@ -6745,6 +7129,18 @@ United States</textarea>
             </a>
             <a href="#assets" class="nav-item" onclick="loadSection('assets')">
                 Assets
+            </a>
+        </div>
+        
+        <div class="sidebar-section">
+            <div class="sidebar-title">Communication</div>
+            <a href="#messages" class="nav-item" onclick="loadSection('messages')">
+                <span class="icon">💬</span> Messages
+                <span class="badge">7</span>
+            </a>
+            <a href="#notifications" class="nav-item" onclick="loadSection('notifications')">
+                <span class="icon">🔔</span> Notifications
+                <span class="badge">3</span>
             </a>
         </div>
         

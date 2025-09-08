@@ -402,8 +402,8 @@
         }
         
         .header-title {
-            font-size: 1.25rem;
-            font-weight: 600;
+            font-size: 1.5rem;
+            font-weight: 700;
         }
         
         .header-actions {
@@ -600,17 +600,17 @@
         }
         
         /* Cards and Containers */
-        .dashboard-grid, .stats-grid {
+        .dashboard-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 1rem;
-            margin-bottom: 1rem;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
         }
         
         .stat-card {
             background: white;
-            padding: 0.75rem;
-            border-radius: 6px;
+            padding: 1.5rem;
+            border-radius: 12px;
             border: 1px solid var(--gray-200);
             transition: all 0.3s;
         }
@@ -621,18 +621,16 @@
         }
         
         .stat-value {
-            font-size: 1.25rem;
-            font-weight: 600;
+            font-size: 2rem;
+            font-weight: 700;
             color: var(--gray-900);
-            margin-bottom: 0.125rem;
-            line-height: 1.2;
+            margin-bottom: 0.25rem;
         }
         
         .stat-label {
-            font-size: 0.75rem;
+            font-size: 0.875rem;
             color: var(--gray-600);
-            margin-bottom: 0.25rem;
-            line-height: 1.3;
+            margin-bottom: 0.5rem;
         }
         
         .stat-trend {
@@ -704,14 +702,14 @@
         /* Tables */
         .table-container {
             background: white;
-            border-radius: 8px;
+            border-radius: 12px;
             border: 1px solid var(--gray-200);
             overflow: hidden;
-            margin-bottom: 1rem;
+            margin-bottom: 2rem;
         }
         
         .table-header {
-            padding: 0.75rem 1rem;
+            padding: 1rem 1.5rem;
             border-bottom: 1px solid var(--gray-200);
             display: flex;
             justify-content: space-between;
@@ -719,7 +717,7 @@
         }
         
         .table-title {
-            font-size: 1rem;
+            font-size: 1.125rem;
             font-weight: 600;
         }
         
@@ -752,9 +750,9 @@
         /* Status Badges */
         .status-badge {
             display: inline-block;
-            padding: 0.125rem 0.5rem;
+            padding: 0.25rem 0.75rem;
             border-radius: 9999px;
-            font-size: 0.625rem;
+            font-size: 0.75rem;
             font-weight: 600;
             text-transform: uppercase;
         }
@@ -993,7 +991,7 @@
     <!-- Header -->
     <div class="header">
         <div class="header-left" style="display: flex; align-items: center; gap: 1rem;">
-            <img src="https://cdn.prod.website-files.com/67edc7c78e3151d3b06686b2/681007b1b7f5a5cc527f1b94_Hey_SPRUCE_logo_font.png" alt="Hey Spruce" class="header-logo" style="height: 32px; width: auto;">
+            <div class="header-logo">Hey Spruce</div>
             <span class="header-badge">Client Portal</span>
         </div>
         
@@ -1082,19 +1080,10 @@
                         <span class="icon"></span>
                         Invoices
                     </a>
-                </div>
-                
-                <div class="sidebar-section">
-                    <div class="sidebar-title">Communication</div>
                     <a href="#messages" class="nav-item" onclick="loadSection('messages')">
-                        <span class="icon">💬</span>
+                        <span class="icon"></span>
                         Messages
                         <span class="notification-badge" id="messagesBadge" style="background: var(--danger); color: white; font-size: 0.75rem; padding: 0.125rem 0.375rem; border-radius: 10px; margin-left: 0.5rem;">3</span>
-                    </a>
-                    <a href="#notifications" class="nav-item" onclick="loadSection('notifications')">
-                        <span class="icon">🔔</span>
-                        Notifications
-                        <span class="notification-badge" id="notificationsBadge" style="background: var(--warning); color: white; font-size: 0.75rem; padding: 0.125rem 0.375rem; border-radius: 10px; margin-left: 0.5rem;">5</span>
                     </a>
                 </div>
                 
@@ -1139,7 +1128,7 @@
         <!-- Main Content -->
         <main class="main-content">
             <!-- Breadcrumb Navigation -->
-            <div id="breadcrumbContainer" style="padding: 0.5rem 20px 0;"></div>
+            <div id="breadcrumbContainer" style="padding: 0 20px;"></div>
             
             <div id="content">
                 <!-- Content will be loaded here -->
@@ -1425,7 +1414,7 @@
                 </div>
 
                 <!-- Calendar Controls -->
-                <div class="table-container" style="margin-bottom: 1rem;">
+                <div class="table-container" style="margin-bottom: 1.5rem;">
                     <div class="table-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
                         <h3 class="table-title">Calendar View</h3>
                         <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
@@ -1497,43 +1486,31 @@
                     </div>
                 </div>
                 
-                <!-- View Toggle -->
-                <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
-                    <button id="clientListViewBtn" class="btn btn-primary" onclick="switchToClientListView()" style="padding: 0.5rem 1rem;">
-                        📋 List View
-                    </button>
-                    <button id="clientCalendarViewBtn" class="btn btn-secondary" onclick="switchToClientCalendarView()" style="padding: 0.5rem 1rem;">
-                        📅 Calendar View
-                    </button>
+                <!-- Filters -->
+                <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
+                    <select class="form-select" style="width: 200px;">
+                        <option>All Locations</option>
+                        <option>McDonald's - Sunset</option>
+                        <option>Burger King - Melrose</option>
+                        <option>Delilah LA</option>
+                    </select>
+                    <select class="form-select" style="width: 150px;">
+                        <option>All Status</option>
+                        <option>Open</option>
+                        <option>In Progress</option>
+                        <option>Completed</option>
+                    </select>
+                    <select class="form-select" style="width: 150px;">
+                        <option>All Priority</option>
+                        <option>Emergency</option>
+                        <option>Urgent</option>
+                        <option>Standard</option>
+                    </select>
+                    <input type="search" class="form-input" placeholder="Search work orders..." style="width: 300px;">
                 </div>
                 
-                <!-- List View Container -->
-                <div id="clientListViewContainer">
-                    <!-- Filters -->
-                    <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
-                        <select class="form-select" style="width: 200px;">
-                            <option>All Locations</option>
-                            <option>McDonald's - Sunset</option>
-                            <option>Burger King - Melrose</option>
-                            <option>Delilah LA</option>
-                        </select>
-                        <select class="form-select" style="width: 150px;">
-                            <option>All Status</option>
-                            <option>Open</option>
-                            <option>In Progress</option>
-                            <option>Completed</option>
-                        </select>
-                        <select class="form-select" style="width: 150px;">
-                            <option>All Priority</option>
-                            <option>Emergency</option>
-                            <option>Urgent</option>
-                            <option>Standard</option>
-                        </select>
-                        <input type="search" class="form-input" placeholder="Search work orders..." style="width: 300px;">
-                    </div>
-                    
-                    <!-- Work Orders List -->
-                    <div class="table-container">
+                <!-- Work Orders List -->
+                <div class="table-container">
                     <div class="table-header">
                         <h3 class="table-title">All Work Orders</h3>
                         <button class="btn btn-secondary" onclick="exportWorkOrders()">Export</button>
@@ -1557,32 +1534,6 @@
                             ${getWorkOrderRows()}
                         </tbody>
                     </table>
-                    </div>
-                </div>
-                
-                <!-- Calendar View Container -->
-                <div id="clientCalendarViewContainer" style="display: none;">
-                    <div class="table-container">
-                        <div class="table-header" style="display: flex; justify-content: space-between; align-items: center;">
-                            <h3 class="table-title">Calendar View</h3>
-                            <div style="display: flex; gap: 0.5rem; align-items: center;">
-                                <button class="btn btn-secondary" onclick="previousClientPeriod()" style="padding: 0.5rem;">◀</button>
-                                <button class="btn btn-secondary" onclick="goToClientToday()">Today</button>
-                                <button class="btn btn-secondary" onclick="nextClientPeriod()" style="padding: 0.5rem;">▶</button>
-                                <select id="clientCalendarView" onchange="changeClientCalendarView()" style="padding: 0.5rem; border: 1px solid var(--gray-300); border-radius: 6px; margin-left: 1rem;">
-                                    <option value="month">Month View</option>
-                                    <option value="week">Week View</option>
-                                    <option value="day">Day View</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div style="padding: 1.5rem;">
-                            <h2 id="clientCurrentPeriod" style="text-align: center; font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem;">September 2025</h2>
-                            <div id="clientCalendarGrid">
-                                <!-- Calendar will be rendered here -->
-                            </div>
-                        </div>
-                    </div>
                 </div>
             `;
         }
@@ -2386,7 +2337,7 @@
                 </div>
                 
                 <!-- Performance Overview Cards -->
-                <div class="stats-grid" style="margin-bottom: 1rem;">
+                <div class="stats-grid" style="margin-bottom: 2rem;">
                     <div class="stat-card">
                         <div class="stat-value">4.7</div>
                         <div class="stat-label">Avg Vendor Rating</div>
@@ -3331,6 +3282,312 @@
         window.handleGlobalSearch = handleGlobalSearch;
         window.handleSearchKeydown = handleSearchKeydown;
         window.selectSearchResult = selectSearchResult;
+                        <div class="stat-change positive">↗ 3% improvement</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">47</div>
+                        <div class="stat-label">Active Vendors</div>
+                        <div class="stat-change">Across all portals</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">4.6★</div>
+                        <div class="stat-label">Avg Quality Rating</div>
+                        <div class="stat-change positive">↗ 0.2 improvement</div>
+                    </div>
+                </div>
+                
+                <!-- Portal Performance Comparison -->
+                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+                    <div class="table-container">
+                        <div class="table-header">
+                            <h3 class="table-title">Portal Performance Comparison</h3>
+                        </div>
+                        <div style="padding: 2rem;">
+                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;">
+                                <!-- Client Portal Stats -->
+                                <div style="text-align: center; padding: 1.5rem; background: var(--success-light); border-radius: 8px;">
+                                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">👥</div>
+                                    <div style="font-size: 1.5rem; font-weight: 600; color: var(--success);">CLIENT</div>
+                                    <div style="font-size: 0.875rem; color: var(--gray-600); margin: 0.5rem 0;">Work Orders Created</div>
+                                    <div style="font-size: 2rem; font-weight: 700;">84</div>
+                                    <div style="font-size: 0.875rem; color: var(--success);">+18% vs last month</div>
+                                </div>
+                                
+                                <!-- Supplier Portal Stats -->
+                                <div style="text-align: center; padding: 1.5rem; background: var(--info-light); border-radius: 8px;">
+                                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">🏢</div>
+                                    <div style="font-size: 1.5rem; font-weight: 600; color: var(--info);">SUPPLIER</div>
+                                    <div style="font-size: 0.875rem; color: var(--gray-600); margin: 0.5rem 0;">Orders Completed</div>
+                                    <div style="font-size: 2rem; font-weight: 700;">76</div>
+                                    <div style="font-size: 0.875rem; color: var(--info);">90% completion rate</div>
+                                </div>
+                                
+                                <!-- Subcontractor Portal Stats -->
+                                <div style="text-align: center; padding: 1.5rem; background: var(--warning-light); border-radius: 8px;">
+                                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">🔧</div>
+                                    <div style="font-size: 1.5rem; font-weight: 600; color: var(--warning);">SUBCONTRACTOR</div>
+                                    <div style="font-size: 0.875rem; color: var(--gray-600); margin: 0.5rem 0;">Tasks Executed</div>
+                                    <div style="font-size: 2rem; font-weight: 700;">52</div>
+                                    <div style="font-size: 0.875rem; color: var(--warning);">4.8★ avg rating</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Top Metrics -->
+                    <div class="table-container">
+                        <div class="table-header">
+                            <h3 class="table-title">Key Performance Indicators</h3>
+                        </div>
+                        <div style="padding: 1.5rem;">
+                            <div style="display: grid; gap: 1rem;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: var(--gray-50); border-radius: 6px;">
+                                    <span style="font-weight: 600;">Avg Response Time</span>
+                                    <span style="color: var(--success); font-weight: 600;">2.3 hrs</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: var(--gray-50); border-radius: 6px;">
+                                    <span style="font-weight: 600;">First Call Resolution</span>
+                                    <span style="color: var(--success); font-weight: 600;">87%</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: var(--gray-50); border-radius: 6px;">
+                                    <span style="font-weight: 600;">Client Satisfaction</span>
+                                    <span style="color: var(--success); font-weight: 600;">4.6★</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: var(--gray-50); border-radius: 6px;">
+                                    <span style="font-weight: 600;">Cost Per Service</span>
+                                    <span style="color: var(--info); font-weight: 600;">$289</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: var(--gray-50); border-radius: 6px;">
+                                    <span style="font-weight: 600;">Vendor Retention</span>
+                                    <span style="color: var(--success); font-weight: 600;">94%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Communication Flow Analytics -->
+                <div class="table-container" style="margin-bottom: 2rem;">
+                    <div class="table-header">
+                        <h3 class="table-title">📡 Communication Flow Analytics</h3>
+                        <button class="btn btn-sm btn-secondary" onclick="viewDetailedFlow()">View Details</button>
+                    </div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Message Type</th>
+                                <th>Client Portal</th>
+                                <th>Supplier Portal</th>
+                                <th>Subcontractor Portal</th>
+                                <th>Total Volume</th>
+                                <th>Avg Response Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Work Order Updates</strong></td>
+                                <td>156 sent</td>
+                                <td>89 received</td>
+                                <td>52 received</td>
+                                <td style="font-weight: 600;">297</td>
+                                <td><span style="color: var(--success);">1.2 hrs</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Quote Requests</strong></td>
+                                <td>45 sent</td>
+                                <td>43 received</td>
+                                <td>28 received</td>
+                                <td style="font-weight: 600;">116</td>
+                                <td><span style="color: var(--warning);">4.8 hrs</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Status Updates</strong></td>
+                                <td>89 received</td>
+                                <td>67 sent</td>
+                                <td>45 sent</td>
+                                <td style="font-weight: 600;">201</td>
+                                <td><span style="color: var(--success);">0.8 hrs</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Document Sharing</strong></td>
+                                <td>78 initiated</td>
+                                <td>56 accessed</td>
+                                <td>34 accessed</td>
+                                <td style="font-weight: 600;">168</td>
+                                <td><span style="color: var(--info);">2.1 hrs</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Quality Assurance Analytics -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+                    <div class="table-container">
+                        <div class="table-header">
+                            <h3 class="table-title">🔍 Quality Assurance Metrics</h3>
+                        </div>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Metric</th>
+                                    <th>This Month</th>
+                                    <th>Trend</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Work Orders Reviewed</td>
+                                    <td><strong>67</strong></td>
+                                    <td><span style="color: var(--success);">↗ +23%</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Avg Quality Rating</td>
+                                    <td><strong>4.6★</strong></td>
+                                    <td><span style="color: var(--success);">↗ +0.2</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Photos Verified</td>
+                                    <td><strong>134</strong></td>
+                                    <td><span style="color: var(--success);">↗ +15%</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Rework Required</td>
+                                    <td><strong>3</strong></td>
+                                    <td><span style="color: var(--success);">↘ -40%</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Client Approvals</td>
+                                    <td><strong>94%</strong></td>
+                                    <td><span style="color: var(--success);">↗ +2%</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="table-container">
+                        <div class="table-header">
+                            <h3 class="table-title">📋 Document Workflow Metrics</h3>
+                        </div>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Document Type</th>
+                                    <th>Shared</th>
+                                    <th>Signed</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Service Contracts</td>
+                                    <td>24</td>
+                                    <td><strong>22</strong> (92%)</td>
+                                </tr>
+                                <tr>
+                                    <td>Work Orders</td>
+                                    <td>156</td>
+                                    <td><strong>149</strong> (95%)</td>
+                                </tr>
+                                <tr>
+                                    <td>Compliance Docs</td>
+                                    <td>18</td>
+                                    <td><strong>16</strong> (89%)</td>
+                                </tr>
+                                <tr>
+                                    <td>Change Orders</td>
+                                    <td>12</td>
+                                    <td><strong>11</strong> (92%)</td>
+                                </tr>
+                                <tr style="border-top: 2px solid var(--gray-200); font-weight: 600;">
+                                    <td>Total</td>
+                                    <td>210</td>
+                                    <td><strong>198</strong> (94%)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Vendor Performance Across Portals -->
+                <div class="table-container">
+                    <div class="table-header">
+                        <h3 class="table-title">🏆 Top Performing Vendors (Cross-Portal)</h3>
+                        <button class="btn btn-sm btn-secondary" onclick="exportVendorReport()">Export Vendor Report</button>
+                    </div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Vendor</th>
+                                <th>Services Delivered</th>
+                                <th>Client Rating</th>
+                                <th>Avg Response Time</th>
+                                <th>Revenue Generated</th>
+                                <th>Completion Rate</th>
+                                <th>Portals Active</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <span style="color: var(--success);">🥇</span>
+                                        <strong>TechPro Services</strong>
+                                    </div>
+                                </td>
+                                <td><strong>127</strong></td>
+                                <td><span style="color: var(--success);">4.9★</span></td>
+                                <td>1.8 hrs</td>
+                                <td>$34,580</td>
+                                <td><span style="color: var(--success);">98%</span></td>
+                                <td>
+                                    <span style="display: flex; gap: 0.25rem;">
+                                        <span style="background: var(--success); color: white; padding: 0.125rem 0.25rem; border-radius: 3px; font-size: 0.75rem;">S</span>
+                                        <span style="background: var(--info); color: white; padding: 0.125rem 0.25rem; border-radius: 3px; font-size: 0.75rem;">SC</span>
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <span style="color: var(--warning);">🥈</span>
+                                        <strong>ABC Maintenance</strong>
+                                    </div>
+                                </td>
+                                <td><strong>89</strong></td>
+                                <td><span style="color: var(--success);">4.7★</span></td>
+                                <td>2.1 hrs</td>
+                                <td>$28,940</td>
+                                <td><span style="color: var(--success);">94%</span></td>
+                                <td>
+                                    <span style="display: flex; gap: 0.25rem;">
+                                        <span style="background: var(--success); color: white; padding: 0.125rem 0.25rem; border-radius: 3px; font-size: 0.75rem;">S</span>
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <span style="color: var(--info);">🥉</span>
+                                        <strong>Elite Electric</strong>
+                                    </div>
+                                </td>
+                                <td><strong>76</strong></td>
+                                <td><span style="color: var(--success);">4.6★</span></td>
+                                <td>1.9 hrs</td>
+                                <td>$22,150</td>
+                                <td><span style="color: var(--success);">96%</span></td>
+                                <td>
+                                    <span style="display: flex; gap: 0.25rem;">
+                                        <span style="background: var(--success); color: white; padding: 0.125rem 0.25rem; border-radius: 3px; font-size: 0.75rem;">S</span>
+                                        <span style="background: var(--info); color: white; padding: 0.125rem 0.25rem; border-radius: 3px; font-size: 0.75rem;">SC</span>
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+        
         function getReportsContent() {
             return `
                 <div class="header-bar">
@@ -4613,7 +4870,7 @@
                 </div>
                 
                 <!-- Budget Overview Cards -->
-                <div class="stats-grid" style="margin-bottom: 1rem;">
+                <div class="stats-grid" style="margin-bottom: 2rem;">
                     <div class="stat-card">
                         <div class="stat-value">$125,000</div>
                         <div class="stat-label">Annual Budget</div>
@@ -4931,7 +5188,7 @@
                 </div>
                 
                 <!-- Document Workflow Status -->
-                <div class=\"stats-grid\" style=\"margin-bottom: 1rem;\">
+                <div class=\"stats-grid\" style=\"margin-bottom: 2rem;\">
                     <div class=\"stat-card\">
                         <div class=\"stat-value\">358</div>
                         <div class=\"stat-label\">Total Documents</div>
@@ -5501,7 +5758,7 @@
                 </div>
                 
                 <!-- Communication Overview -->
-                <div class="stats-grid" style="margin-bottom: 1rem;">
+                <div class="stats-grid" style="margin-bottom: 2rem;">
                     <div class="stat-card">
                         <div class="stat-value">12</div>
                         <div class="stat-label">Active Conversations</div>
@@ -5579,21 +5836,71 @@
                     </div>
                     
                     <!-- Chat Interface -->
-                    <div class="table-container" id="chatInterface" style="height: 100%; margin: 0; display: flex; flex-direction: column;">
-                        <!-- Chat Placeholder -->
+                    <div class="table-container" style="height: 100%; margin: 0; display: flex; flex-direction: column;">
+                        <!-- Chat Header -->
                         <div class="table-header" style="flex-shrink: 0;">
                             <div style="display: flex; align-items: center; gap: 0.75rem;">
-                                <div style="font-weight: 600; color: var(--gray-500);">Select a conversation to start messaging</div>
+                                <div style="width: 32px; height: 32px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 0.875rem;">CS</div>
+                                <div>
+                                    <div style="font-weight: 600;">CoolAir HVAC Services</div>
+                                    <div style="font-size: 0.75rem; color: var(--gray-600);">WO #2024-1523 • HVAC Repair</div>
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <button class="btn btn-sm" onclick="showWorkOrderDetails('2024-1523')">View WO</button>
+                                <button class="btn btn-sm" onclick="callVendor()">📞 Call</button>
+                                <button class="btn btn-sm" onclick="emailVendor()">✉️ Email</button>
                             </div>
                         </div>
                         
-                        <!-- Chat Placeholder Content -->
-                        <div style="flex: 1; display: flex; align-items: center; justify-content: center; background: var(--gray-50);">
-                            <div style="text-align: center; color: var(--gray-500);">
-                                <div style="font-size: 3rem; margin-bottom: 1rem;">💬</div>
-                                <div style="font-weight: 600; margin-bottom: 0.5rem;">No Conversation Selected</div>
-                                <div>Click on a conversation from the left to start messaging</div>
+                        <!-- Chat Messages -->
+                        <div id="chatMessages" style="flex: 1; padding: 1rem; overflow-y: auto; background: var(--gray-50);">
+                            <!-- Message from vendor -->
+                            <div style="margin-bottom: 1rem;">
+                                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+                                    <div style="width: 24px; height: 24px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 0.75rem; font-weight: bold;">CS</div>
+                                    <span style="font-size: 0.875rem; font-weight: 600;">CoolAir HVAC</span>
+                                    <span style="font-size: 0.75rem; color: var(--gray-600);">2:45 PM</span>
+                                </div>
+                                <div style="background: white; padding: 0.75rem; border-radius: 0 12px 12px 12px; margin-left: 32px; border-left: 3px solid var(--primary);">
+                                    Good afternoon! We're en route to your location for the HVAC repair. Our technician Mike will be there in approximately 20 minutes. He has all the necessary parts for the compressor replacement.
+                                </div>
                             </div>
+                            
+                            <!-- Message from client -->
+                            <div style="margin-bottom: 1rem;">
+                                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem; justify-content: flex-end;">
+                                    <span style="font-size: 0.75rem; color: var(--gray-600);">2:47 PM</span>
+                                    <span style="font-size: 0.875rem; font-weight: 600;">You</span>
+                                </div>
+                                <div style="background: var(--primary); color: white; padding: 0.75rem; border-radius: 12px 0 12px 12px; margin-right: 32px; margin-left: auto; max-width: 80%;">
+                                    Perfect! Please have Mike use the service entrance on the side of the building. The main entrance is blocked for deliveries.
+                                </div>
+                            </div>
+                            
+                            <!-- System message -->
+                            <div style="margin-bottom: 1rem; text-align: center;">
+                                <div style="background: var(--gray-200); color: var(--gray-700); padding: 0.5rem 1rem; border-radius: 20px; display: inline-block; font-size: 0.875rem;">
+                                    📍 Technician location shared • 3:05 PM
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Message Input -->
+                        <div style="padding: 1rem; border-top: 1px solid var(--gray-200); background: white; flex-shrink: 0;">
+                            <div style="display: flex; gap: 0.5rem; align-items: end;">
+                                <button class="btn btn-sm" onclick="attachFile()" title="Attach file">
+                                    📎
+                                </button>
+                                <button class="btn btn-sm" onclick="takePhoto()" title="Take photo">
+                                    📷
+                                </button>
+                                <textarea id="messageInput" class="form-input" rows="2" placeholder="Type your message..." style="flex: 1; resize: none;" onkeypress="if(event.key==='Enter' && !event.shiftKey) { event.preventDefault(); sendMessage(); }"></textarea>
+                                <button class="btn btn-primary" onclick="sendMessage()">
+                                    Send
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
@@ -5621,103 +5928,6 @@
                     </div>
                 </div>
             `;
-        }
-        
-        // Client Portal View Switching Functions
-        function switchToClientListView() {
-            document.getElementById('clientListViewContainer').style.display = 'block';
-            document.getElementById('clientCalendarViewContainer').style.display = 'none';
-            document.getElementById('clientListViewBtn').classList.remove('btn-secondary');
-            document.getElementById('clientListViewBtn').classList.add('btn-primary');
-            document.getElementById('clientCalendarViewBtn').classList.remove('btn-primary');
-            document.getElementById('clientCalendarViewBtn').classList.add('btn-secondary');
-        }
-        
-        function switchToClientCalendarView() {
-            document.getElementById('clientListViewContainer').style.display = 'none';
-            document.getElementById('clientCalendarViewContainer').style.display = 'block';
-            document.getElementById('clientCalendarViewBtn').classList.remove('btn-secondary');
-            document.getElementById('clientCalendarViewBtn').classList.add('btn-primary');
-            document.getElementById('clientListViewBtn').classList.remove('btn-primary');
-            document.getElementById('clientListViewBtn').classList.add('btn-secondary');
-            
-            // Initialize calendar
-            renderClientCalendar();
-        }
-        
-        function renderClientCalendar() {
-            const calendarGrid = document.getElementById('clientCalendarGrid');
-            if (!calendarGrid) return;
-            
-            const now = new Date();
-            const year = now.getFullYear();
-            const month = now.getMonth();
-            const firstDay = new Date(year, month, 1).getDay();
-            const daysInMonth = new Date(year, month + 1, 0).getDate();
-            
-            // Sample work orders for calendar
-            const workOrders = {
-                8: [{ title: 'HVAC Maintenance', time: '9:00 AM', status: 'scheduled' }],
-                12: [{ title: 'Plumbing Inspection', time: '2:00 PM', status: 'scheduled' }],
-                15: [{ title: 'Electrical Repair', time: '10:00 AM', status: 'urgent' }],
-                20: [{ title: 'Equipment Service', time: '1:00 PM', status: 'scheduled' }],
-                25: [{ title: 'Monthly Review', time: '3:00 PM', status: 'scheduled' }]
-            };
-            
-            let html = '<div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; background: var(--gray-200);">';
-            
-            // Day headers
-            const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-            days.forEach(day => {
-                html += `<div style="background: var(--gray-50); padding: 0.5rem; text-align: center; font-weight: 600; font-size: 0.875rem;">${day}</div>`;
-            });
-            
-            // Empty cells for days before month starts
-            for (let i = 0; i < firstDay; i++) {
-                html += '<div style="background: white; min-height: 80px; padding: 0.5rem;"></div>';
-            }
-            
-            // Days of month
-            for (let day = 1; day <= daysInMonth; day++) {
-                const hasWorkOrders = workOrders[day];
-                const isToday = day === now.getDate();
-                
-                html += `<div style="background: ${isToday ? 'var(--primary-light)' : 'white'}; min-height: 80px; padding: 0.5rem; position: relative;">
-                    <div style="font-weight: ${isToday ? 'bold' : 'normal'}; margin-bottom: 0.25rem;">${day}</div>`;
-                
-                if (hasWorkOrders) {
-                    hasWorkOrders.forEach(wo => {
-                        const color = wo.status === 'urgent' ? 'var(--danger)' : 'var(--primary)';
-                        html += `<div style="font-size: 0.625rem; background: ${color}; color: white; padding: 0.125rem 0.25rem; border-radius: 2px; margin-bottom: 0.125rem; cursor: pointer;" onclick="viewWorkOrder('WO-${day}')">${wo.time} - ${wo.title}</div>`;
-                    });
-                }
-                
-                html += '</div>';
-            }
-            
-            html += '</div>';
-            calendarGrid.innerHTML = html;
-        }
-        
-        function previousClientPeriod() {
-            // Navigate to previous month
-            showToast('Previous month', 'info');
-        }
-        
-        function nextClientPeriod() {
-            // Navigate to next month
-            showToast('Next month', 'info');
-        }
-        
-        function goToClientToday() {
-            // Navigate to current month
-            renderClientCalendar();
-            showToast('Today', 'info');
-        }
-        
-        function changeClientCalendarView() {
-            const view = document.getElementById('clientCalendarView').value;
-            showToast(`Switched to ${view} view`, 'info');
         }
         
         function showCreateWorkOrderModal() {
@@ -6264,113 +6474,7 @@
         }
         
         function viewInvoice(id) {
-            // Create modal overlay
-            const modalOverlay = document.createElement('div');
-            modalOverlay.className = 'modal-overlay';
-            modalOverlay.style.cssText = `
-                position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-                background: rgba(0, 0, 0, 0.5); z-index: 1000;
-                display: flex; align-items: center; justify-content: center;
-            `;
-            
-            // Create modal content
-            modalOverlay.innerHTML = `
-                <div class="modal-dialog" style="background: white; border-radius: 12px; max-width: 800px; width: 90%; max-height: 90vh; overflow-y: auto; position: relative;">
-                    <div class="modal-header" style="padding: 1.5rem; border-bottom: 1px solid var(--gray-200); display: flex; justify-content: between; align-items: center;">
-                        <h2 style="margin: 0; color: var(--gray-900);">Invoice ${id}</h2>
-                        <button onclick="this.closest('.modal-overlay').remove()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--gray-500);">&times;</button>
-                    </div>
-                    <div class="modal-body" style="padding: 1.5rem;">
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
-                            <div>
-                                <h4 style="color: var(--gray-700); margin-bottom: 1rem;">Invoice Details</h4>
-                                <div style="margin-bottom: 0.5rem;"><strong>Invoice ID:</strong> ${id}</div>
-                                <div style="margin-bottom: 0.5rem;"><strong>Date:</strong> ${new Date().toLocaleDateString()}</div>
-                                <div style="margin-bottom: 0.5rem;"><strong>Due Date:</strong> ${new Date(Date.now() + 30*24*60*60*1000).toLocaleDateString()}</div>
-                                <div style="margin-bottom: 0.5rem;"><strong>Status:</strong> <span style="padding: 0.25rem 0.5rem; background: var(--warning-light); color: var(--warning); border-radius: 4px; font-size: 0.75rem;">Pending</span></div>
-                            </div>
-                            <div>
-                                <h4 style="color: var(--gray-700); margin-bottom: 1rem;">Service Provider</h4>
-                                <div style="margin-bottom: 0.5rem;"><strong>Company:</strong> CoolAir HVAC Services</div>
-                                <div style="margin-bottom: 0.5rem;"><strong>Contact:</strong> Mike Johnson</div>
-                                <div style="margin-bottom: 0.5rem;"><strong>Phone:</strong> (555) 123-4567</div>
-                                <div style="margin-bottom: 0.5rem;"><strong>Email:</strong> mike@coolairhvac.com</div>
-                            </div>
-                        </div>
-                        
-                        <h4 style="color: var(--gray-700); margin-bottom: 1rem;">Service Items</h4>
-                        <div class="table-container">
-                            <table class="data-table" style="width: 100%;">
-                                <thead>
-                                    <tr>
-                                        <th>Description</th>
-                                        <th>Quantity</th>
-                                        <th>Rate</th>
-                                        <th>Amount</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Emergency HVAC System Repair</td>
-                                        <td>1</td>
-                                        <td>$450.00</td>
-                                        <td>$450.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Replacement Parts & Labor</td>
-                                        <td>1</td>
-                                        <td>$125.00</td>
-                                        <td>$125.00</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        
-                        <div style="margin-top: 2rem; padding: 1rem; background: var(--gray-50); border-radius: 8px;">
-                            <div style="display: flex; justify-content: between; margin-bottom: 0.5rem;">
-                                <span>Subtotal:</span>
-                                <span>$575.00</span>
-                            </div>
-                            <div style="display: flex; justify-content: between; margin-bottom: 0.5rem;">
-                                <span>Tax (8.5%):</span>
-                                <span>$48.88</span>
-                            </div>
-                            <div style="display: flex; justify-content: between; font-weight: bold; font-size: 1.1rem; border-top: 1px solid var(--gray-300); padding-top: 0.5rem;">
-                                <span>Total:</span>
-                                <span>$623.88</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer" style="padding: 1.5rem; border-top: 1px solid var(--gray-200); display: flex; gap: 1rem; justify-content: flex-end;">
-                        <button class="btn btn-secondary" onclick="downloadInvoice('${id}')">📄 Download PDF</button>
-                        <button class="btn btn-secondary" onclick="this.closest('.modal-overlay').remove()">Close</button>
-                        <button class="btn btn-primary" onclick="payInvoice('${id}')">Pay Now</button>
-                    </div>
-                </div>
-            `;
-            
-            document.body.appendChild(modalOverlay);
-        }
-        
-        function downloadInvoice(id) {
-            // Create a link to download the PDF
-            const link = document.createElement('a');
-            link.href = `/api/invoices/${id}/pdf`;
-            link.download = `invoice-${id}.pdf`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            
-            showToast(`Downloading invoice ${id}...`, 'success');
-        }
-        
-        function payInvoice(id) {
-            // Close the modal first
-            const modal = document.querySelector('.modal-overlay');
-            if (modal) modal.remove();
-            
-            showToast(`Processing payment for invoice ${id}...`, 'info');
-            // Here you could integrate with actual payment processing
+            showToast(`Opening invoice ${id}...`, 'info');
         }
         
         function payAllInvoices() {
@@ -6405,154 +6509,6 @@
                 document.getElementById('teamRole').value = '';
                 document.querySelectorAll('#permissionsList input[type="checkbox"]').forEach(cb => cb.checked = false);
             }
-        }
-        
-        // Messaging Functions
-        function openConversation(conversationId) {
-            // Update the chat interface with the selected conversation
-            const conversations = {
-                'wo-2024-1523': {
-                    name: 'CoolAir HVAC Services',
-                    workOrder: 'WO #2024-1523',
-                    avatar: 'CS',
-                    color: 'var(--primary)',
-                    messages: [
-                        { sender: 'them', message: 'On my way to your location now. ETA 15 minutes.', time: '2:45 PM' },
-                        { sender: 'them', message: 'We\'re running 15 minutes late due to traffic. ETA now 3:15 PM.', time: '3:00 PM' }
-                    ]
-                },
-                'wo-2024-1519': {
-                    name: 'Elite Plumbing Solutions',
-                    workOrder: 'WO #2024-1519',
-                    avatar: 'EP',
-                    color: 'var(--warning)',
-                    messages: [
-                        { sender: 'you', message: 'How is the repair progressing?', time: '1:30 PM' },
-                        { sender: 'them', message: 'Job completed. Please review the work and provide feedback when convenient.', time: '2:00 PM' }
-                    ]
-                },
-                'urgent-repair': {
-                    name: '🚨 Urgent Repair Team',
-                    workOrder: 'Emergency',
-                    avatar: 'UR',
-                    color: 'var(--danger)',
-                    messages: [
-                        { sender: 'them', message: 'Emergency electrical issue resolved. Full report attached.', time: '11:00 AM' },
-                        { sender: 'you', message: 'Thank you for the quick response!', time: '11:30 AM' }
-                    ]
-                }
-            };
-            
-            const conversation = conversations[conversationId];
-            if (!conversation) return;
-            
-            // Update chat header
-            const chatInterface = document.getElementById('chatInterface');
-            const header = chatInterface.querySelector('.table-header');
-            header.innerHTML = `
-                <div style="display: flex; align-items: center; gap: 0.75rem;">
-                    <div style="width: 32px; height: 32px; background: ${conversation.color}; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 0.875rem;">${conversation.avatar}</div>
-                    <div>
-                        <div style="font-weight: 600;">${conversation.name}</div>
-                        <div style="font-size: 0.75rem; color: var(--gray-600);">${conversation.workOrder}</div>
-                    </div>
-                </div>
-                <button class="btn btn-sm btn-secondary" onclick="showToast('Call feature coming soon!', 'info')">📞 Call</button>
-            `;
-            
-            // Update chat messages
-            let messagesHtml = conversation.messages.map(msg => {
-                const isYou = msg.sender === 'you';
-                return `
-                    <div style="display: flex; gap: 0.75rem; margin-bottom: 1rem; ${isYou ? 'flex-direction: row-reverse;' : ''}">
-                        <div style="width: 32px; height: 32px; background: ${isYou ? 'var(--gray-300)' : conversation.color}; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: ${isYou ? 'var(--gray-700)' : 'white'}; font-weight: bold; font-size: 0.75rem; flex-shrink: 0;">
-                            ${isYou ? 'You' : conversation.avatar}
-                        </div>
-                        <div style="flex: 1; max-width: 70%;">
-                            <div style="background: ${isYou ? 'var(--primary)' : 'var(--gray-100)'}; color: ${isYou ? 'white' : 'var(--gray-900)'}; padding: 0.75rem; border-radius: 12px; ${isYou ? 'border-bottom-right-radius: 4px;' : 'border-bottom-left-radius: 4px;'}">${msg.message}</div>
-                            <div style="font-size: 0.75rem; color: var(--gray-500); margin-top: 0.25rem; ${isYou ? 'text-align: right;' : ''}">${msg.time}</div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-            
-            // Clear existing content and rebuild
-            // Remove placeholder content first
-            const placeholderContent = chatInterface.querySelector('div[style*="flex: 1; display: flex; align-items: center"]');
-            if (placeholderContent) {
-                placeholderContent.remove();
-            }
-            
-            // Remove any existing messages or input areas
-            const existingMessages = chatInterface.querySelector('.chat-messages');
-            const existingInput = chatInterface.querySelector('.message-input-area');
-            if (existingMessages) existingMessages.remove();
-            if (existingInput) existingInput.remove();
-            
-            // Create the message area
-            const messageArea = document.createElement('div');
-            messageArea.className = 'chat-messages';
-            messageArea.style.cssText = 'flex: 1; padding: 1rem; overflow-y: auto; background: var(--gray-50);';
-            messageArea.innerHTML = messagesHtml;
-            chatInterface.appendChild(messageArea);
-            
-            // Add message input
-            const inputArea = document.createElement('div');
-            inputArea.className = 'message-input-area';
-            inputArea.style.cssText = 'padding: 1rem; border-top: 1px solid var(--gray-200); background: white; flex-shrink: 0;';
-            inputArea.innerHTML = `
-                <div style="display: flex; gap: 0.5rem;">
-                    <input type="text" id="messageInput" placeholder="Type your message..." style="flex: 1; padding: 0.75rem; border: 1px solid var(--gray-300); border-radius: 6px;" onkeypress="if(event.key==='Enter') sendMessage('${conversationId}')">
-                    <button class="btn btn-primary" onclick="sendMessage('${conversationId}')">Send</button>
-                </div>
-            `;
-            chatInterface.appendChild(inputArea);
-            
-            // Mark conversation as active
-            document.querySelectorAll('.conversation-item').forEach(item => {
-                item.style.background = '';
-            });
-            event.target.closest('.conversation-item').style.background = 'var(--primary-light)';
-        }
-        
-        function sendMessage(conversationId) {
-            const input = document.getElementById('messageInput');
-            if (!input || !input.value.trim()) return;
-            
-            const message = input.value.trim();
-            const now = new Date();
-            const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            
-            // Add message to chat
-            const messagesContainer = document.querySelector('.chat-messages');
-            if (messagesContainer) {
-                const messageHtml = `
-                    <div style="display: flex; gap: 0.75rem; margin-bottom: 1rem; flex-direction: row-reverse;">
-                        <div style="width: 32px; height: 32px; background: var(--gray-300); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--gray-700); font-weight: bold; font-size: 0.75rem; flex-shrink: 0;">You</div>
-                        <div style="flex: 1; max-width: 70%;">
-                            <div style="background: var(--primary); color: white; padding: 0.75rem; border-radius: 12px; border-bottom-right-radius: 4px;">${message}</div>
-                            <div style="font-size: 0.75rem; color: var(--gray-500); margin-top: 0.25rem; text-align: right;">${timeStr}</div>
-                        </div>
-                    </div>
-                `;
-                messagesContainer.innerHTML += messageHtml;
-                messagesContainer.scrollTop = messagesContainer.scrollHeight;
-            }
-            
-            input.value = '';
-            showToast('Message sent!', 'success');
-        }
-        
-        function startNewConversation() {
-            showToast('New conversation feature coming soon!', 'info');
-        }
-        
-        function filterConversations(filter) {
-            showToast(`Filtering by: ${filter}`, 'info');
-        }
-        
-        function showCommunicationSettings() {
-            showToast('Communication settings coming soon!', 'info');
         }
         
         function updatePermissions() {

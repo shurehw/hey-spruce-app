@@ -56,9 +56,107 @@ app.get('/api/health', (req, res) => {
       webhook: '/api/webhooks/stripe',
       payment: '/api/payment',
       invoices: '/api/invoices',
-      vendors: '/api/vendors'
+      vendors: '/api/vendors',
+      analytics: '/api/analytics'
     }
   });
+});
+
+// ANALYTICS ENDPOINT
+app.get('/api/analytics', async (req, res) => {
+  try {
+    const { type, period = '30d' } = req.query;
+    
+    // Mock analytics data for testing
+    const mockData = {
+      overview: {
+        total_work_orders: 47,
+        completed_work_orders: 32,
+        pending_work_orders: 12,
+        in_progress_work_orders: 3,
+        total_notifications: 28,
+        unread_notifications: 5,
+        completion_rate: 68,
+        period
+      },
+      'work-orders': {
+        daily_counts: [
+          { date: '2024-01-01', created: 3, completed: 2 },
+          { date: '2024-01-02', created: 5, completed: 3 },
+          { date: '2024-01-03', created: 2, completed: 4 },
+          { date: '2024-01-04', created: 4, completed: 3 },
+          { date: '2024-01-05', created: 6, completed: 5 }
+        ],
+        status_distribution: {
+          pending: 12,
+          in_progress: 3,
+          completed: 32,
+          cancelled: 2
+        },
+        priority_distribution: {
+          low: 15,
+          normal: 20,
+          high: 8,
+          urgent: 4
+        },
+        total: 47,
+        average_completion_time: 24,
+        period
+      },
+      financial: {
+        total_spend: 127500,
+        completed_spend: 89200,
+        pending_spend: 38300,
+        monthly_spend: [
+          { month: '2024-01', amount: 45200 },
+          { month: '2024-02', amount: 38900 },
+          { month: '2024-03', amount: 43400 }
+        ],
+        category_breakdown: [
+          { category: 'HVAC', amount: 45200 },
+          { category: 'Plumbing', amount: 28900 },
+          { category: 'Electrical', amount: 23400 },
+          { category: 'General', amount: 30000 }
+        ],
+        period
+      },
+      performance: {
+        completion_rate: 68,
+        on_time_rate: 87,
+        average_rating: 4.2,
+        customer_satisfaction: 87,
+        total_jobs: 47,
+        completed_jobs: 32,
+        period
+      },
+      communication: {
+        messages_sent: 156,
+        messages_received: 89,
+        total_conversations: 23,
+        average_response_time: 2.5,
+        notifications_sent: 234,
+        email_notifications: 89,
+        in_app_notifications: 145,
+        period
+      }
+    };
+    
+    if (!mockData[type]) {
+      return res.status(400).json({ error: 'Invalid analytics type' });
+    }
+    
+    res.json({ 
+      success: true, 
+      data: mockData[type]
+    });
+    
+  } catch (error) {
+    console.error('Analytics API Error:', error);
+    res.status(500).json({ 
+      error: 'Internal server error', 
+      details: error.message 
+    });
+  }
 });
 
 // VENDOR ENDPOINTS

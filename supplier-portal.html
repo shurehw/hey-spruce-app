@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Supplier Portal - Hey Spruce</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
@@ -5494,83 +5495,76 @@ Spruce - Professional Service Management
         }
 
         function getAnalyticsContent() {
+            // Initialize analytics when content loads
+            setTimeout(() => {
+                initializeSupplierAnalytics();
+            }, 100);
+            
             return `
                 <div>
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
                         <h2 style="font-size: 1.875rem; font-weight: 700;">Analytics Dashboard</h2>
-                        <select style="padding: 0.5rem; border: 1px solid var(--gray-300); border-radius: 6px;">
-                            <option>Last 30 Days</option>
-                            <option>Last 90 Days</option>
-                            <option>Last Year</option>
-                        </select>
-                    </div>
-                    
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
-                        <div style="background: white; padding: 1.5rem; border-radius: 8px; border: 1px solid var(--gray-200);">
-                            <h4 style="color: var(--gray-600); font-size: 0.875rem; margin-bottom: 0.5rem;">Total Revenue</h4>
-                            <p style="font-size: 1.5rem; font-weight: 700; color: var(--primary);">$158,400</p>
-                            <span style="color: var(--success); font-size: 0.875rem;">↑ 12% from last month</span>
-                        </div>
-                        <div style="background: white; padding: 1.5rem; border-radius: 8px; border: 1px solid var(--gray-200);">
-                            <h4 style="color: var(--gray-600); font-size: 0.875rem; margin-bottom: 0.5rem;">Work Orders Completed</h4>
-                            <p style="font-size: 1.5rem; font-weight: 700; color: var(--primary);">47</p>
-                            <span style="color: var(--success); font-size: 0.875rem;">↑ 8% from last month</span>
-                        </div>
-                        <div style="background: white; padding: 1.5rem; border-radius: 8px; border: 1px solid var(--gray-200);">
-                            <h4 style="color: var(--gray-600); font-size: 0.875rem; margin-bottom: 0.5rem;">Avg Response Time</h4>
-                            <p style="font-size: 1.5rem; font-weight: 700; color: var(--primary);">2.4 hrs</p>
-                            <span style="color: var(--success); font-size: 0.875rem;">↓ 15% improvement</span>
-                        </div>
-                        <div style="background: white; padding: 1.5rem; border-radius: 8px; border: 1px solid var(--gray-200);">
-                            <h4 style="color: var(--gray-600); font-size: 0.875rem; margin-bottom: 0.5rem;">Customer Satisfaction</h4>
-                            <p style="font-size: 1.5rem; font-weight: 700; color: var(--primary);">4.8/5</p>
-                            <span style="color: var(--success); font-size: 0.875rem;">↑ 0.3 from last month</span>
+                        <div style="display: flex; gap: 0.75rem;">
+                            <select id="supplierAnalyticsPeriod" style="padding: 0.5rem 1rem; border: 1px solid var(--gray-300); border-radius: 6px;" onchange="updateSupplierAnalyticsPeriod(this.value)">
+                                <option value="30d" selected>Last 30 Days</option>
+                                <option value="90d">Last 90 Days</option>
+                                <option value="1y">Last 12 Months</option>
+                                <option value="all">All Time</option>
+                            </select>
+                            <button class="btn btn-secondary" onclick="exportSupplierAnalytics()">Export Data</button>
                         </div>
                     </div>
                     
-                    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;">
-                        <div class="table-container">
-                            <div class="table-header">
-                                <h3 class="table-title">Revenue Trends</h3>
+                    <!-- Loading State -->
+                    <div id="supplierAnalyticsLoading" style="display: flex; justify-content: center; align-items: center; height: 200px; color: var(--gray-500);">
+                        <div>Loading analytics data...</div>
+                    </div>
+                    
+                    <!-- Analytics Content -->
+                    <div id="supplierAnalyticsContent" style="display: none;">
+                        <!-- KPI Cards -->
+                        <div id="supplierKPICards" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+                            <!-- Will be populated by JavaScript -->
+                        </div>
+                        
+                        <!-- Charts Section -->
+                        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+                            <div class="table-container">
+                                <div class="table-header">
+                                    <h3 class="table-title">Revenue Trends</h3>
+                                </div>
+                                <div style="padding: 1rem; height: 350px;">
+                                    <canvas id="supplierRevenueChart"></canvas>
+                                </div>
                             </div>
-                            <div style="padding: 2rem; text-align: center;">
-                                <div style="height: 200px; background: var(--gray-50); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--gray-500);">
-                                    📊 Revenue Chart Placeholder<br><small>Integration with chart library needed</small>
+                            
+                            <div class="table-container">
+                                <div class="table-header">
+                                    <h3 class="table-title">Service Distribution</h3>
+                                </div>
+                                <div style="padding: 1rem; height: 350px; display: flex; align-items: center; justify-content: center;">
+                                    <canvas id="supplierServiceChart" style="max-height: 300px;"></canvas>
                                 </div>
                             </div>
                         </div>
                         
-                        <div class="table-container">
-                            <div class="table-header">
-                                <h3 class="table-title">Top Performing Services</h3>
+                        <!-- Performance Metrics -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                            <div class="table-container">
+                                <div class="table-header">
+                                    <h3 class="table-title">Work Order Performance</h3>
+                                </div>
+                                <div style="padding: 1rem; height: 300px;">
+                                    <canvas id="supplierPerformanceChart"></canvas>
+                                </div>
                             </div>
-                            <div style="padding: 1.5rem;">
-                                <div style="margin-bottom: 1rem;">
-                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                                        <span>HVAC Maintenance</span>
-                                        <span style="font-weight: 600;">$45,200</span>
-                                    </div>
-                                    <div style="background: var(--gray-200); height: 8px; border-radius: 4px;">
-                                        <div style="background: var(--primary); height: 100%; width: 85%; border-radius: 4px;"></div>
-                                    </div>
+                            
+                            <div class="table-container">
+                                <div class="table-header">
+                                    <h3 class="table-title">Performance Metrics</h3>
                                 </div>
-                                <div style="margin-bottom: 1rem;">
-                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                                        <span>Plumbing Repairs</span>
-                                        <span style="font-weight: 600;">$32,800</span>
-                                    </div>
-                                    <div style="background: var(--gray-200); height: 8px; border-radius: 4px;">
-                                        <div style="background: var(--success); height: 100%; width: 65%; border-radius: 4px;"></div>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                                        <span>Electrical Work</span>
-                                        <span style="font-weight: 600;">$28,500</span>
-                                    </div>
-                                    <div style="background: var(--gray-200); height: 8px; border-radius: 4px;">
-                                        <div style="background: var(--warning); height: 100%; width: 55%; border-radius: 4px;"></div>
-                                    </div>
+                                <div id="supplierPerformanceMetrics">
+                                    <!-- Will be populated by JavaScript -->
                                 </div>
                             </div>
                         </div>
@@ -6609,8 +6603,29 @@ United States</textarea>
     <header class="header">
         <div class="header-content">
             <div style="display: flex; align-items: center; gap: 1rem;">
-                <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary);">Hey Spruce</div>
+                <img src="https://cdn.prod.website-files.com/67edc7c78e3151d3b06686b2/681007b1b7f5a5cc527f1b94_Hey_SPRUCE_logo_font.png" alt="Hey Spruce" style="height: 32px; width: auto;">
                 <span class="portal-badge">Supplier Portal</span>
+            </div>
+            
+            <!-- Global Search -->
+            <div class="header-search" style="flex: 1; max-width: 400px; margin: 0 2rem;">
+                <div style="position: relative;">
+                    <input type="text" 
+                           id="supplierGlobalSearch" 
+                           placeholder="Search RFPs, work orders, clients..." 
+                           style="width: 100%; padding: 0.5rem 0.75rem 0.5rem 2.5rem; border: 1px solid var(--gray-300); border-radius: 6px; font-size: 0.875rem;"
+                           onkeyup="handleSupplierGlobalSearch(this.value)"
+                           onkeydown="handleSupplierSearchKeydown(event)">
+                    <div style="position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: var(--gray-400); pointer-events: none;">
+                        🔍
+                    </div>
+                    <div id="supplierSearchResults" class="search-results" style="position: absolute; top: 100%; left: 0; right: 0; background: white; border: 1px solid var(--gray-200); border-top: none; border-radius: 0 0 6px 6px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); z-index: 1000; display: none; max-height: 300px; overflow-y: auto;">
+                        <!-- Search results will be populated here -->
+                    </div>
+                    <div style="position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); font-size: 0.75rem; color: var(--gray-400); pointer-events: none;">
+                        Ctrl+K
+                    </div>
+                </div>
             </div>
             
             <!-- Right side navigation -->
@@ -6766,9 +6781,6 @@ United States</textarea>
     
     <!-- Main Content -->
     <main class="main-content">
-        <!-- Global Search -->
-        <div id="globalSearchContainer" style="padding: 20px 20px 0;"></div>
-        
         <!-- Breadcrumb Navigation -->
         <div id="breadcrumbContainer" style="padding: 0 20px;"></div>
         
@@ -9574,6 +9586,458 @@ United States</textarea>
             `;
         }
         window.getAnalyticsContent = getAnalyticsContent;
+        
+        // Supplier Analytics JavaScript Functions
+        let supplierAnalyticsCharts = {};
+        let currentSupplierAnalyticsPeriod = '30d';
+        
+        async function initializeSupplierAnalytics() {
+            try {
+                showSupplierAnalyticsLoading(true);
+                await loadSupplierAnalyticsData(currentSupplierAnalyticsPeriod);
+                showSupplierAnalyticsLoading(false);
+            } catch (error) {
+                console.error('Failed to initialize supplier analytics:', error);
+                showSupplierAnalyticsError('Failed to load analytics data');
+            }
+        }
+        
+        async function loadSupplierAnalyticsData(period) {
+            const token = localStorage.getItem('supabase_token');
+            if (!token) {
+                throw new Error('Authentication required');
+            }
+            
+            try {
+                // Load different types of analytics data for suppliers
+                const [financial, performance, workOrders] = await Promise.all([
+                    fetch(`/api/analytics?type=financial&period=${period}`, {
+                        headers: { Authorization: `Bearer ${token}` }
+                    }).then(r => r.json()),
+                    fetch(`/api/analytics?type=performance&period=${period}`, {
+                        headers: { Authorization: `Bearer ${token}` }
+                    }).then(r => r.json()),
+                    fetch(`/api/analytics?type=work-orders&period=${period}`, {
+                        headers: { Authorization: `Bearer ${token}` }
+                    }).then(r => r.json())
+                ]);
+                
+                // Update KPI cards
+                updateSupplierKPICards(financial.data, performance.data, workOrders.data);
+                
+                // Create or update charts
+                createSupplierRevenueChart(financial.data);
+                createSupplierServiceChart(financial.data);
+                createSupplierPerformanceChart(workOrders.data);
+                
+                // Update performance metrics table
+                updateSupplierPerformanceMetrics(performance.data);
+                
+            } catch (error) {
+                console.error('Supplier Analytics API Error:', error);
+                throw error;
+            }
+        }
+        
+        function updateSupplierKPICards(financial, performance, workOrders) {
+            const kpiHTML = `
+                <div style="background: white; padding: 1.5rem; border-radius: 8px; border: 1px solid var(--gray-200);">
+                    <h4 style="color: var(--gray-600); font-size: 0.875rem; margin-bottom: 0.5rem;">Total Revenue</h4>
+                    <p style="font-size: 1.5rem; font-weight: 700; color: var(--primary);">$${(financial.total_spend || 0).toLocaleString()}</p>
+                    <span style="color: var(--success); font-size: 0.875rem;">↑ 12% from last month</span>
+                </div>
+                <div style="background: white; padding: 1.5rem; border-radius: 8px; border: 1px solid var(--gray-200);">
+                    <h4 style="color: var(--gray-600); font-size: 0.875rem; margin-bottom: 0.5rem;">Work Orders Completed</h4>
+                    <p style="font-size: 1.5rem; font-weight: 700; color: var(--primary);">${workOrders.total || 0}</p>
+                    <span style="color: var(--success); font-size: 0.875rem;">↑ ${performance.completion_rate}% rate</span>
+                </div>
+                <div style="background: white; padding: 1.5rem; border-radius: 8px; border: 1px solid var(--gray-200);">
+                    <h4 style="color: var(--gray-600); font-size: 0.875rem; margin-bottom: 0.5rem;">Avg Response Time</h4>
+                    <p style="font-size: 1.5rem; font-weight: 700; color: var(--primary);">${workOrders.average_completion_time || 0} hrs</p>
+                    <span style="color: var(--success); font-size: 0.875rem;">↓ 15% improvement</span>
+                </div>
+                <div style="background: white; padding: 1.5rem; border-radius: 8px; border: 1px solid var(--gray-200);">
+                    <h4 style="color: var(--gray-600); font-size: 0.875rem; margin-bottom: 0.5rem;">Customer Satisfaction</h4>
+                    <p style="font-size: 1.5rem; font-weight: 700; color: var(--primary);">${performance.average_rating || 0}★</p>
+                    <span style="color: var(--success); font-size: 0.875rem;">↑ ${performance.customer_satisfaction}% satisfaction</span>
+                </div>
+            `;
+            document.getElementById('supplierKPICards').innerHTML = kpiHTML;
+        }
+        
+        function createSupplierRevenueChart(data) {
+            const ctx = document.getElementById('supplierRevenueChart').getContext('2d');
+            
+            if (supplierAnalyticsCharts.revenue) {
+                supplierAnalyticsCharts.revenue.destroy();
+            }
+            
+            const monthlyData = data.monthly_spend || [];
+            const labels = monthlyData.map(d => d.month);
+            const amounts = monthlyData.map(d => d.amount);
+            
+            supplierAnalyticsCharts.revenue = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Revenue',
+                        data: amounts,
+                        borderColor: '#16a085',
+                        backgroundColor: 'rgba(22, 160, 133, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '$' + value.toLocaleString();
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        function createSupplierServiceChart(data) {
+            const ctx = document.getElementById('supplierServiceChart').getContext('2d');
+            
+            if (supplierAnalyticsCharts.service) {
+                supplierAnalyticsCharts.service.destroy();
+            }
+            
+            const categoryData = data.category_breakdown || [];
+            const labels = categoryData.map(d => d.category);
+            const amounts = categoryData.map(d => d.amount);
+            
+            supplierAnalyticsCharts.service = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: amounts,
+                        backgroundColor: [
+                            '#16a085',
+                            '#2ecc71',
+                            '#3498db',
+                            '#9b59b6',
+                            '#e74c3c',
+                            '#f39c12'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        }
+        
+        function createSupplierPerformanceChart(data) {
+            const ctx = document.getElementById('supplierPerformanceChart').getContext('2d');
+            
+            if (supplierAnalyticsCharts.performance) {
+                supplierAnalyticsCharts.performance.destroy();
+            }
+            
+            const statusData = data.status_distribution || {};
+            
+            supplierAnalyticsCharts.performance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Pending', 'In Progress', 'Completed', 'Cancelled'],
+                    datasets: [{
+                        label: 'Work Orders',
+                        data: [
+                            statusData.pending || 0,
+                            statusData.in_progress || 0,
+                            statusData.completed || 0,
+                            statusData.cancelled || 0
+                        ],
+                        backgroundColor: [
+                            '#f39c12',
+                            '#3498db',
+                            '#2ecc71',
+                            '#e74c3c'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+        
+        function updateSupplierPerformanceMetrics(data) {
+            const metricsHTML = `
+                <div style="padding: 1.5rem;">
+                    <div style="margin-bottom: 1.5rem; padding: 1rem; background: var(--gray-50); border-radius: 6px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-weight: 600;">Completion Rate</span>
+                            <span style="font-size: 1.25rem; font-weight: 700; color: var(--success);">${data.completion_rate}%</span>
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 1.5rem; padding: 1rem; background: var(--gray-50); border-radius: 6px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-weight: 600;">On-Time Rate</span>
+                            <span style="font-size: 1.25rem; font-weight: 700; color: var(--success);">${data.on_time_rate}%</span>
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 1.5rem; padding: 1rem; background: var(--gray-50); border-radius: 6px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-weight: 600;">Average Rating</span>
+                            <span style="font-size: 1.25rem; font-weight: 700; color: var(--warning);">${data.average_rating}★</span>
+                        </div>
+                    </div>
+                    <div style="padding: 1rem; background: var(--gray-50); border-radius: 6px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-weight: 600;">Total Jobs</span>
+                            <span style="font-size: 1.25rem; font-weight: 700; color: var(--primary);">${data.total_jobs}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('supplierPerformanceMetrics').innerHTML = metricsHTML;
+        }
+        
+        function showSupplierAnalyticsLoading(show) {
+            document.getElementById('supplierAnalyticsLoading').style.display = show ? 'flex' : 'none';
+            document.getElementById('supplierAnalyticsContent').style.display = show ? 'none' : 'block';
+        }
+        
+        function showSupplierAnalyticsError(message) {
+            document.getElementById('supplierAnalyticsLoading').innerHTML = `
+                <div style="text-align: center; color: var(--danger);">
+                    <div style="font-size: 1.5rem; margin-bottom: 1rem;">⚠️</div>
+                    <div>${message}</div>
+                    <button class="btn btn-secondary" onclick="initializeSupplierAnalytics()" style="margin-top: 1rem;">
+                        Retry
+                    </button>
+                </div>
+            `;
+            document.getElementById('supplierAnalyticsLoading').style.display = 'flex';
+            document.getElementById('supplierAnalyticsContent').style.display = 'none';
+        }
+        
+        async function updateSupplierAnalyticsPeriod(period) {
+            currentSupplierAnalyticsPeriod = period;
+            await loadSupplierAnalyticsData(period);
+            showToast(`Analytics updated for ${period} period`, 'info');
+        }
+        
+        function exportSupplierAnalytics() {
+            showToast('Exporting supplier analytics data...', 'info');
+        }
+        
+        // Export global functions
+        window.initializeSupplierAnalytics = initializeSupplierAnalytics;
+        window.updateSupplierAnalyticsPeriod = updateSupplierAnalyticsPeriod;
+        window.exportSupplierAnalytics = exportSupplierAnalytics;
+        
+        // Supplier Global Search Functions
+        let supplierSearchTimeout;
+        let supplierSearchData = {
+            rfps: [
+                { id: 'RFP-2024-001', title: 'Kitchen Equipment Replacement', client: 'Pizza Palace', type: 'rfp' },
+                { id: 'RFP-2024-002', title: 'HVAC System Upgrade', client: 'Burger King', type: 'rfp' },
+                { id: 'RFP-2024-003', title: 'Deep Cleaning Service', client: 'Fine Dining Co', type: 'rfp' }
+            ],
+            workOrders: [
+                { id: 'WO-2024-101', title: 'Emergency HVAC Repair', client: 'McDonald\'s Downtown', type: 'work-order' },
+                { id: 'WO-2024-102', title: 'Kitchen Deep Clean', client: 'Tasty Burgers', type: 'work-order' },
+                { id: 'WO-2024-103', title: 'Electrical Maintenance', client: 'Coffee House', type: 'work-order' }
+            ],
+            clients: [
+                { id: 'client-001', title: 'Pizza Palace', location: 'Downtown Seattle', type: 'client' },
+                { id: 'client-002', title: 'Burger King', location: 'Bellevue Mall', type: 'client' },
+                { id: 'client-003', title: 'Fine Dining Co', location: 'Capitol Hill', type: 'client' }
+            ]
+        };
+        
+        function handleSupplierGlobalSearch(query) {
+            clearTimeout(supplierSearchTimeout);
+            
+            if (query.length < 2) {
+                hideSupplierSearchResults();
+                return;
+            }
+            
+            supplierSearchTimeout = setTimeout(() => {
+                performSupplierSearch(query);
+            }, 300);
+        }
+        
+        function performSupplierSearch(query) {
+            const results = [];
+            const lowerQuery = query.toLowerCase();
+            
+            // Search RFPs
+            supplierSearchData.rfps.forEach(rfp => {
+                if (rfp.title.toLowerCase().includes(lowerQuery) || 
+                    rfp.client.toLowerCase().includes(lowerQuery) ||
+                    rfp.id.toLowerCase().includes(lowerQuery)) {
+                    results.push(rfp);
+                }
+            });
+            
+            // Search work orders
+            supplierSearchData.workOrders.forEach(wo => {
+                if (wo.title.toLowerCase().includes(lowerQuery) || 
+                    wo.client.toLowerCase().includes(lowerQuery) ||
+                    wo.id.toLowerCase().includes(lowerQuery)) {
+                    results.push(wo);
+                }
+            });
+            
+            // Search clients
+            supplierSearchData.clients.forEach(client => {
+                if (client.title.toLowerCase().includes(lowerQuery) || 
+                    client.location.toLowerCase().includes(lowerQuery)) {
+                    results.push(client);
+                }
+            });
+            
+            displaySupplierSearchResults(results, query);
+        }
+        
+        function displaySupplierSearchResults(results, query) {
+            const resultsContainer = document.getElementById('supplierSearchResults');
+            
+            if (results.length === 0) {
+                resultsContainer.innerHTML = `
+                    <div style="padding: 1rem; text-align: center; color: var(--gray-500);">
+                        No results found for "${query}"
+                    </div>
+                `;
+            } else {
+                const resultHTML = results.map(result => {
+                    let icon, subtitle;
+                    switch(result.type) {
+                        case 'rfp':
+                            icon = '📋';
+                            subtitle = result.client;
+                            break;
+                        case 'work-order':
+                            icon = '🔧';
+                            subtitle = result.client;
+                            break;
+                        case 'client':
+                            icon = '🏢';
+                            subtitle = result.location;
+                            break;
+                    }
+                    
+                    return `
+                        <div class="search-result-item" style="padding: 0.75rem; border-bottom: 1px solid var(--gray-100); cursor: pointer; transition: background-color 0.15s;" 
+                             onclick="selectSupplierSearchResult('${result.type}', '${result.id}')"
+                             onmouseover="this.style.backgroundColor='var(--gray-50)'"
+                             onmouseout="this.style.backgroundColor='white'">
+                            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                <span style="font-size: 1.25rem;">${icon}</span>
+                                <div>
+                                    <div style="font-weight: 600; color: var(--gray-900);">${result.title}</div>
+                                    <div style="font-size: 0.875rem; color: var(--gray-600);">${subtitle}</div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+                
+                resultsContainer.innerHTML = resultHTML;
+            }
+            
+            resultsContainer.style.display = 'block';
+        }
+        
+        function selectSupplierSearchResult(type, id) {
+            hideSupplierSearchResults();
+            document.getElementById('supplierGlobalSearch').value = '';
+            
+            // Navigate to the appropriate section
+            switch(type) {
+                case 'rfp':
+                    showSection('rfps');
+                    showToast(`Navigated to RFP ${id}`, 'info');
+                    break;
+                case 'work-order':
+                    showSection('work-orders');
+                    showToast(`Navigated to work order ${id}`, 'info');
+                    break;
+                case 'client':
+                    showSection('dashboard'); // Could be clients section if it exists
+                    showToast(`Navigated to client ${id}`, 'info');
+                    break;
+            }
+        }
+        
+        function hideSupplierSearchResults() {
+            document.getElementById('supplierSearchResults').style.display = 'none';
+        }
+        
+        function handleSupplierSearchKeydown(event) {
+            const resultsContainer = document.getElementById('supplierSearchResults');
+            
+            if (event.key === 'Escape') {
+                hideSupplierSearchResults();
+                document.getElementById('supplierGlobalSearch').blur();
+            } else if (event.key === 'Enter') {
+                const firstResult = resultsContainer.querySelector('.search-result-item');
+                if (firstResult) {
+                    firstResult.click();
+                }
+            }
+        }
+        
+        // Keyboard shortcut for search (Ctrl+K) - supplier version
+        document.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                const searchInput = document.getElementById('supplierGlobalSearch');
+                if (searchInput) {
+                    searchInput.focus();
+                }
+            }
+        });
+        
+        // Hide search results when clicking outside - supplier version
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.header-search')) {
+                hideSupplierSearchResults();
+            }
+        });
+        
+        // Export supplier search functions
+        window.handleSupplierGlobalSearch = handleSupplierGlobalSearch;
+        window.handleSupplierSearchKeydown = handleSupplierSearchKeydown;
+        window.selectSupplierSearchResult = selectSupplierSearchResult;
         
         function getReportsContent() {
             return `

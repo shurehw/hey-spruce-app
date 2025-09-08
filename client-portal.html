@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Client Portal - Hey Spruce</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
             /* Layout Variables */
@@ -401,8 +402,8 @@
         }
         
         .header-title {
-            font-size: 1.5rem;
-            font-weight: 700;
+            font-size: 1.25rem;
+            font-weight: 600;
         }
         
         .header-actions {
@@ -599,17 +600,17 @@
         }
         
         /* Cards and Containers */
-        .dashboard-grid {
+        .dashboard-grid, .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 1.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
         }
         
         .stat-card {
             background: white;
-            padding: 1.5rem;
-            border-radius: 12px;
+            padding: 0.75rem;
+            border-radius: 6px;
             border: 1px solid var(--gray-200);
             transition: all 0.3s;
         }
@@ -620,16 +621,18 @@
         }
         
         .stat-value {
-            font-size: 2rem;
-            font-weight: 700;
+            font-size: 1.25rem;
+            font-weight: 600;
             color: var(--gray-900);
-            margin-bottom: 0.25rem;
+            margin-bottom: 0.125rem;
+            line-height: 1.2;
         }
         
         .stat-label {
-            font-size: 0.875rem;
+            font-size: 0.75rem;
             color: var(--gray-600);
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.25rem;
+            line-height: 1.3;
         }
         
         .stat-trend {
@@ -701,14 +704,14 @@
         /* Tables */
         .table-container {
             background: white;
-            border-radius: 12px;
+            border-radius: 8px;
             border: 1px solid var(--gray-200);
             overflow: hidden;
-            margin-bottom: 2rem;
+            margin-bottom: 1rem;
         }
         
         .table-header {
-            padding: 1rem 1.5rem;
+            padding: 0.75rem 1rem;
             border-bottom: 1px solid var(--gray-200);
             display: flex;
             justify-content: space-between;
@@ -716,7 +719,7 @@
         }
         
         .table-title {
-            font-size: 1.125rem;
+            font-size: 1rem;
             font-weight: 600;
         }
         
@@ -749,9 +752,9 @@
         /* Status Badges */
         .status-badge {
             display: inline-block;
-            padding: 0.25rem 0.75rem;
+            padding: 0.125rem 0.5rem;
             border-radius: 9999px;
-            font-size: 0.75rem;
+            font-size: 0.625rem;
             font-weight: 600;
             text-transform: uppercase;
         }
@@ -990,9 +993,31 @@
     <!-- Header -->
     <div class="header">
         <div class="header-left" style="display: flex; align-items: center; gap: 1rem;">
-            <div class="header-logo">Hey Spruce</div>
+            <img src="https://cdn.prod.website-files.com/67edc7c78e3151d3b06686b2/681007b1b7f5a5cc527f1b94_Hey_SPRUCE_logo_font.png" alt="Hey Spruce" class="header-logo" style="height: 32px; width: auto;">
             <span class="header-badge">Client Portal</span>
         </div>
+        
+        <!-- Global Search -->
+        <div class="header-search" style="flex: 1; max-width: 400px; margin: 0 2rem;">
+            <div style="position: relative;">
+                <input type="text" 
+                       id="globalSearch" 
+                       placeholder="Search work orders, locations, vendors..." 
+                       style="width: 100%; padding: 0.5rem 0.75rem 0.5rem 2.5rem; border: 1px solid var(--gray-300); border-radius: 6px; font-size: 0.875rem;"
+                       onkeyup="handleGlobalSearch(this.value)"
+                       onkeydown="handleSearchKeydown(event)">
+                <div style="position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: var(--gray-400); pointer-events: none;">
+                    🔍
+                </div>
+                <div id="searchResults" class="search-results" style="position: absolute; top: 100%; left: 0; right: 0; background: white; border: 1px solid var(--gray-200); border-top: none; border-radius: 0 0 6px 6px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); z-index: 1000; display: none; max-height: 300px; overflow-y: auto;">
+                    <!-- Search results will be populated here -->
+                </div>
+                <div style="position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); font-size: 0.75rem; color: var(--gray-400); pointer-events: none;">
+                    Ctrl+K
+                </div>
+            </div>
+        </div>
+        
         <div class="header-right">
             <div class="notification-icon">
                 🔔
@@ -1104,11 +1129,8 @@
         
         <!-- Main Content -->
         <main class="main-content">
-            <!-- Global Search -->
-            <div id="globalSearchContainer" style="padding: 20px 20px 0;"></div>
-            
             <!-- Breadcrumb Navigation -->
-            <div id="breadcrumbContainer" style="padding: 0 20px;"></div>
+            <div id="breadcrumbContainer" style="padding: 0.5rem 20px 0;"></div>
             
             <div id="content">
                 <!-- Content will be loaded here -->
@@ -1394,7 +1416,7 @@
                 </div>
 
                 <!-- Calendar Controls -->
-                <div class="table-container" style="margin-bottom: 1.5rem;">
+                <div class="table-container" style="margin-bottom: 1rem;">
                     <div class="table-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
                         <h3 class="table-title">Calendar View</h3>
                         <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
@@ -2317,7 +2339,7 @@
                 </div>
                 
                 <!-- Performance Overview Cards -->
-                <div class="stats-grid" style="margin-bottom: 2rem;">
+                <div class="stats-grid" style="margin-bottom: 1rem;">
                     <div class="stat-card">
                         <div class="stat-value">4.7</div>
                         <div class="stat-label">Avg Vendor Rating</div>
@@ -2676,11 +2698,16 @@
         }
         
         function getCrossPortalAnalyticsContent() {
+            // Initialize analytics when content loads
+            setTimeout(() => {
+                initializeAnalytics();
+            }, 100);
+            
             return `
                 <div class="header-bar">
                     <h1 class="header-title">Cross-Portal Analytics Dashboard</h1>
                     <div class="header-actions">
-                        <select class="form-select" style="width: 150px;" onchange="updateAnalyticsPeriod(this.value)">
+                        <select class="form-select" id="analyticsPerio​d" style="width: 150px;" onchange="updateAnalyticsPeriod(this.value)">
                             <option value="7d">Last 7 Days</option>
                             <option value="30d" selected>Last 30 Days</option>
                             <option value="90d">Last 90 Days</option>
@@ -2695,322 +2722,568 @@
                     </div>
                 </div>
                 
-                <!-- Executive Summary Cards -->
-                <div class="stats-grid" style="margin-bottom: 2rem;">
-                    <div class="stat-card">
-                        <div class="stat-value">$127K</div>
-                        <div class="stat-label">Total Spend (30 days)</div>
-                        <div class="stat-change positive">↗ 12% vs last period</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value">89%</div>
-                        <div class="stat-label">Cross-Portal Efficiency</div>
-                        <div class="stat-change positive">↗ 3% improvement</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value">47</div>
-                        <div class="stat-label">Active Vendors</div>
-                        <div class="stat-change">Across all portals</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value">4.6★</div>
-                        <div class="stat-label">Avg Quality Rating</div>
-                        <div class="stat-change positive">↗ 0.2 improvement</div>
-                    </div>
+                <!-- Loading State -->
+                <div id="analyticsLoading" style="display: flex; justify-content: center; align-items: center; height: 200px; color: var(--gray-500);">
+                    <div>Loading analytics data...</div>
                 </div>
                 
-                <!-- Portal Performance Comparison -->
-                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; margin-bottom: 2rem;">
-                    <div class="table-container">
-                        <div class="table-header">
-                            <h3 class="table-title">Portal Performance Comparison</h3>
+                <!-- Analytics Content -->
+                <div id="analyticsContent" style="display: none;">
+                    <!-- Executive Summary Cards -->
+                    <div class="stats-grid" id="executiveSummary" style="margin-bottom: 2rem;">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+                    
+                    <!-- Charts Section -->
+                    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+                        <div class="table-container">
+                            <div class="table-header">
+                                <h3 class="table-title">Work Order Trends</h3>
+                            </div>
+                            <div style="padding: 1rem; height: 400px;">
+                                <canvas id="workOrderTrendChart"></canvas>
+                            </div>
                         </div>
-                        <div style="padding: 2rem;">
-                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;">
-                                <!-- Client Portal Stats -->
-                                <div style="text-align: center; padding: 1.5rem; background: var(--success-light); border-radius: 8px;">
-                                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">👥</div>
-                                    <div style="font-size: 1.5rem; font-weight: 600; color: var(--success);">CLIENT</div>
-                                    <div style="font-size: 0.875rem; color: var(--gray-600); margin: 0.5rem 0;">Work Orders Created</div>
-                                    <div style="font-size: 2rem; font-weight: 700;">84</div>
-                                    <div style="font-size: 0.875rem; color: var(--success);">+18% vs last month</div>
-                                </div>
-                                
-                                <!-- Supplier Portal Stats -->
-                                <div style="text-align: center; padding: 1.5rem; background: var(--info-light); border-radius: 8px;">
-                                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">🏢</div>
-                                    <div style="font-size: 1.5rem; font-weight: 600; color: var(--info);">SUPPLIER</div>
-                                    <div style="font-size: 0.875rem; color: var(--gray-600); margin: 0.5rem 0;">Orders Completed</div>
-                                    <div style="font-size: 2rem; font-weight: 700;">76</div>
-                                    <div style="font-size: 0.875rem; color: var(--info);">90% completion rate</div>
-                                </div>
-                                
-                                <!-- Subcontractor Portal Stats -->
-                                <div style="text-align: center; padding: 1.5rem; background: var(--warning-light); border-radius: 8px;">
-                                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">🔧</div>
-                                    <div style="font-size: 1.5rem; font-weight: 600; color: var(--warning);">SUBCONTRACTOR</div>
-                                    <div style="font-size: 0.875rem; color: var(--gray-600); margin: 0.5rem 0;">Tasks Executed</div>
-                                    <div style="font-size: 2rem; font-weight: 700;">52</div>
-                                    <div style="font-size: 0.875rem; color: var(--warning);">4.8★ avg rating</div>
-                                </div>
+                        
+                        <div class="table-container">
+                            <div class="table-header">
+                                <h3 class="table-title">Status Distribution</h3>
+                            </div>
+                            <div style="padding: 1rem; height: 400px; display: flex; align-items: center; justify-content: center;">
+                                <canvas id="statusDistributionChart" style="max-height: 300px;"></canvas>
                             </div>
                         </div>
                     </div>
                     
-                    <!-- Top Metrics -->
-                    <div class="table-container">
-                        <div class="table-header">
-                            <h3 class="table-title">Key Performance Indicators</h3>
+                    <!-- Financial Analytics -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+                        <div class="table-container">
+                            <div class="table-header">
+                                <h3 class="table-title">Monthly Spend Analysis</h3>
+                            </div>
+                            <div style="padding: 1rem; height: 300px;">
+                                <canvas id="monthlySpendChart"></canvas>
+                            </div>
                         </div>
-                        <div style="padding: 1.5rem;">
-                            <div style="display: grid; gap: 1rem;">
-                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: var(--gray-50); border-radius: 6px;">
-                                    <span style="font-weight: 600;">Avg Response Time</span>
-                                    <span style="color: var(--success); font-weight: 600;">2.3 hrs</span>
-                                </div>
-                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: var(--gray-50); border-radius: 6px;">
-                                    <span style="font-weight: 600;">First Call Resolution</span>
-                                    <span style="color: var(--success); font-weight: 600;">87%</span>
-                                </div>
-                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: var(--gray-50); border-radius: 6px;">
-                                    <span style="font-weight: 600;">Client Satisfaction</span>
-                                    <span style="color: var(--success); font-weight: 600;">4.6★</span>
-                                </div>
-                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: var(--gray-50); border-radius: 6px;">
-                                    <span style="font-weight: 600;">Cost Per Service</span>
-                                    <span style="color: var(--info); font-weight: 600;">$289</span>
-                                </div>
-                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: var(--gray-50); border-radius: 6px;">
-                                    <span style="font-weight: 600;">Vendor Retention</span>
-                                    <span style="color: var(--success); font-weight: 600;">94%</span>
-                                </div>
+                        
+                        <div class="table-container">
+                            <div class="table-header">
+                                <h3 class="table-title">Category Breakdown</h3>
+                            </div>
+                            <div style="padding: 1rem; height: 300px; display: flex; align-items: center; justify-content: center;">
+                                <canvas id="categoryBreakdownChart" style="max-height: 250px;"></canvas>
                             </div>
                         </div>
                     </div>
-                </div>
-                
-                <!-- Communication Flow Analytics -->
-                <div class="table-container" style="margin-bottom: 2rem;">
-                    <div class="table-header">
-                        <h3 class="table-title">📡 Communication Flow Analytics</h3>
-                        <button class="btn btn-sm btn-secondary" onclick="viewDetailedFlow()">View Details</button>
-                    </div>
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Message Type</th>
-                                <th>Client Portal</th>
-                                <th>Supplier Portal</th>
-                                <th>Subcontractor Portal</th>
-                                <th>Total Volume</th>
-                                <th>Avg Response Time</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>Work Order Updates</strong></td>
-                                <td>156 sent</td>
-                                <td>89 received</td>
-                                <td>52 received</td>
-                                <td style="font-weight: 600;">297</td>
-                                <td><span style="color: var(--success);">1.2 hrs</span></td>
-                            </tr>
-                            <tr>
-                                <td><strong>Quote Requests</strong></td>
-                                <td>45 sent</td>
-                                <td>43 received</td>
-                                <td>28 received</td>
-                                <td style="font-weight: 600;">116</td>
-                                <td><span style="color: var(--warning);">4.8 hrs</span></td>
-                            </tr>
-                            <tr>
-                                <td><strong>Status Updates</strong></td>
-                                <td>89 received</td>
-                                <td>67 sent</td>
-                                <td>45 sent</td>
-                                <td style="font-weight: 600;">201</td>
-                                <td><span style="color: var(--success);">0.8 hrs</span></td>
-                            </tr>
-                            <tr>
-                                <td><strong>Document Sharing</strong></td>
-                                <td>78 initiated</td>
-                                <td>56 accessed</td>
-                                <td>34 accessed</td>
-                                <td style="font-weight: 600;">168</td>
-                                <td><span style="color: var(--info);">2.1 hrs</span></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                
-                <!-- Quality Assurance Analytics -->
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
-                    <div class="table-container">
-                        <div class="table-header">
-                            <h3 class="table-title">🔍 Quality Assurance Metrics</h3>
-                        </div>
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Metric</th>
-                                    <th>This Month</th>
-                                    <th>Trend</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Work Orders Reviewed</td>
-                                    <td><strong>67</strong></td>
-                                    <td><span style="color: var(--success);">↗ +23%</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Avg Quality Rating</td>
-                                    <td><strong>4.6★</strong></td>
-                                    <td><span style="color: var(--success);">↗ +0.2</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Photos Verified</td>
-                                    <td><strong>134</strong></td>
-                                    <td><span style="color: var(--success);">↗ +15%</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Rework Required</td>
-                                    <td><strong>3</strong></td>
-                                    <td><span style="color: var(--success);">↘ -40%</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Client Approvals</td>
-                                    <td><strong>94%</strong></td>
-                                    <td><span style="color: var(--success);">↗ +2%</span></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
                     
+                    <!-- Performance Metrics Table -->
                     <div class="table-container">
                         <div class="table-header">
-                            <h3 class="table-title">📋 Document Workflow Metrics</h3>
+                            <h3 class="table-title">Performance Metrics</h3>
+                            <button class="btn btn-sm btn-secondary" onclick="refreshMetrics()">Refresh</button>
                         </div>
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Document Type</th>
-                                    <th>Shared</th>
-                                    <th>Signed</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Service Contracts</td>
-                                    <td>24</td>
-                                    <td><strong>22</strong> (92%)</td>
-                                </tr>
-                                <tr>
-                                    <td>Work Orders</td>
-                                    <td>156</td>
-                                    <td><strong>149</strong> (95%)</td>
-                                </tr>
-                                <tr>
-                                    <td>Compliance Docs</td>
-                                    <td>18</td>
-                                    <td><strong>16</strong> (89%)</td>
-                                </tr>
-                                <tr>
-                                    <td>Change Orders</td>
-                                    <td>12</td>
-                                    <td><strong>11</strong> (92%)</td>
-                                </tr>
-                                <tr style="border-top: 2px solid var(--gray-200); font-weight: 600;">
-                                    <td>Total</td>
-                                    <td>210</td>
-                                    <td><strong>198</strong> (94%)</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div id="performanceMetrics">
+                            <!-- Will be populated by JavaScript -->
+                        </div>
                     </div>
-                </div>
-                
-                <!-- Vendor Performance Across Portals -->
-                <div class="table-container">
-                    <div class="table-header">
-                        <h3 class="table-title">🏆 Top Performing Vendors (Cross-Portal)</h3>
-                        <button class="btn btn-sm btn-secondary" onclick="exportVendorReport()">Export Vendor Report</button>
-                    </div>
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Vendor</th>
-                                <th>Services Delivered</th>
-                                <th>Client Rating</th>
-                                <th>Avg Response Time</th>
-                                <th>Revenue Generated</th>
-                                <th>Completion Rate</th>
-                                <th>Portals Active</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                        <span style="color: var(--success);">🥇</span>
-                                        <strong>TechPro Services</strong>
-                                    </div>
-                                </td>
-                                <td><strong>127</strong></td>
-                                <td><span style="color: var(--success);">4.9★</span></td>
-                                <td>1.8 hrs</td>
-                                <td>$34,580</td>
-                                <td><span style="color: var(--success);">98%</span></td>
-                                <td>
-                                    <span style="display: flex; gap: 0.25rem;">
-                                        <span style="background: var(--success); color: white; padding: 0.125rem 0.25rem; border-radius: 3px; font-size: 0.75rem;">S</span>
-                                        <span style="background: var(--info); color: white; padding: 0.125rem 0.25rem; border-radius: 3px; font-size: 0.75rem;">SC</span>
-                                    </span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                        <span style="color: var(--warning);">🥈</span>
-                                        <strong>ABC Maintenance</strong>
-                                    </div>
-                                </td>
-                                <td><strong>89</strong></td>
-                                <td><span style="color: var(--success);">4.7★</span></td>
-                                <td>2.1 hrs</td>
-                                <td>$28,940</td>
-                                <td><span style="color: var(--success);">94%</span></td>
-                                <td>
-                                    <span style="display: flex; gap: 0.25rem;">
-                                        <span style="background: var(--success); color: white; padding: 0.125rem 0.25rem; border-radius: 3px; font-size: 0.75rem;">S</span>
-                                    </span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                        <span style="color: var(--info);">🥉</span>
-                                        <strong>Elite Electric</strong>
-                                    </div>
-                                </td>
-                                <td><strong>76</strong></td>
-                                <td><span style="color: var(--success);">4.6★</span></td>
-                                <td>1.9 hrs</td>
-                                <td>$22,150</td>
-                                <td><span style="color: var(--success);">96%</span></td>
-                                <td>
-                                    <span style="display: flex; gap: 0.25rem;">
-                                        <span style="background: var(--success); color: white; padding: 0.125rem 0.25rem; border-radius: 3px; font-size: 0.75rem;">S</span>
-                                        <span style="background: var(--info); color: white; padding: 0.125rem 0.25rem; border-radius: 3px; font-size: 0.75rem;">SC</span>
-                                    </span>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
                 </div>
             `;
         }
         
+        // Analytics JavaScript Functions
+        let analyticsCharts = {};
+        let currentAnalyticsPeriod = '30d';
+        
+        async function initializeAnalytics() {
+            try {
+                showAnalyticsLoading(true);
+                await loadAnalyticsData(currentAnalyticsPeriod);
+                showAnalyticsLoading(false);
+            } catch (error) {
+                console.error('Failed to initialize analytics:', error);
+                showAnalyticsError('Failed to load analytics data');
+            }
+        }
+        
+        async function loadAnalyticsData(period) {
+            const token = localStorage.getItem('supabase_token');
+            if (!token) {
+                throw new Error('Authentication required');
+            }
+            
+            try {
+                // Load different types of analytics data
+                const [overview, workOrders, financial, performance] = await Promise.all([
+                    fetch(`/api/analytics?type=overview&period=${period}`, {
+                        headers: { Authorization: `Bearer ${token}` }
+                    }).then(r => r.json()),
+                    fetch(`/api/analytics?type=work-orders&period=${period}`, {
+                        headers: { Authorization: `Bearer ${token}` }
+                    }).then(r => r.json()),
+                    fetch(`/api/analytics?type=financial&period=${period}`, {
+                        headers: { Authorization: `Bearer ${token}` }
+                    }).then(r => r.json()),
+                    fetch(`/api/analytics?type=performance&period=${period}`, {
+                        headers: { Authorization: `Bearer ${token}` }
+                    }).then(r => r.json())
+                ]);
+                
+                // Update executive summary cards
+                updateExecutiveSummary(overview.data);
+                
+                // Create or update charts
+                createWorkOrderTrendChart(workOrders.data);
+                createStatusDistributionChart(workOrders.data);
+                createMonthlySpendChart(financial.data);
+                createCategoryBreakdownChart(financial.data);
+                
+                // Update performance metrics table
+                updatePerformanceMetrics(performance.data);
+                
+            } catch (error) {
+                console.error('API Error:', error);
+                throw error;
+            }
+        }
+        
+        function updateExecutiveSummary(data) {
+            const summaryHTML = `
+                <div class="stat-card">
+                    <div class="stat-value">${data.total_work_orders || 0}</div>
+                    <div class="stat-label">Total Work Orders</div>
+                    <div class="stat-change positive">↗ ${data.completion_rate}% complete</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${data.completed_work_orders || 0}</div>
+                    <div class="stat-label">Completed</div>
+                    <div class="stat-change positive">↗ ${data.completion_rate}% rate</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${data.pending_work_orders || 0}</div>
+                    <div class="stat-label">Pending</div>
+                    <div class="stat-change">${data.in_progress_work_orders || 0} in progress</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${data.unread_notifications || 0}</div>
+                    <div class="stat-label">Notifications</div>
+                    <div class="stat-change">Total: ${data.total_notifications || 0}</div>
+                </div>
+            `;
+            document.getElementById('executiveSummary').innerHTML = summaryHTML;
+        }
+        
+        function createWorkOrderTrendChart(data) {
+            const ctx = document.getElementById('workOrderTrendChart').getContext('2d');
+            
+            if (analyticsCharts.workOrderTrend) {
+                analyticsCharts.workOrderTrend.destroy();
+            }
+            
+            const labels = data.daily_counts?.map(d => new Date(d.date).toLocaleDateString()) || [];
+            const createdData = data.daily_counts?.map(d => d.created) || [];
+            const completedData = data.daily_counts?.map(d => d.completed) || [];
+            
+            analyticsCharts.workOrderTrend = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Created',
+                        data: createdData,
+                        borderColor: '#6366f1',
+                        backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                        tension: 0.4
+                    }, {
+                        label: 'Completed',
+                        data: completedData,
+                        borderColor: '#10b981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+        
+        function createStatusDistributionChart(data) {
+            const ctx = document.getElementById('statusDistributionChart').getContext('2d');
+            
+            if (analyticsCharts.statusDistribution) {
+                analyticsCharts.statusDistribution.destroy();
+            }
+            
+            const statusData = data.status_distribution || {};
+            
+            analyticsCharts.statusDistribution = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Pending', 'In Progress', 'Completed', 'Cancelled'],
+                    datasets: [{
+                        data: [
+                            statusData.pending || 0,
+                            statusData.in_progress || 0,
+                            statusData.completed || 0,
+                            statusData.cancelled || 0
+                        ],
+                        backgroundColor: [
+                            '#f59e0b',
+                            '#3b82f6',
+                            '#10b981',
+                            '#ef4444'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        }
+        
+        function createMonthlySpendChart(data) {
+            const ctx = document.getElementById('monthlySpendChart').getContext('2d');
+            
+            if (analyticsCharts.monthlySpend) {
+                analyticsCharts.monthlySpend.destroy();
+            }
+            
+            const monthlyData = data.monthly_spend || [];
+            const labels = monthlyData.map(d => d.month);
+            const amounts = monthlyData.map(d => d.amount);
+            
+            analyticsCharts.monthlySpend = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Monthly Spend',
+                        data: amounts,
+                        backgroundColor: '#6366f1',
+                        borderColor: '#4f46e5',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '$' + value.toLocaleString();
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        function createCategoryBreakdownChart(data) {
+            const ctx = document.getElementById('categoryBreakdownChart').getContext('2d');
+            
+            if (analyticsCharts.categoryBreakdown) {
+                analyticsCharts.categoryBreakdown.destroy();
+            }
+            
+            const categoryData = data.category_breakdown || [];
+            const labels = categoryData.map(d => d.category);
+            const amounts = categoryData.map(d => d.amount);
+            
+            analyticsCharts.categoryBreakdown = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: amounts,
+                        backgroundColor: [
+                            '#6366f1',
+                            '#8b5cf6',
+                            '#10b981',
+                            '#f59e0b',
+                            '#ef4444',
+                            '#3b82f6'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        }
+        
+        function updatePerformanceMetrics(data) {
+            const metricsHTML = `
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Metric</th>
+                            <th>Value</th>
+                            <th>Period</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Completion Rate</td>
+                            <td><strong>${data.completion_rate}%</strong></td>
+                            <td>${data.period}</td>
+                        </tr>
+                        <tr>
+                            <td>On-Time Rate</td>
+                            <td><strong>${data.on_time_rate}%</strong></td>
+                            <td>${data.period}</td>
+                        </tr>
+                        <tr>
+                            <td>Average Rating</td>
+                            <td><strong>${data.average_rating}★</strong></td>
+                            <td>${data.period}</td>
+                        </tr>
+                        <tr>
+                            <td>Customer Satisfaction</td>
+                            <td><strong>${data.customer_satisfaction}%</strong></td>
+                            <td>${data.period}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            `;
+            document.getElementById('performanceMetrics').innerHTML = metricsHTML;
+        }
+        
+        function showAnalyticsLoading(show) {
+            document.getElementById('analyticsLoading').style.display = show ? 'flex' : 'none';
+            document.getElementById('analyticsContent').style.display = show ? 'none' : 'block';
+        }
+        
+        function showAnalyticsError(message) {
+            document.getElementById('analyticsLoading').innerHTML = `
+                <div style="text-align: center; color: var(--danger);">
+                    <div style="font-size: 1.5rem; margin-bottom: 1rem;">⚠️</div>
+                    <div>${message}</div>
+                    <button class="btn btn-secondary" onclick="initializeAnalytics()" style="margin-top: 1rem;">
+                        Retry
+                    </button>
+                </div>
+            `;
+            document.getElementById('analyticsLoading').style.display = 'flex';
+            document.getElementById('analyticsContent').style.display = 'none';
+        }
+        
+        async function updateAnalyticsPeriod(period) {
+            currentAnalyticsPeriod = period;
+            await loadAnalyticsData(period);
+            showToast(`Analytics updated for ${period} period`, 'info');
+        }
+        
+        function refreshMetrics() {
+            initializeAnalytics();
+        }
+        
+        // Export global functions
+        window.initializeAnalytics = initializeAnalytics;
+        window.updateAnalyticsPeriod = updateAnalyticsPeriod;
+        window.refreshMetrics = refreshMetrics;
+        
+        // Global Search Functions
+        let searchTimeout;
+        let searchData = {
+            workOrders: [
+                { id: 'WO-2024-001', title: 'HVAC Not Cooling', location: 'McDonald\'s - Sunset', type: 'work-order' },
+                { id: 'WO-2024-002', title: 'Plumbing Leak', location: 'Burger King - Melrose', type: 'work-order' },
+                { id: 'WO-2024-003', title: 'Electrical Issue', location: 'Delilah LA', type: 'work-order' }
+            ],
+            locations: [
+                { id: 'chi-001', title: 'Chicago - State Street', address: '123 N State St', type: 'location' },
+                { id: 'chi-002', title: 'Chicago - Michigan Ave', address: '456 Michigan Ave', type: 'location' },
+                { id: 'ny-001', title: 'New York - Times Square', address: '789 Broadway', type: 'location' }
+            ],
+            vendors: [
+                { id: 'v-001', title: 'ABC Maintenance', service: 'HVAC & Plumbing', type: 'vendor' },
+                { id: 'v-002', title: 'Elite Electric', service: 'Electrical Services', type: 'vendor' },
+                { id: 'v-003', title: 'TechPro Services', service: 'General Maintenance', type: 'vendor' }
+            ]
+        };
+        
+        function handleGlobalSearch(query) {
+            clearTimeout(searchTimeout);
+            
+            if (query.length < 2) {
+                hideSearchResults();
+                return;
+            }
+            
+            searchTimeout = setTimeout(() => {
+                performSearch(query);
+            }, 300);
+        }
+        
+        function performSearch(query) {
+            const results = [];
+            const lowerQuery = query.toLowerCase();
+            
+            // Search work orders
+            searchData.workOrders.forEach(wo => {
+                if (wo.title.toLowerCase().includes(lowerQuery) || 
+                    wo.location.toLowerCase().includes(lowerQuery) ||
+                    wo.id.toLowerCase().includes(lowerQuery)) {
+                    results.push(wo);
+                }
+            });
+            
+            // Search locations
+            searchData.locations.forEach(loc => {
+                if (loc.title.toLowerCase().includes(lowerQuery) || 
+                    loc.address.toLowerCase().includes(lowerQuery)) {
+                    results.push(loc);
+                }
+            });
+            
+            // Search vendors
+            searchData.vendors.forEach(vendor => {
+                if (vendor.title.toLowerCase().includes(lowerQuery) || 
+                    vendor.service.toLowerCase().includes(lowerQuery)) {
+                    results.push(vendor);
+                }
+            });
+            
+            displaySearchResults(results, query);
+        }
+        
+        function displaySearchResults(results, query) {
+            const resultsContainer = document.getElementById('searchResults');
+            
+            if (results.length === 0) {
+                resultsContainer.innerHTML = `
+                    <div style="padding: 1rem; text-align: center; color: var(--gray-500);">
+                        No results found for "${query}"
+                    </div>
+                `;
+            } else {
+                const resultHTML = results.map(result => {
+                    let icon, subtitle;
+                    switch(result.type) {
+                        case 'work-order':
+                            icon = '📋';
+                            subtitle = result.location;
+                            break;
+                        case 'location':
+                            icon = '📍';
+                            subtitle = result.address;
+                            break;
+                        case 'vendor':
+                            icon = '🏢';
+                            subtitle = result.service;
+                            break;
+                    }
+                    
+                    return `
+                        <div class="search-result-item" style="padding: 0.75rem; border-bottom: 1px solid var(--gray-100); cursor: pointer; transition: background-color 0.15s;" 
+                             onclick="selectSearchResult('${result.type}', '${result.id}')"
+                             onmouseover="this.style.backgroundColor='var(--gray-50)'"
+                             onmouseout="this.style.backgroundColor='white'">
+                            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                <span style="font-size: 1.25rem;">${icon}</span>
+                                <div>
+                                    <div style="font-weight: 600; color: var(--gray-900);">${result.title}</div>
+                                    <div style="font-size: 0.875rem; color: var(--gray-600);">${subtitle}</div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+                
+                resultsContainer.innerHTML = resultHTML;
+            }
+            
+            resultsContainer.style.display = 'block';
+        }
+        
+        function selectSearchResult(type, id) {
+            hideSearchResults();
+            document.getElementById('globalSearch').value = '';
+            
+            // Navigate to the appropriate section
+            switch(type) {
+                case 'work-order':
+                    loadSection('work-orders');
+                    showToast(`Navigated to work order ${id}`, 'info');
+                    break;
+                case 'location':
+                    loadSection('location-detail', id);
+                    break;
+                case 'vendor':
+                    loadSection('vendors');
+                    showToast(`Navigated to vendor ${id}`, 'info');
+                    break;
+            }
+        }
+        
+        function hideSearchResults() {
+            document.getElementById('searchResults').style.display = 'none';
+        }
+        
+        function handleSearchKeydown(event) {
+            const resultsContainer = document.getElementById('searchResults');
+            
+            if (event.key === 'Escape') {
+                hideSearchResults();
+                document.getElementById('globalSearch').blur();
+            } else if (event.key === 'Enter') {
+                const firstResult = resultsContainer.querySelector('.search-result-item');
+                if (firstResult) {
+                    firstResult.click();
+                }
+            }
+        }
+        
+        // Keyboard shortcut for search (Ctrl+K)
+        document.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                document.getElementById('globalSearch').focus();
+            }
+        });
+        
+        // Hide search results when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.header-search')) {
+                hideSearchResults();
+            }
+        });
+        
+        // Export search functions
+        window.handleGlobalSearch = handleGlobalSearch;
+        window.handleSearchKeydown = handleSearchKeydown;
+        window.selectSearchResult = selectSearchResult;
         function getReportsContent() {
             return `
                 <div class="header-bar">
@@ -4293,7 +4566,7 @@
                 </div>
                 
                 <!-- Budget Overview Cards -->
-                <div class="stats-grid" style="margin-bottom: 2rem;">
+                <div class="stats-grid" style="margin-bottom: 1rem;">
                     <div class="stat-card">
                         <div class="stat-value">$125,000</div>
                         <div class="stat-label">Annual Budget</div>
@@ -4611,7 +4884,7 @@
                 </div>
                 
                 <!-- Document Workflow Status -->
-                <div class=\"stats-grid\" style=\"margin-bottom: 2rem;\">
+                <div class=\"stats-grid\" style=\"margin-bottom: 1rem;\">
                     <div class=\"stat-card\">
                         <div class=\"stat-value\">358</div>
                         <div class=\"stat-label\">Total Documents</div>
@@ -5181,7 +5454,7 @@
                 </div>
                 
                 <!-- Communication Overview -->
-                <div class="stats-grid" style="margin-bottom: 2rem;">
+                <div class="stats-grid" style="margin-bottom: 1rem;">
                     <div class="stat-card">
                         <div class="stat-value">12</div>
                         <div class="stat-label">Active Conversations</div>
@@ -5259,71 +5532,21 @@
                     </div>
                     
                     <!-- Chat Interface -->
-                    <div class="table-container" style="height: 100%; margin: 0; display: flex; flex-direction: column;">
-                        <!-- Chat Header -->
+                    <div class="table-container" id="chatInterface" style="height: 100%; margin: 0; display: flex; flex-direction: column;">
+                        <!-- Chat Placeholder -->
                         <div class="table-header" style="flex-shrink: 0;">
                             <div style="display: flex; align-items: center; gap: 0.75rem;">
-                                <div style="width: 32px; height: 32px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 0.875rem;">CS</div>
-                                <div>
-                                    <div style="font-weight: 600;">CoolAir HVAC Services</div>
-                                    <div style="font-size: 0.75rem; color: var(--gray-600);">WO #2024-1523 • HVAC Repair</div>
-                                </div>
-                            </div>
-                            <div style="display: flex; gap: 0.5rem;">
-                                <button class="btn btn-sm" onclick="showWorkOrderDetails('2024-1523')">View WO</button>
-                                <button class="btn btn-sm" onclick="callVendor()">📞 Call</button>
-                                <button class="btn btn-sm" onclick="emailVendor()">✉️ Email</button>
+                                <div style="font-weight: 600; color: var(--gray-500);">Select a conversation to start messaging</div>
                             </div>
                         </div>
                         
-                        <!-- Chat Messages -->
-                        <div id="chatMessages" style="flex: 1; padding: 1rem; overflow-y: auto; background: var(--gray-50);">
-                            <!-- Message from vendor -->
-                            <div style="margin-bottom: 1rem;">
-                                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
-                                    <div style="width: 24px; height: 24px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 0.75rem; font-weight: bold;">CS</div>
-                                    <span style="font-size: 0.875rem; font-weight: 600;">CoolAir HVAC</span>
-                                    <span style="font-size: 0.75rem; color: var(--gray-600);">2:45 PM</span>
-                                </div>
-                                <div style="background: white; padding: 0.75rem; border-radius: 0 12px 12px 12px; margin-left: 32px; border-left: 3px solid var(--primary);">
-                                    Good afternoon! We're en route to your location for the HVAC repair. Our technician Mike will be there in approximately 20 minutes. He has all the necessary parts for the compressor replacement.
-                                </div>
+                        <!-- Chat Placeholder Content -->
+                        <div style="flex: 1; display: flex; align-items: center; justify-content: center; background: var(--gray-50);">
+                            <div style="text-align: center; color: var(--gray-500);">
+                                <div style="font-size: 3rem; margin-bottom: 1rem;">💬</div>
+                                <div style="font-weight: 600; margin-bottom: 0.5rem;">No Conversation Selected</div>
+                                <div>Click on a conversation from the left to start messaging</div>
                             </div>
-                            
-                            <!-- Message from client -->
-                            <div style="margin-bottom: 1rem;">
-                                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem; justify-content: flex-end;">
-                                    <span style="font-size: 0.75rem; color: var(--gray-600);">2:47 PM</span>
-                                    <span style="font-size: 0.875rem; font-weight: 600;">You</span>
-                                </div>
-                                <div style="background: var(--primary); color: white; padding: 0.75rem; border-radius: 12px 0 12px 12px; margin-right: 32px; margin-left: auto; max-width: 80%;">
-                                    Perfect! Please have Mike use the service entrance on the side of the building. The main entrance is blocked for deliveries.
-                                </div>
-                            </div>
-                            
-                            <!-- System message -->
-                            <div style="margin-bottom: 1rem; text-align: center;">
-                                <div style="background: var(--gray-200); color: var(--gray-700); padding: 0.5rem 1rem; border-radius: 20px; display: inline-block; font-size: 0.875rem;">
-                                    📍 Technician location shared • 3:05 PM
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Message Input -->
-                        <div style="padding: 1rem; border-top: 1px solid var(--gray-200); background: white; flex-shrink: 0;">
-                            <div style="display: flex; gap: 0.5rem; align-items: end;">
-                                <button class="btn btn-sm" onclick="attachFile()" title="Attach file">
-                                    📎
-                                </button>
-                                <button class="btn btn-sm" onclick="takePhoto()" title="Take photo">
-                                    📷
-                                </button>
-                                <textarea id="messageInput" class="form-input" rows="2" placeholder="Type your message..." style="flex: 1; resize: none;" onkeypress="if(event.key==='Enter' && !event.shiftKey) { event.preventDefault(); sendMessage(); }"></textarea>
-                                <button class="btn btn-primary" onclick="sendMessage()">
-                                    Send
-                                </button>
-                            </div>
-                        </div>
                     </div>
                 </div>
                 
@@ -5897,7 +6120,113 @@
         }
         
         function viewInvoice(id) {
-            showToast(`Opening invoice ${id}...`, 'info');
+            // Create modal overlay
+            const modalOverlay = document.createElement('div');
+            modalOverlay.className = 'modal-overlay';
+            modalOverlay.style.cssText = `
+                position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+                background: rgba(0, 0, 0, 0.5); z-index: 1000;
+                display: flex; align-items: center; justify-content: center;
+            `;
+            
+            // Create modal content
+            modalOverlay.innerHTML = `
+                <div class="modal-dialog" style="background: white; border-radius: 12px; max-width: 800px; width: 90%; max-height: 90vh; overflow-y: auto; position: relative;">
+                    <div class="modal-header" style="padding: 1.5rem; border-bottom: 1px solid var(--gray-200); display: flex; justify-content: between; align-items: center;">
+                        <h2 style="margin: 0; color: var(--gray-900);">Invoice ${id}</h2>
+                        <button onclick="this.closest('.modal-overlay').remove()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--gray-500);">&times;</button>
+                    </div>
+                    <div class="modal-body" style="padding: 1.5rem;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+                            <div>
+                                <h4 style="color: var(--gray-700); margin-bottom: 1rem;">Invoice Details</h4>
+                                <div style="margin-bottom: 0.5rem;"><strong>Invoice ID:</strong> ${id}</div>
+                                <div style="margin-bottom: 0.5rem;"><strong>Date:</strong> ${new Date().toLocaleDateString()}</div>
+                                <div style="margin-bottom: 0.5rem;"><strong>Due Date:</strong> ${new Date(Date.now() + 30*24*60*60*1000).toLocaleDateString()}</div>
+                                <div style="margin-bottom: 0.5rem;"><strong>Status:</strong> <span style="padding: 0.25rem 0.5rem; background: var(--warning-light); color: var(--warning); border-radius: 4px; font-size: 0.75rem;">Pending</span></div>
+                            </div>
+                            <div>
+                                <h4 style="color: var(--gray-700); margin-bottom: 1rem;">Service Provider</h4>
+                                <div style="margin-bottom: 0.5rem;"><strong>Company:</strong> CoolAir HVAC Services</div>
+                                <div style="margin-bottom: 0.5rem;"><strong>Contact:</strong> Mike Johnson</div>
+                                <div style="margin-bottom: 0.5rem;"><strong>Phone:</strong> (555) 123-4567</div>
+                                <div style="margin-bottom: 0.5rem;"><strong>Email:</strong> mike@coolairhvac.com</div>
+                            </div>
+                        </div>
+                        
+                        <h4 style="color: var(--gray-700); margin-bottom: 1rem;">Service Items</h4>
+                        <div class="table-container">
+                            <table class="data-table" style="width: 100%;">
+                                <thead>
+                                    <tr>
+                                        <th>Description</th>
+                                        <th>Quantity</th>
+                                        <th>Rate</th>
+                                        <th>Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Emergency HVAC System Repair</td>
+                                        <td>1</td>
+                                        <td>$450.00</td>
+                                        <td>$450.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Replacement Parts & Labor</td>
+                                        <td>1</td>
+                                        <td>$125.00</td>
+                                        <td>$125.00</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div style="margin-top: 2rem; padding: 1rem; background: var(--gray-50); border-radius: 8px;">
+                            <div style="display: flex; justify-content: between; margin-bottom: 0.5rem;">
+                                <span>Subtotal:</span>
+                                <span>$575.00</span>
+                            </div>
+                            <div style="display: flex; justify-content: between; margin-bottom: 0.5rem;">
+                                <span>Tax (8.5%):</span>
+                                <span>$48.88</span>
+                            </div>
+                            <div style="display: flex; justify-content: between; font-weight: bold; font-size: 1.1rem; border-top: 1px solid var(--gray-300); padding-top: 0.5rem;">
+                                <span>Total:</span>
+                                <span>$623.88</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer" style="padding: 1.5rem; border-top: 1px solid var(--gray-200); display: flex; gap: 1rem; justify-content: flex-end;">
+                        <button class="btn btn-secondary" onclick="downloadInvoice('${id}')">📄 Download PDF</button>
+                        <button class="btn btn-secondary" onclick="this.closest('.modal-overlay').remove()">Close</button>
+                        <button class="btn btn-primary" onclick="payInvoice('${id}')">Pay Now</button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modalOverlay);
+        }
+        
+        function downloadInvoice(id) {
+            // Create a link to download the PDF
+            const link = document.createElement('a');
+            link.href = `/api/invoices/${id}/pdf`;
+            link.download = `invoice-${id}.pdf`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            showToast(`Downloading invoice ${id}...`, 'success');
+        }
+        
+        function payInvoice(id) {
+            // Close the modal first
+            const modal = document.querySelector('.modal-overlay');
+            if (modal) modal.remove();
+            
+            showToast(`Processing payment for invoice ${id}...`, 'info');
+            // Here you could integrate with actual payment processing
         }
         
         function payAllInvoices() {
@@ -5932,6 +6261,154 @@
                 document.getElementById('teamRole').value = '';
                 document.querySelectorAll('#permissionsList input[type="checkbox"]').forEach(cb => cb.checked = false);
             }
+        }
+        
+        // Messaging Functions
+        function openConversation(conversationId) {
+            // Update the chat interface with the selected conversation
+            const conversations = {
+                'wo-2024-1523': {
+                    name: 'CoolAir HVAC Services',
+                    workOrder: 'WO #2024-1523',
+                    avatar: 'CS',
+                    color: 'var(--primary)',
+                    messages: [
+                        { sender: 'them', message: 'On my way to your location now. ETA 15 minutes.', time: '2:45 PM' },
+                        { sender: 'them', message: 'We\'re running 15 minutes late due to traffic. ETA now 3:15 PM.', time: '3:00 PM' }
+                    ]
+                },
+                'wo-2024-1519': {
+                    name: 'Elite Plumbing Solutions',
+                    workOrder: 'WO #2024-1519',
+                    avatar: 'EP',
+                    color: 'var(--warning)',
+                    messages: [
+                        { sender: 'you', message: 'How is the repair progressing?', time: '1:30 PM' },
+                        { sender: 'them', message: 'Job completed. Please review the work and provide feedback when convenient.', time: '2:00 PM' }
+                    ]
+                },
+                'urgent-repair': {
+                    name: '🚨 Urgent Repair Team',
+                    workOrder: 'Emergency',
+                    avatar: 'UR',
+                    color: 'var(--danger)',
+                    messages: [
+                        { sender: 'them', message: 'Emergency electrical issue resolved. Full report attached.', time: '11:00 AM' },
+                        { sender: 'you', message: 'Thank you for the quick response!', time: '11:30 AM' }
+                    ]
+                }
+            };
+            
+            const conversation = conversations[conversationId];
+            if (!conversation) return;
+            
+            // Update chat header
+            const chatInterface = document.getElementById('chatInterface');
+            const header = chatInterface.querySelector('.table-header');
+            header.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                    <div style="width: 32px; height: 32px; background: ${conversation.color}; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 0.875rem;">${conversation.avatar}</div>
+                    <div>
+                        <div style="font-weight: 600;">${conversation.name}</div>
+                        <div style="font-size: 0.75rem; color: var(--gray-600);">${conversation.workOrder}</div>
+                    </div>
+                </div>
+                <button class="btn btn-sm btn-secondary" onclick="showToast('Call feature coming soon!', 'info')">📞 Call</button>
+            `;
+            
+            // Update chat messages
+            let messagesHtml = conversation.messages.map(msg => {
+                const isYou = msg.sender === 'you';
+                return `
+                    <div style="display: flex; gap: 0.75rem; margin-bottom: 1rem; ${isYou ? 'flex-direction: row-reverse;' : ''}">
+                        <div style="width: 32px; height: 32px; background: ${isYou ? 'var(--gray-300)' : conversation.color}; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: ${isYou ? 'var(--gray-700)' : 'white'}; font-weight: bold; font-size: 0.75rem; flex-shrink: 0;">
+                            ${isYou ? 'You' : conversation.avatar}
+                        </div>
+                        <div style="flex: 1; max-width: 70%;">
+                            <div style="background: ${isYou ? 'var(--primary)' : 'var(--gray-100)'}; color: ${isYou ? 'white' : 'var(--gray-900)'}; padding: 0.75rem; border-radius: 12px; ${isYou ? 'border-bottom-right-radius: 4px;' : 'border-bottom-left-radius: 4px;'}">${msg.message}</div>
+                            <div style="font-size: 0.75rem; color: var(--gray-500); margin-top: 0.25rem; ${isYou ? 'text-align: right;' : ''}">${msg.time}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            // Clear existing content and rebuild
+            // Remove placeholder content first
+            const placeholderContent = chatInterface.querySelector('div[style*="flex: 1; display: flex; align-items: center"]');
+            if (placeholderContent) {
+                placeholderContent.remove();
+            }
+            
+            // Remove any existing messages or input areas
+            const existingMessages = chatInterface.querySelector('.chat-messages');
+            const existingInput = chatInterface.querySelector('.message-input-area');
+            if (existingMessages) existingMessages.remove();
+            if (existingInput) existingInput.remove();
+            
+            // Create the message area
+            const messageArea = document.createElement('div');
+            messageArea.className = 'chat-messages';
+            messageArea.style.cssText = 'flex: 1; padding: 1rem; overflow-y: auto; background: var(--gray-50);';
+            messageArea.innerHTML = messagesHtml;
+            chatInterface.appendChild(messageArea);
+            
+            // Add message input
+            const inputArea = document.createElement('div');
+            inputArea.className = 'message-input-area';
+            inputArea.style.cssText = 'padding: 1rem; border-top: 1px solid var(--gray-200); background: white; flex-shrink: 0;';
+            inputArea.innerHTML = `
+                <div style="display: flex; gap: 0.5rem;">
+                    <input type="text" id="messageInput" placeholder="Type your message..." style="flex: 1; padding: 0.75rem; border: 1px solid var(--gray-300); border-radius: 6px;" onkeypress="if(event.key==='Enter') sendMessage('${conversationId}')">
+                    <button class="btn btn-primary" onclick="sendMessage('${conversationId}')">Send</button>
+                </div>
+            `;
+            chatInterface.appendChild(inputArea);
+            
+            // Mark conversation as active
+            document.querySelectorAll('.conversation-item').forEach(item => {
+                item.style.background = '';
+            });
+            event.target.closest('.conversation-item').style.background = 'var(--primary-light)';
+        }
+        
+        function sendMessage(conversationId) {
+            const input = document.getElementById('messageInput');
+            if (!input || !input.value.trim()) return;
+            
+            const message = input.value.trim();
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            
+            // Add message to chat
+            const messagesContainer = document.querySelector('.chat-messages');
+            if (messagesContainer) {
+                const messageHtml = `
+                    <div style="display: flex; gap: 0.75rem; margin-bottom: 1rem; flex-direction: row-reverse;">
+                        <div style="width: 32px; height: 32px; background: var(--gray-300); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--gray-700); font-weight: bold; font-size: 0.75rem; flex-shrink: 0;">You</div>
+                        <div style="flex: 1; max-width: 70%;">
+                            <div style="background: var(--primary); color: white; padding: 0.75rem; border-radius: 12px; border-bottom-right-radius: 4px;">${message}</div>
+                            <div style="font-size: 0.75rem; color: var(--gray-500); margin-top: 0.25rem; text-align: right;">${timeStr}</div>
+                        </div>
+                    </div>
+                `;
+                messagesContainer.innerHTML += messageHtml;
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+            
+            input.value = '';
+            showToast('Message sent!', 'success');
+        }
+        
+        function startNewConversation() {
+            showToast('New conversation feature coming soon!', 'info');
+        }
+        
+        function filterConversations(filter) {
+            showToast(`Filtering by: ${filter}`, 'info');
+        }
+        
+        function showCommunicationSettings() {
+            showToast('Communication settings coming soon!', 'info');
         }
         
         function updatePermissions() {

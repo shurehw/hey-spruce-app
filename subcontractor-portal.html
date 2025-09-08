@@ -637,6 +637,41 @@
             justify-content: flex-end;
             gap: 0.75rem;
         }
+        
+        /* Badge Styles */
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .badge-high {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+        
+        .badge-normal {
+            background: #e0e7ff;
+            color: #4f46e5;
+        }
+        
+        .badge-pending {
+            background: #fed7aa;
+            color: #ea580c;
+        }
+        
+        .badge-in-progress {
+            background: #fef3c7;
+            color: #d97706;
+        }
+        
+        .badge-completed {
+            background: #d1fae5;
+            color: #059669;
+        }
     </style>
 </head>
 <body>
@@ -908,10 +943,18 @@
                 <div class="dashboard-header">
                     <h1 class="dashboard-title">Your Work Orders</h1>
                     <p class="dashboard-subtitle">View and manage your assigned work orders</p>
+                    <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+                        <button id="listViewBtn" class="btn btn-secondary" onclick="switchToListView()" style="padding: 0.5rem 1rem;">
+                            📋 List View
+                        </button>
+                        <button id="calendarViewBtn" class="btn btn-primary" onclick="switchToCalendarView()" style="padding: 0.5rem 1rem;">
+                            📅 Calendar View
+                        </button>
+                    </div>
                 </div>
                 
-                <!-- Calendar Controls -->
-                <div class="section-card" style="margin-bottom: 1.5rem;">
+                <!-- Calendar View -->
+                <div id="calendarViewContainer" class="section-card" style="margin-bottom: 1.5rem;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
                         <div style="display: flex; gap: 0.5rem; align-items: center;">
                             <button class="btn btn-secondary" onclick="previousPeriod()" style="padding: 0.5rem;">◀</button>
@@ -931,9 +974,17 @@
                     </div>
                 </div>
                 
-                <!-- Work Orders List -->
-                <div class="section-card">
-                    <h2 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem;">Upcoming Work Orders</h2>
+                <!-- List View -->
+                <div id="listViewContainer" class="section-card" style="display: none;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h2 style="font-size: 1.25rem; font-weight: 600;">All Work Orders</h2>
+                        <select onchange="filterWorkOrders(this.value)" style="padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 6px;">
+                            <option value="all">All Status</option>
+                            <option value="pending">Pending</option>
+                            <option value="in-progress">In Progress</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                    </div>
                     <div id="workOrdersList">
                         <!-- Work orders list will be rendered here -->
                     </div>
@@ -3806,6 +3857,79 @@
             });
             if (event && event.target) {
                 event.target.classList.add('active');
+            }
+        }
+        
+        // View switching functions
+        function switchToListView() {
+            document.getElementById('listViewContainer').style.display = 'block';
+            document.getElementById('calendarViewContainer').style.display = 'none';
+            document.getElementById('listViewBtn').classList.remove('btn-secondary');
+            document.getElementById('listViewBtn').classList.add('btn-primary');
+            document.getElementById('calendarViewBtn').classList.remove('btn-primary');
+            document.getElementById('calendarViewBtn').classList.add('btn-secondary');
+            
+            // Load list view data
+            loadWorkOrdersList();
+        }
+        
+        function switchToCalendarView() {
+            document.getElementById('listViewContainer').style.display = 'none';
+            document.getElementById('calendarViewContainer').style.display = 'block';
+            document.getElementById('calendarViewBtn').classList.remove('btn-secondary');
+            document.getElementById('calendarViewBtn').classList.add('btn-primary');
+            document.getElementById('listViewBtn').classList.remove('btn-primary');
+            document.getElementById('listViewBtn').classList.add('btn-secondary');
+            
+            // Load calendar if not already loaded
+            if (typeof renderCalendar === 'function') {
+                renderCalendar();
+            }
+        }
+        
+        function loadWorkOrdersList() {
+            const workOrders = [
+                { id: 'WO-001', title: 'Emergency Plumbing Repair', client: 'McDonald\'s - Sunset', date: '2025-09-08', time: '9:00 AM', status: 'in-progress', priority: 'high' },
+                { id: 'WO-002', title: 'HVAC Maintenance', client: 'Burger King - Melrose', date: '2025-09-09', time: '10:00 AM', status: 'pending', priority: 'normal' },
+                { id: 'WO-003', title: 'Electrical Inspection', client: 'Delilah LA', date: '2025-09-10', time: '2:00 PM', status: 'pending', priority: 'normal' },
+                { id: 'WO-004', title: 'Kitchen Equipment Repair', client: 'McDonald\'s - Downtown', date: '2025-09-11', time: '11:00 AM', status: 'pending', priority: 'high' },
+                { id: 'WO-005', title: 'Grease Trap Cleaning', client: 'Pizza Palace', date: '2025-09-12', time: '8:00 AM', status: 'completed', priority: 'normal' }
+            ];
+            
+            const listContainer = document.getElementById('workOrdersList');
+            listContainer.innerHTML = workOrders.map(wo => `
+                <div style="padding: 1rem; border: 1px solid var(--gray-200); border-radius: 8px; margin-bottom: 0.75rem; cursor: pointer; transition: all 0.2s;" onclick="viewWorkOrder('${wo.id}')" onmouseover="this.style.boxShadow='0 2px 8px rgba(0,0,0,0.1)'" onmouseout="this.style.boxShadow='none'">
+                    <div style="display: flex; justify-content: space-between; align-items: start;">
+                        <div style="flex: 1;">
+                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                <h3 style="font-weight: 600; margin: 0;">${wo.title}</h3>
+                                <span class="badge badge-${wo.priority}" style="font-size: 0.625rem; padding: 0.125rem 0.5rem;">${wo.priority.toUpperCase()}</span>
+                                <span class="badge badge-${wo.status}" style="font-size: 0.625rem; padding: 0.125rem 0.5rem;">${wo.status.replace('-', ' ').toUpperCase()}</span>
+                            </div>
+                            <div style="display: flex; gap: 1rem; font-size: 0.875rem; color: var(--gray-600);">
+                                <span>📍 ${wo.client}</span>
+                                <span>📅 ${wo.date}</span>
+                                <span>🕐 ${wo.time}</span>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button class="btn btn-sm btn-secondary" onclick="event.stopPropagation(); viewDetails('${wo.id}')">View Details</button>
+                            ${wo.status === 'pending' ? `<button class="btn btn-sm btn-primary" onclick="event.stopPropagation(); acceptJob('${wo.id}')">Accept Job</button>` : ''}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function filterWorkOrders(status) {
+            // Filter work orders based on status
+            loadWorkOrdersList(); // For now, just reload all
+            if (status !== 'all') {
+                const items = document.querySelectorAll('#workOrdersList > div');
+                items.forEach(item => {
+                    const hasStatus = item.innerHTML.includes(`badge-${status}`);
+                    item.style.display = hasStatus ? 'block' : 'none';
+                });
             }
         }
         

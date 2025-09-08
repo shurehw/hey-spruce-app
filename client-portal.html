@@ -1488,31 +1488,43 @@
                     </div>
                 </div>
                 
-                <!-- Filters -->
-                <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
-                    <select class="form-select" style="width: 200px;">
-                        <option>All Locations</option>
-                        <option>McDonald's - Sunset</option>
-                        <option>Burger King - Melrose</option>
-                        <option>Delilah LA</option>
-                    </select>
-                    <select class="form-select" style="width: 150px;">
-                        <option>All Status</option>
-                        <option>Open</option>
-                        <option>In Progress</option>
-                        <option>Completed</option>
-                    </select>
-                    <select class="form-select" style="width: 150px;">
-                        <option>All Priority</option>
-                        <option>Emergency</option>
-                        <option>Urgent</option>
-                        <option>Standard</option>
-                    </select>
-                    <input type="search" class="form-input" placeholder="Search work orders..." style="width: 300px;">
+                <!-- View Toggle -->
+                <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+                    <button id="clientListViewBtn" class="btn btn-primary" onclick="switchToClientListView()" style="padding: 0.5rem 1rem;">
+                        📋 List View
+                    </button>
+                    <button id="clientCalendarViewBtn" class="btn btn-secondary" onclick="switchToClientCalendarView()" style="padding: 0.5rem 1rem;">
+                        📅 Calendar View
+                    </button>
                 </div>
                 
-                <!-- Work Orders List -->
-                <div class="table-container">
+                <!-- List View Container -->
+                <div id="clientListViewContainer">
+                    <!-- Filters -->
+                    <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
+                        <select class="form-select" style="width: 200px;">
+                            <option>All Locations</option>
+                            <option>McDonald's - Sunset</option>
+                            <option>Burger King - Melrose</option>
+                            <option>Delilah LA</option>
+                        </select>
+                        <select class="form-select" style="width: 150px;">
+                            <option>All Status</option>
+                            <option>Open</option>
+                            <option>In Progress</option>
+                            <option>Completed</option>
+                        </select>
+                        <select class="form-select" style="width: 150px;">
+                            <option>All Priority</option>
+                            <option>Emergency</option>
+                            <option>Urgent</option>
+                            <option>Standard</option>
+                        </select>
+                        <input type="search" class="form-input" placeholder="Search work orders..." style="width: 300px;">
+                    </div>
+                    
+                    <!-- Work Orders List -->
+                    <div class="table-container">
                     <div class="table-header">
                         <h3 class="table-title">All Work Orders</h3>
                         <button class="btn btn-secondary" onclick="exportWorkOrders()">Export</button>
@@ -1536,6 +1548,32 @@
                             ${getWorkOrderRows()}
                         </tbody>
                     </table>
+                    </div>
+                </div>
+                
+                <!-- Calendar View Container -->
+                <div id="clientCalendarViewContainer" style="display: none;">
+                    <div class="table-container">
+                        <div class="table-header" style="display: flex; justify-content: space-between; align-items: center;">
+                            <h3 class="table-title">Calendar View</h3>
+                            <div style="display: flex; gap: 0.5rem; align-items: center;">
+                                <button class="btn btn-secondary" onclick="previousClientPeriod()" style="padding: 0.5rem;">◀</button>
+                                <button class="btn btn-secondary" onclick="goToClientToday()">Today</button>
+                                <button class="btn btn-secondary" onclick="nextClientPeriod()" style="padding: 0.5rem;">▶</button>
+                                <select id="clientCalendarView" onchange="changeClientCalendarView()" style="padding: 0.5rem; border: 1px solid var(--gray-300); border-radius: 6px; margin-left: 1rem;">
+                                    <option value="month">Month View</option>
+                                    <option value="week">Week View</option>
+                                    <option value="day">Day View</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div style="padding: 1.5rem;">
+                            <h2 id="clientCurrentPeriod" style="text-align: center; font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem;">September 2025</h2>
+                            <div id="clientCalendarGrid">
+                                <!-- Calendar will be rendered here -->
+                            </div>
+                        </div>
+                    </div>
                 </div>
             `;
         }
@@ -5574,6 +5612,103 @@
                     </div>
                 </div>
             `;
+        }
+        
+        // Client Portal View Switching Functions
+        function switchToClientListView() {
+            document.getElementById('clientListViewContainer').style.display = 'block';
+            document.getElementById('clientCalendarViewContainer').style.display = 'none';
+            document.getElementById('clientListViewBtn').classList.remove('btn-secondary');
+            document.getElementById('clientListViewBtn').classList.add('btn-primary');
+            document.getElementById('clientCalendarViewBtn').classList.remove('btn-primary');
+            document.getElementById('clientCalendarViewBtn').classList.add('btn-secondary');
+        }
+        
+        function switchToClientCalendarView() {
+            document.getElementById('clientListViewContainer').style.display = 'none';
+            document.getElementById('clientCalendarViewContainer').style.display = 'block';
+            document.getElementById('clientCalendarViewBtn').classList.remove('btn-secondary');
+            document.getElementById('clientCalendarViewBtn').classList.add('btn-primary');
+            document.getElementById('clientListViewBtn').classList.remove('btn-primary');
+            document.getElementById('clientListViewBtn').classList.add('btn-secondary');
+            
+            // Initialize calendar
+            renderClientCalendar();
+        }
+        
+        function renderClientCalendar() {
+            const calendarGrid = document.getElementById('clientCalendarGrid');
+            if (!calendarGrid) return;
+            
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth();
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            
+            // Sample work orders for calendar
+            const workOrders = {
+                8: [{ title: 'HVAC Maintenance', time: '9:00 AM', status: 'scheduled' }],
+                12: [{ title: 'Plumbing Inspection', time: '2:00 PM', status: 'scheduled' }],
+                15: [{ title: 'Electrical Repair', time: '10:00 AM', status: 'urgent' }],
+                20: [{ title: 'Equipment Service', time: '1:00 PM', status: 'scheduled' }],
+                25: [{ title: 'Monthly Review', time: '3:00 PM', status: 'scheduled' }]
+            };
+            
+            let html = '<div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; background: var(--gray-200);">';
+            
+            // Day headers
+            const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            days.forEach(day => {
+                html += `<div style="background: var(--gray-50); padding: 0.5rem; text-align: center; font-weight: 600; font-size: 0.875rem;">${day}</div>`;
+            });
+            
+            // Empty cells for days before month starts
+            for (let i = 0; i < firstDay; i++) {
+                html += '<div style="background: white; min-height: 80px; padding: 0.5rem;"></div>';
+            }
+            
+            // Days of month
+            for (let day = 1; day <= daysInMonth; day++) {
+                const hasWorkOrders = workOrders[day];
+                const isToday = day === now.getDate();
+                
+                html += `<div style="background: ${isToday ? 'var(--primary-light)' : 'white'}; min-height: 80px; padding: 0.5rem; position: relative;">
+                    <div style="font-weight: ${isToday ? 'bold' : 'normal'}; margin-bottom: 0.25rem;">${day}</div>`;
+                
+                if (hasWorkOrders) {
+                    hasWorkOrders.forEach(wo => {
+                        const color = wo.status === 'urgent' ? 'var(--danger)' : 'var(--primary)';
+                        html += `<div style="font-size: 0.625rem; background: ${color}; color: white; padding: 0.125rem 0.25rem; border-radius: 2px; margin-bottom: 0.125rem; cursor: pointer;" onclick="viewWorkOrder('WO-${day}')">${wo.time} - ${wo.title}</div>`;
+                    });
+                }
+                
+                html += '</div>';
+            }
+            
+            html += '</div>';
+            calendarGrid.innerHTML = html;
+        }
+        
+        function previousClientPeriod() {
+            // Navigate to previous month
+            showToast('Previous month', 'info');
+        }
+        
+        function nextClientPeriod() {
+            // Navigate to next month
+            showToast('Next month', 'info');
+        }
+        
+        function goToClientToday() {
+            // Navigate to current month
+            renderClientCalendar();
+            showToast('Today', 'info');
+        }
+        
+        function changeClientCalendarView() {
+            const view = document.getElementById('clientCalendarView').value;
+            showToast(`Switched to ${view} view`, 'info');
         }
         
         function showCreateWorkOrderModal() {

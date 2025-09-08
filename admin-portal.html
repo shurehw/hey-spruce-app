@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Supplier Portal - Hey Spruce</title>
+    <title>Admin Portal - Hey Spruce</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -14,7 +14,7 @@
             --sidebar-width: 260px;
             --header-height: 60px;
             
-            /* Portal Theme Colors - Supplier (Purple) */
+            /* Portal Theme Colors - Admin (Purple) */
             --primary: #6366f1;
             --primary-dark: #4f46e5;
             --primary-light: #e0e7ff;
@@ -5206,7 +5206,7 @@ Spruce - Professional Service Management
         function getDashboardContent() {
             return `<div>
                 <h1>Dashboard</h1>
-                <p>Welcome to the Supplier Portal Dashboard</p>
+                <p>Welcome to the Admin Portal Dashboard</p>
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; margin-top: 2rem;">
                     <div style="background: white; padding: 1.5rem; border-radius: 8px; border: 1px solid var(--gray-200);">
                         <h3>Active Work Orders</h3>
@@ -5497,7 +5497,7 @@ Spruce - Professional Service Management
         function getAnalyticsContent() {
             // Initialize analytics when content loads
             setTimeout(() => {
-                initializeSupplierAnalytics();
+                initializeAdminAnalytics();
             }, 100);
             
             return `
@@ -5505,13 +5505,13 @@ Spruce - Professional Service Management
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
                         <h2 style="font-size: 1.875rem; font-weight: 700;">Analytics Dashboard</h2>
                         <div style="display: flex; gap: 0.75rem;">
-                            <select id="supplierAnalyticsPeriod" style="padding: 0.5rem 1rem; border: 1px solid var(--gray-300); border-radius: 6px;" onchange="updateSupplierAnalyticsPeriod(this.value)">
+                            <select id="adminAnalyticsPeriod" style="padding: 0.5rem 1rem; border: 1px solid var(--gray-300); border-radius: 6px;" onchange="updateAdminAnalyticsPeriod(this.value)">
                                 <option value="30d" selected>Last 30 Days</option>
                                 <option value="90d">Last 90 Days</option>
                                 <option value="1y">Last 12 Months</option>
                                 <option value="all">All Time</option>
                             </select>
-                            <button class="btn btn-secondary" onclick="exportSupplierAnalytics()">Export Data</button>
+                            <button class="btn btn-secondary" onclick="exportAdminAnalytics()">Export Data</button>
                         </div>
                     </div>
                     
@@ -5761,7 +5761,7 @@ Spruce - Professional Service Management
                                 <div style="space-y: 1rem;">
                                     <div style="margin-bottom: 1rem;">
                                         <label style="display: block; font-weight: 600; margin-bottom: 0.5rem;">Company Name</label>
-                                        <input type="text" value="Hwood Group Suppliers" style="width: 100%; padding: 0.75rem; border: 1px solid var(--gray-300); border-radius: 6px;">
+                                        <input type="text" value="Hwood Group Admins" style="width: 100%; padding: 0.75rem; border: 1px solid var(--gray-300); border-radius: 6px;">
                                     </div>
                                     <div style="margin-bottom: 1rem;">
                                         <label style="display: block; font-weight: 600; margin-bottom: 0.5rem;">Business Address</label>
@@ -6604,7 +6604,7 @@ United States</textarea>
         <div class="header-content">
             <div style="display: flex; align-items: center; gap: 1rem;">
                 <img src="https://cdn.prod.website-files.com/67edc7c78e3151d3b06686b2/681007b1b7f5a5cc527f1b94_Hey_SPRUCE_logo_font.png" alt="Hey Spruce" style="height: 32px; width: auto;">
-                <span class="portal-badge">Supplier Portal</span>
+                <span class="portal-badge">Admin Portal</span>
             </div>
             
             <!-- Global Search -->
@@ -6614,8 +6614,8 @@ United States</textarea>
                            id="supplierGlobalSearch" 
                            placeholder="Search RFPs, work orders, clients..." 
                            style="width: 100%; padding: 0.5rem 0.75rem 0.5rem 2.5rem; border: 1px solid var(--gray-300); border-radius: 6px; font-size: 0.875rem;"
-                           onkeyup="handleSupplierGlobalSearch(this.value)"
-                           onkeydown="handleSupplierSearchKeydown(event)">
+                           onkeyup="handleAdminGlobalSearch(this.value)"
+                           onkeydown="handleAdminSearchKeydown(event)">
                     <div style="position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: var(--gray-400); pointer-events: none;">
                         🔍
                     </div>
@@ -6655,11 +6655,11 @@ United States</textarea>
                     <!-- User Dropdown Menu -->
                     <div class="user-dropdown-menu" id="userDropdownMenu" style="display: none; position: absolute; top: calc(100% + 0.5rem); right: 0; background: white; border: 1px solid var(--gray-200); border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 240px; z-index: 1000;">
                         <div style="padding: 1rem; border-bottom: 1px solid var(--gray-200);">
-                            <div style="font-weight: 600; color: var(--gray-900); margin-bottom: 0.25rem;">Hwood Group Suppliers</div>
+                            <div style="font-weight: 600; color: var(--gray-900); margin-bottom: 0.25rem;">Hwood Group Admin</div>
                             <div style="font-size: 0.875rem; color: var(--gray-600);">jacob@hwood.com</div>
                         </div>
                         <div style="padding: 0.5rem 0;">
-                            <a href="#profile" onclick="loadUserSettings('profile'); closeUserDropdown(); return false;" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; color: var(--gray-700); text-decoration: none; transition: all 0.2s;" onmouseover="this.style.background='var(--gray-50)'" onmouseout="this.style.background='transparent'">
+                            <a href="#profile" onclick="loadSection('profile'); closeUserDropdown(); return false;" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; color: var(--gray-700); text-decoration: none; transition: all 0.2s;" onmouseover="this.style.background='var(--gray-50)'" onmouseout="this.style.background='transparent'">
                                 <span>👤</span>
                                 <span>Profile</span>
                             </a>
@@ -9587,22 +9587,22 @@ United States</textarea>
         }
         window.getAnalyticsContent = getAnalyticsContent;
         
-        // Supplier Analytics JavaScript Functions
+        // Admin Analytics JavaScript Functions
         let supplierAnalyticsCharts = {};
-        let currentSupplierAnalyticsPeriod = '30d';
+        let currentAdminAnalyticsPeriod = '30d';
         
-        async function initializeSupplierAnalytics() {
+        async function initializeAdminAnalytics() {
             try {
-                showSupplierAnalyticsLoading(true);
-                await loadSupplierAnalyticsData(currentSupplierAnalyticsPeriod);
-                showSupplierAnalyticsLoading(false);
+                showAdminAnalyticsLoading(true);
+                await loadAdminAnalyticsData(currentAdminAnalyticsPeriod);
+                showAdminAnalyticsLoading(false);
             } catch (error) {
                 console.error('Failed to initialize supplier analytics:', error);
-                showSupplierAnalyticsError('Failed to load analytics data');
+                showAdminAnalyticsError('Failed to load analytics data');
             }
         }
         
-        async function loadSupplierAnalyticsData(period) {
+        async function loadAdminAnalyticsData(period) {
             const token = localStorage.getItem('supabase_token');
             if (!token) {
                 throw new Error('Authentication required');
@@ -9623,23 +9623,23 @@ United States</textarea>
                 ]);
                 
                 // Update KPI cards
-                updateSupplierKPICards(financial.data, performance.data, workOrders.data);
+                updateAdminKPICards(financial.data, performance.data, workOrders.data);
                 
                 // Create or update charts
-                createSupplierRevenueChart(financial.data);
-                createSupplierServiceChart(financial.data);
-                createSupplierPerformanceChart(workOrders.data);
+                createAdminRevenueChart(financial.data);
+                createAdminServiceChart(financial.data);
+                createAdminPerformanceChart(workOrders.data);
                 
                 // Update performance metrics table
-                updateSupplierPerformanceMetrics(performance.data);
+                updateAdminPerformanceMetrics(performance.data);
                 
             } catch (error) {
-                console.error('Supplier Analytics API Error:', error);
+                console.error('Admin Analytics API Error:', error);
                 throw error;
             }
         }
         
-        function updateSupplierKPICards(financial, performance, workOrders) {
+        function updateAdminKPICards(financial, performance, workOrders) {
             const kpiHTML = `
                 <div style="background: white; padding: 1.5rem; border-radius: 8px; border: 1px solid var(--gray-200);">
                     <h4 style="color: var(--gray-600); font-size: 0.875rem; margin-bottom: 0.5rem;">Total Revenue</h4>
@@ -9665,7 +9665,7 @@ United States</textarea>
             document.getElementById('supplierKPICards').innerHTML = kpiHTML;
         }
         
-        function createSupplierRevenueChart(data) {
+        function createAdminRevenueChart(data) {
             const ctx = document.getElementById('supplierRevenueChart').getContext('2d');
             
             if (supplierAnalyticsCharts.revenue) {
@@ -9711,7 +9711,7 @@ United States</textarea>
             });
         }
         
-        function createSupplierServiceChart(data) {
+        function createAdminServiceChart(data) {
             const ctx = document.getElementById('supplierServiceChart').getContext('2d');
             
             if (supplierAnalyticsCharts.service) {
@@ -9750,7 +9750,7 @@ United States</textarea>
             });
         }
         
-        function createSupplierPerformanceChart(data) {
+        function createAdminPerformanceChart(data) {
             const ctx = document.getElementById('supplierPerformanceChart').getContext('2d');
             
             if (supplierAnalyticsCharts.performance) {
@@ -9796,7 +9796,7 @@ United States</textarea>
             });
         }
         
-        function updateSupplierPerformanceMetrics(data) {
+        function updateAdminPerformanceMetrics(data) {
             const metricsHTML = `
                 <div style="padding: 1.5rem;">
                     <div style="margin-bottom: 1.5rem; padding: 1rem; background: var(--gray-50); border-radius: 6px;">
@@ -9828,17 +9828,17 @@ United States</textarea>
             document.getElementById('supplierPerformanceMetrics').innerHTML = metricsHTML;
         }
         
-        function showSupplierAnalyticsLoading(show) {
+        function showAdminAnalyticsLoading(show) {
             document.getElementById('supplierAnalyticsLoading').style.display = show ? 'flex' : 'none';
             document.getElementById('supplierAnalyticsContent').style.display = show ? 'none' : 'block';
         }
         
-        function showSupplierAnalyticsError(message) {
+        function showAdminAnalyticsError(message) {
             document.getElementById('supplierAnalyticsLoading').innerHTML = `
                 <div style="text-align: center; color: var(--danger);">
                     <div style="font-size: 1.5rem; margin-bottom: 1rem;">⚠️</div>
                     <div>${message}</div>
-                    <button class="btn btn-secondary" onclick="initializeSupplierAnalytics()" style="margin-top: 1rem;">
+                    <button class="btn btn-secondary" onclick="initializeAdminAnalytics()" style="margin-top: 1rem;">
                         Retry
                     </button>
                 </div>
@@ -9847,22 +9847,22 @@ United States</textarea>
             document.getElementById('supplierAnalyticsContent').style.display = 'none';
         }
         
-        async function updateSupplierAnalyticsPeriod(period) {
-            currentSupplierAnalyticsPeriod = period;
-            await loadSupplierAnalyticsData(period);
+        async function updateAdminAnalyticsPeriod(period) {
+            currentAdminAnalyticsPeriod = period;
+            await loadAdminAnalyticsData(period);
             showToast(`Analytics updated for ${period} period`, 'info');
         }
         
-        function exportSupplierAnalytics() {
+        function exportAdminAnalytics() {
             showToast('Exporting supplier analytics data...', 'info');
         }
         
         // Export global functions
-        window.initializeSupplierAnalytics = initializeSupplierAnalytics;
-        window.updateSupplierAnalyticsPeriod = updateSupplierAnalyticsPeriod;
-        window.exportSupplierAnalytics = exportSupplierAnalytics;
+        window.initializeAdminAnalytics = initializeAdminAnalytics;
+        window.updateAdminAnalyticsPeriod = updateAdminAnalyticsPeriod;
+        window.exportAdminAnalytics = exportAdminAnalytics;
         
-        // Supplier Global Search Functions
+        // Admin Global Search Functions
         let supplierSearchTimeout;
         let supplierSearchData = {
             rfps: [
@@ -9882,20 +9882,20 @@ United States</textarea>
             ]
         };
         
-        function handleSupplierGlobalSearch(query) {
+        function handleAdminGlobalSearch(query) {
             clearTimeout(supplierSearchTimeout);
             
             if (query.length < 2) {
-                hideSupplierSearchResults();
+                hideAdminSearchResults();
                 return;
             }
             
             supplierSearchTimeout = setTimeout(() => {
-                performSupplierSearch(query);
+                performAdminSearch(query);
             }, 300);
         }
         
-        function performSupplierSearch(query) {
+        function performAdminSearch(query) {
             const results = [];
             const lowerQuery = query.toLowerCase();
             
@@ -9925,10 +9925,10 @@ United States</textarea>
                 }
             });
             
-            displaySupplierSearchResults(results, query);
+            displayAdminSearchResults(results, query);
         }
         
-        function displaySupplierSearchResults(results, query) {
+        function displayAdminSearchResults(results, query) {
             const resultsContainer = document.getElementById('supplierSearchResults');
             
             if (results.length === 0) {
@@ -9957,7 +9957,7 @@ United States</textarea>
                     
                     return `
                         <div class="search-result-item" style="padding: 0.75rem; border-bottom: 1px solid var(--gray-100); cursor: pointer; transition: background-color 0.15s;" 
-                             onclick="selectSupplierSearchResult('${result.type}', '${result.id}')"
+                             onclick="selectAdminSearchResult('${result.type}', '${result.id}')"
                              onmouseover="this.style.backgroundColor='var(--gray-50)'"
                              onmouseout="this.style.backgroundColor='white'">
                             <div style="display: flex; align-items: center; gap: 0.75rem;">
@@ -9977,8 +9977,8 @@ United States</textarea>
             resultsContainer.style.display = 'block';
         }
         
-        function selectSupplierSearchResult(type, id) {
-            hideSupplierSearchResults();
+        function selectAdminSearchResult(type, id) {
+            hideAdminSearchResults();
             document.getElementById('supplierGlobalSearch').value = '';
             
             // Navigate to the appropriate section
@@ -9998,15 +9998,15 @@ United States</textarea>
             }
         }
         
-        function hideSupplierSearchResults() {
+        function hideAdminSearchResults() {
             document.getElementById('supplierSearchResults').style.display = 'none';
         }
         
-        function handleSupplierSearchKeydown(event) {
+        function handleAdminSearchKeydown(event) {
             const resultsContainer = document.getElementById('supplierSearchResults');
             
             if (event.key === 'Escape') {
-                hideSupplierSearchResults();
+                hideAdminSearchResults();
                 document.getElementById('supplierGlobalSearch').blur();
             } else if (event.key === 'Enter') {
                 const firstResult = resultsContainer.querySelector('.search-result-item');
@@ -10030,14 +10030,14 @@ United States</textarea>
         // Hide search results when clicking outside - supplier version
         document.addEventListener('click', (e) => {
             if (!e.target.closest('.header-search')) {
-                hideSupplierSearchResults();
+                hideAdminSearchResults();
             }
         });
         
         // Export supplier search functions
-        window.handleSupplierGlobalSearch = handleSupplierGlobalSearch;
-        window.handleSupplierSearchKeydown = handleSupplierSearchKeydown;
-        window.selectSupplierSearchResult = selectSupplierSearchResult;
+        window.handleAdminGlobalSearch = handleAdminGlobalSearch;
+        window.handleAdminSearchKeydown = handleAdminSearchKeydown;
+        window.selectAdminSearchResult = selectAdminSearchResult;
         
         function getReportsContent() {
             return `
@@ -15114,201 +15114,6 @@ United States</textarea>
             `;
         }
         
-        function getRFPsContent() {
-            return `
-                <div>
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-                        <h2 style="font-size: 1.875rem; font-weight: 700;">Request for Proposals</h2>
-                        <button class="btn btn-secondary" onclick="exportToCSV('rfps')">
-                            <span style="margin-right: 0.25rem;">↓</span> Export
-                        </button>
-                    </div>
-                    
-                    <!-- Tabs like Inbox -->
-                    <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem; border-bottom: 2px solid var(--gray-200);">
-                        <button class="rfp-tab active" onclick="switchRFPTab('all')" style="padding: 0.75rem 0; background: none; border: none; border-bottom: 2px solid var(--primary); color: var(--gray-900); cursor: pointer; font-weight: 500; margin-bottom: -2px;">
-                            All <span style="color: var(--gray-500); font-size: 0.875rem;">(13)</span>
-                        </button>
-                        <button class="rfp-tab" onclick="switchRFPTab('requested')" style="padding: 0.75rem 0; background: none; border: none; border-bottom: 2px solid transparent; color: var(--gray-600); cursor: pointer; font-weight: 500; margin-bottom: -2px;">
-                            Requested <span style="color: var(--gray-500); font-size: 0.875rem;">(3)</span>
-                        </button>
-                        <button class="rfp-tab" onclick="switchRFPTab('interested')" style="padding: 0.75rem 0; background: none; border: none; border-bottom: 2px solid transparent; color: var(--gray-600); cursor: pointer; font-weight: 500; margin-bottom: -2px;">
-                            Interested <span style="color: var(--gray-500); font-size: 0.875rem;">(2)</span>
-                        </button>
-                        <button class="rfp-tab" onclick="switchRFPTab('submitted')" style="padding: 0.75rem 0; background: none; border: none; border-bottom: 2px solid transparent; color: var(--gray-600); cursor: pointer; font-weight: 500; margin-bottom: -2px;">
-                            Submitted <span style="color: var(--gray-500); font-size: 0.875rem;">(4)</span>
-                        </button>
-                        <button class="rfp-tab" onclick="switchRFPTab('review')" style="padding: 0.75rem 0; background: none; border: none; border-bottom: 2px solid transparent; color: var(--gray-600); cursor: pointer; font-weight: 500; margin-bottom: -2px;">
-                            Under Review <span style="color: var(--gray-500); font-size: 0.875rem;">(1)</span>
-                        </button>
-                        <button class="rfp-tab" onclick="switchRFPTab('awarded')" style="padding: 0.75rem 0; background: none; border: none; border-bottom: 2px solid transparent; color: var(--gray-600); cursor: pointer; font-weight: 500; margin-bottom: -2px;">
-                            Awarded <span style="color: var(--gray-500); font-size: 0.875rem;">(2)</span>
-                        </button>
-                        <button class="rfp-tab" onclick="switchRFPTab('declined')" style="padding: 0.75rem 0; background: none; border: none; border-bottom: 2px solid transparent; color: var(--gray-600); cursor: pointer; font-weight: 500; margin-bottom: -2px;">
-                            Declined <span style="color: var(--gray-500); font-size: 0.875rem;">(1)</span>
-                        </button>
-                    </div>
-                    
-                    <!-- Search and Filter Bar -->
-                    <div class="table-container">
-                        <div class="table-header">
-                            <h3 class="table-title">All RFPs</h3>
-                            <div style="display: flex; gap: 0.75rem; align-items: center;">
-                                <input type="text" id="rfpSearch" placeholder="Search RFPs..." 
-                                    onkeyup="filterRFPs()" 
-                                    style="padding: 0.5rem 1rem; border: 1px solid var(--gray-300); border-radius: 6px; width: 250px;">
-                                <select id="rfpStatusFilter" onchange="filterRFPs()" 
-                                    style="padding: 0.5rem 1rem; border: 1px solid var(--gray-300); border-radius: 6px;">
-                                    <option value="">All Status</option>
-                                    <option value="requested">Requested</option>
-                                    <option value="interested">Interested</option>
-                                    <option value="submitted">Submitted</option>
-                                    <option value="review">Under Review</option>
-                                    <option value="awarded">Awarded</option>
-                                    <option value="declined">Declined</option>
-                                </select>
-                            </div>
-                        </div>
-                        <table id="rfpTable" style="width: 100%;">
-                            <thead>
-                                <tr>
-                                    <th style="width: 12%;">RFP #</th>
-                                    <th style="width: 25%;">Title</th>
-                                    <th style="width: 15%;">Client</th>
-                                    <th style="width: 10%;">Type</th>
-                                    <th style="width: 10%;">Deadline</th>
-                                    <th style="width: 12%;">Value Range</th>
-                                    <th style="width: 10%;">Status</th>
-                                    <th style="width: 10%;">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><a href="#" onclick="viewRFPDetail('RFP-2025-001'); return false;" style="color: var(--primary); font-weight: 700;">#RFP-2025-001</a></td>
-                                    <td><strong>HVAC Maintenance Contract</strong></td>
-                                    <td>The h.wood Group</td>
-                                    <td>Maintenance</td>
-                                    <td style="color: var(--danger);">Aug 30, 2025</td>
-                                    <td>$50K - $75K</td>
-                                    <td><span class="status-badge requested">Requested</span></td>
-                                    <td>
-                                        <button class="btn btn-primary" onclick="submitProposal('RFP-2025-001')" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">Submit</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><a href="#" onclick="viewRFPDetail('RFP-2025-002'); return false;" style="color: var(--primary); font-weight: 700;">#RFP-2025-002</a></td>
-                                    <td><strong>Kitchen Equipment Installation</strong></td>
-                                    <td>Delilah LA</td>
-                                    <td>Installation</td>
-                                    <td>Sep 15, 2025</td>
-                                    <td>$25K - $40K</td>
-                                    <td><span class="status-badge requested">Requested</span></td>
-                                    <td>
-                                        <button class="btn btn-secondary" onclick="markInterested('RFP-2025-002')" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">Interested</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><a href="#" onclick="viewRFPDetail('RFP-2025-003'); return false;" style="color: var(--primary); font-weight: 700;">#RFP-2025-003</a></td>
-                                    <td><strong>Annual Plumbing Services</strong></td>
-                                    <td>Bootsy Bellows</td>
-                                    <td>Service Contract</td>
-                                    <td>Sep 30, 2025</td>
-                                    <td>$100K - $150K</td>
-                                    <td><span class="status-badge" style="background: #fef3c7; color: #92400e;">Interested</span></td>
-                                    <td>
-                                        <button class="btn btn-primary" onclick="submitProposal('RFP-2025-003')" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">Submit</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><a href="#" onclick="viewRFPDetail('RFP-2025-004'); return false;" style="color: var(--primary); font-weight: 700;">#RFP-2025-004</a></td>
-                                    <td><strong>Electrical System Upgrade</strong></td>
-                                    <td>Nice Guy</td>
-                                    <td>Construction</td>
-                                    <td>Oct 10, 2025</td>
-                                    <td>$200K - $300K</td>
-                                    <td><span class="status-badge completed">Submitted</span></td>
-                                    <td>
-                                        <button class="btn btn-secondary" onclick="viewSubmission('RFP-2025-004')" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">View</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><a href="#" onclick="viewRFPDetail('RFP-2025-005'); return false;" style="color: var(--primary); font-weight: 700;">#RFP-2025-005</a></td>
-                                    <td><strong>Painting & Renovation</strong></td>
-                                    <td>Poppy</td>
-                                    <td>Renovation</td>
-                                    <td>Oct 20, 2025</td>
-                                    <td>$75K - $100K</td>
-                                    <td><span class="status-badge completed">Submitted</span></td>
-                                    <td>
-                                        <button class="btn btn-secondary" onclick="viewSubmission('RFP-2025-005')" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">View</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><a href="#" onclick="viewRFPDetail('RFP-2025-006'); return false;" style="color: var(--primary); font-weight: 700;">#RFP-2025-006</a></td>
-                                    <td><strong>Security System Installation</strong></td>
-                                    <td>Multiple Locations</td>
-                                    <td>Installation</td>
-                                    <td>Nov 1, 2025</td>
-                                    <td>$150K - $200K</td>
-                                    <td><span class="status-badge" style="background: #fef3c7; color: #92400e;">Under Review</span></td>
-                                    <td>
-                                        <button class="btn btn-secondary" disabled style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">Pending</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><a href="#" onclick="viewRFPDetail('RFP-2024-098'); return false;" style="color: var(--primary); font-weight: 700;">#RFP-2024-098</a></td>
-                                    <td><strong>Landscaping Services</strong></td>
-                                    <td>The h.wood Group</td>
-                                    <td>Maintenance</td>
-                                    <td style="color: var(--gray-500);">Jul 15, 2024</td>
-                                    <td>$60K - $80K</td>
-                                    <td><span class="status-badge" style="background: #d1fae5; color: #065f46;">Awarded</span></td>
-                                    <td>
-                                        <button class="btn btn-success" onclick="viewContract('RFP-2024-098')" style="padding: 0.25rem 0.5rem; font-size: 0.75rem; background: var(--success); color: white;">Contract</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><a href="#" onclick="viewRFPDetail('RFP-2024-097'); return false;" style="color: var(--primary); font-weight: 700;">#RFP-2024-097</a></td>
-                                    <td><strong>Fire Safety Equipment</strong></td>
-                                    <td>Delilah LA</td>
-                                    <td>Equipment</td>
-                                    <td style="color: var(--gray-500);">Jun 30, 2024</td>
-                                    <td>$40K - $60K</td>
-                                    <td><span class="status-badge" style="background: #d1fae5; color: #065f46;">Awarded</span></td>
-                                    <td>
-                                        <button class="btn btn-success" onclick="viewContract('RFP-2024-097')" style="padding: 0.25rem 0.5rem; font-size: 0.75rem; background: var(--success); color: white;">Contract</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><a href="#" onclick="viewRFPDetail('RFP-2024-096'); return false;" style="color: var(--primary); font-weight: 700;">#RFP-2024-096</a></td>
-                                    <td><strong>Roofing Repairs</strong></td>
-                                    <td>Bootsy Bellows</td>
-                                    <td>Repair</td>
-                                    <td style="color: var(--gray-500);">Jun 15, 2024</td>
-                                    <td>$30K - $50K</td>
-                                    <td><span class="status-badge" style="background: #fee2e2; color: #991b1b;">Declined</span></td>
-                                    <td>
-                                        <button class="btn btn-secondary" disabled style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">Closed</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><a href="#" onclick="viewRFPDetail('RFP-2025-007'); return false;" style="color: var(--primary); font-weight: 700;">#RFP-2025-007</a></td>
-                                    <td><strong>Window Cleaning Services</strong></td>
-                                    <td>Nice Guy</td>
-                                    <td>Service</td>
-                                    <td>Sep 5, 2025</td>
-                                    <td>$15K - $25K</td>
-                                    <td><span class="status-badge requested">Requested</span></td>
-                                    <td>
-                                        <button class="btn btn-primary" onclick="submitProposal('RFP-2025-007')" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">Submit</button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            `;
-        }
         
         // Modal Functions
         function openScheduleModal() {

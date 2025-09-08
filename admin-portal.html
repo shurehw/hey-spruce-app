@@ -1483,6 +1483,172 @@
             }, 3000);
         }
         
+        function showSMSModal() {
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay';
+            modal.innerHTML = `
+                <div class="modal-dialog">
+                    <div class="modal-header">
+                        <h2>Send SMS Message</h2>
+                        <button onclick="this.closest('.modal-overlay').remove();" class="close-btn">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="form-label">Phone Number</label>
+                            <input type="tel" id="smsPhone" class="form-input" placeholder="(555) 123-4567" 
+                                   value="+1234567890" required>
+                            <small style="color: var(--gray-600);">Include country code (e.g., +1 for US)</small>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Message Type</label>
+                            <select id="smsType" class="form-select">
+                                <option value="standard">Standard</option>
+                                <option value="urgent">🚨 Urgent</option>
+                                <option value="reminder">⏰ Reminder</option>
+                                <option value="notification">📢 Notification</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Message</label>
+                            <textarea id="smsMessage" class="form-textarea" placeholder="Enter your SMS message..." 
+                                      maxlength="160" required></textarea>
+                            <div style="display: flex; justify-content: between; align-items: center; margin-top: 0.5rem;">
+                                <small style="color: var(--gray-600);">SMS messages are limited to 160 characters</small>
+                                <small id="charCount" style="color: var(--gray-600);">0/160</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button onclick="this.closest('.modal-overlay').remove();" class="btn btn-secondary">Cancel</button>
+                        <button onclick="sendSMS()" class="btn btn-primary">Send SMS</button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // Add character counter
+            const textarea = modal.querySelector('#smsMessage');
+            const charCount = modal.querySelector('#charCount');
+            
+            textarea.addEventListener('input', function() {
+                const count = this.value.length;
+                charCount.textContent = count + '/160';
+                charCount.style.color = count > 160 ? 'var(--danger)' : 'var(--gray-600)';
+            });
+        }
+        
+        async function sendSMS() {
+            const phone = document.getElementById('smsPhone').value.trim();
+            const message = document.getElementById('smsMessage').value.trim();
+            const type = document.getElementById('smsType').value;
+            
+            if (!phone || !message) {
+                showToast('Please fill in all required fields', 'error');
+                return;
+            }
+            
+            if (message.length > 160) {
+                showToast('Message exceeds 160 character limit', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/sms', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        to: phone,
+                        message: message,
+                        type: type
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showToast('SMS sent successfully!', 'success');
+                    document.querySelector('.modal-overlay').remove();
+                } else {
+                    throw new Error(result.details || result.error);
+                }
+            } catch (error) {
+                console.error('SMS Error:', error);
+                showToast('Failed to send SMS: ' + error.message, 'error');
+            }
+        }
+        
+        async function testWorkOrderSMSNotifications() {
+            // Create test work order data
+            const testWorkOrder = {
+                id: 'WO-TEST-' + Date.now(),
+                title: 'Emergency HVAC Repair - Test Notification',
+                location: 'McDonald\'s - Sunset Boulevard',
+                category: 'HVAC',
+                status: 'urgent',
+                due_date: new Date().toLocaleDateString(),
+                client_id: 'client_123',
+                assigned_to: 'contractor_456'
+            };
+            
+            showToast('Sending test SMS notifications...', 'info');
+            
+            try {
+                // Test different notification types
+                const notificationTypes = [
+                    'work_order_created',
+                    'work_order_urgent',
+                    'work_order_status_changed'
+                ];
+                
+                let results = [];
+                
+                for (const eventType of notificationTypes) {
+                    const response = await fetch('/api/work-order-notifications', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            eventType: eventType,
+                            workOrder: testWorkOrder,
+                            users: ['current_user'] // Test with current user
+                        })
+                    });
+                    
+                    const result = await response.json();
+                    results.push({
+                        eventType,
+                        result: result
+                    });
+                    
+                    // Wait a bit between notifications
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                }
+                
+                const totalSent = results.reduce((sum, r) => sum + (r.result.results?.sent || 0), 0);
+                const totalSkipped = results.reduce((sum, r) => sum + (r.result.results?.skipped || 0), 0);
+                const totalFailed = results.reduce((sum, r) => sum + (r.result.results?.failed || 0), 0);
+                
+                if (totalSent > 0) {
+                    showToast(`✅ Test completed! Sent: ${totalSent}, Skipped: ${totalSkipped}, Failed: ${totalFailed}`, 'success');
+                } else if (totalSkipped > 0) {
+                    showToast(`⚠️ No SMS sent. ${totalSkipped} notifications were skipped. Check your SMS preferences.`, 'warning');
+                } else {
+                    showToast(`❌ Test failed. ${totalFailed} notifications failed to send.`, 'error');
+                }
+                
+                // Show detailed results in console
+                console.log('SMS Test Results:', results);
+                
+            } catch (error) {
+                console.error('Error testing SMS notifications:', error);
+                showToast('Failed to test SMS notifications: ' + error.message, 'error');
+            }
+        }
+        
         // Work Orders Filter Function
         function filterWorkOrders() {
             const searchTerm = document.getElementById('workOrderSearch')?.value.toLowerCase() || '';
@@ -5476,6 +5642,7 @@ Spruce - Professional Service Management
                                     <div style="display: flex; gap: 0.5rem;">
                                         <button style="padding: 0.5rem; background: none; border: 1px solid var(--gray-300); border-radius: 6px; cursor: pointer;">📞</button>
                                         <button style="padding: 0.5rem; background: none; border: 1px solid var(--gray-300); border-radius: 6px; cursor: pointer;">📹</button>
+                                        <button onclick="showSMSModal()" style="padding: 0.5rem; background: none; border: 1px solid var(--gray-300); border-radius: 6px; cursor: pointer;" title="Send SMS">📱</button>
                                         <button style="padding: 0.5rem; background: none; border: 1px solid var(--gray-300); border-radius: 6px; cursor: pointer;">📎</button>
                                         <button style="padding: 0.5rem; background: none; border: 1px solid var(--gray-300); border-radius: 6px; cursor: pointer;">ℹ️</button>
                                     </div>
@@ -5676,7 +5843,10 @@ Spruce - Professional Service Management
                 <div>
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
                         <h2 style="font-size: 1.875rem; font-weight: 700;">Work Orders</h2>
-                        <button class="btn btn-primary" onclick="showCreateWorkOrderModal()">+ Create Work Order</button>
+                        <div style="display: flex; gap: 0.75rem;">
+                            <button class="btn btn-secondary" onclick="testWorkOrderSMSNotifications()">📱 Test SMS</button>
+                            <button class="btn btn-primary" onclick="showCreateWorkOrderModal()">+ Create Work Order</button>
+                        </div>
                     </div>
                     
                     <div class="table-container">

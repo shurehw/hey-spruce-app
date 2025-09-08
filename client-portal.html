@@ -3860,15 +3860,27 @@
             return `
                 <div class="header-bar">
                     <h1 class="header-title">Notifications</h1>
+                    <div class="header-actions">
+                        <button class="btn btn-secondary" onclick="showSMSPreferencesModal()">📱 SMS Settings</button>
+                        <button class="btn btn-secondary" onclick="markAllRead()">Mark All Read</button>
+                    </div>
                 </div>
                 
                 <div class="table-container">
                     <div class="table-header">
                         <h3 class="table-title">Recent Notifications</h3>
-                        <button class="btn btn-secondary" onclick="markAllRead()">Mark All Read</button>
                     </div>
                     <div style="padding: 1rem;">
                         ${getNotificationItems()}
+                    </div>
+                </div>
+                
+                <div class="table-container" style="margin-top: 1.5rem;">
+                    <div class="table-header">
+                        <h3 class="table-title">Notification Settings</h3>
+                    </div>
+                    <div style="padding: 1.5rem;">
+                        ${getNotificationSettings()}
                     </div>
                 </div>
             `;
@@ -3893,6 +3905,64 @@
                     </div>
                 </div>
             `).join('');
+        }
+        
+        function getNotificationSettings() {
+            return `
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                    <div>
+                        <h4 style="margin-bottom: 1rem; color: var(--gray-800);">Email Notifications</h4>
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" checked> Work order status changes
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" checked> New quotes and approvals
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox"> Payment reminders
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" checked> Emergency notifications
+                            </label>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 style="margin-bottom: 1rem; color: var(--gray-800);">Push Notifications</h4>
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" checked> Urgent work orders
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox"> Daily digest
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" checked> New messages
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--gray-200);">
+                    <h4 style="margin-bottom: 1rem; color: var(--gray-800);">📱 SMS Notifications</h4>
+                    <div id="smsPreferencesSection">
+                        <div style="padding: 1rem; background: var(--gray-50); border-radius: 8px; text-align: center;">
+                            <p style="margin-bottom: 1rem; color: var(--gray-600);">Configure SMS notifications to get instant updates on your phone</p>
+                            <button class="btn btn-primary" onclick="showSMSPreferencesModal()">📱 Set Up SMS Notifications</button>
+                        </div>
+                    </div>
+                </div>
+            `;
         }
         
         function getUserAdminContent() {
@@ -5564,6 +5634,7 @@
                                     <div style="display: flex; gap: 0.5rem;">
                                         <button style="padding: 0.5rem; background: none; border: 1px solid var(--gray-300); border-radius: 6px; cursor: pointer;">📞</button>
                                         <button style="padding: 0.5rem; background: none; border: 1px solid var(--gray-300); border-radius: 6px; cursor: pointer;">📹</button>
+                                        <button onclick="showSMSModal()" style="padding: 0.5rem; background: none; border: 1px solid var(--gray-300); border-radius: 6px; cursor: pointer;" title="Send SMS">📱</button>
                                         <button style="padding: 0.5rem; background: none; border: 1px solid var(--gray-300); border-radius: 6px; cursor: pointer;">📎</button>
                                         <button style="padding: 0.5rem; background: none; border: 1px solid var(--gray-300); border-radius: 6px; cursor: pointer;">ℹ️</button>
                                     </div>
@@ -6576,6 +6647,337 @@
         
         function showCommunicationSettings() {
             showToast('Communication settings coming soon!', 'info');
+        }
+        
+        function showSMSModal() {
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay';
+            modal.innerHTML = `
+                <div class="modal-dialog">
+                    <div class="modal-header">
+                        <h2>Send SMS Message</h2>
+                        <button onclick="this.closest('.modal-overlay').remove();" class="close-btn">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="form-label">Phone Number</label>
+                            <input type="tel" id="smsPhone" class="form-input" placeholder="(555) 123-4567" 
+                                   value="+1234567890" required>
+                            <small style="color: var(--gray-600);">Include country code (e.g., +1 for US)</small>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Message Type</label>
+                            <select id="smsType" class="form-select">
+                                <option value="standard">Standard</option>
+                                <option value="urgent">🚨 Urgent</option>
+                                <option value="reminder">⏰ Reminder</option>
+                                <option value="notification">📢 Notification</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Message</label>
+                            <textarea id="smsMessage" class="form-textarea" placeholder="Enter your SMS message..." 
+                                      maxlength="160" required></textarea>
+                            <div style="display: flex; justify-content: between; align-items: center; margin-top: 0.5rem;">
+                                <small style="color: var(--gray-600);">SMS messages are limited to 160 characters</small>
+                                <small id="charCount" style="color: var(--gray-600);">0/160</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button onclick="this.closest('.modal-overlay').remove();" class="btn btn-secondary">Cancel</button>
+                        <button onclick="sendSMS()" class="btn btn-primary">Send SMS</button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // Add character counter
+            const textarea = modal.querySelector('#smsMessage');
+            const charCount = modal.querySelector('#charCount');
+            
+            textarea.addEventListener('input', function() {
+                const count = this.value.length;
+                charCount.textContent = count + '/160';
+                charCount.style.color = count > 160 ? 'var(--danger)' : 'var(--gray-600)';
+            });
+        }
+        
+        async function sendSMS() {
+            const phone = document.getElementById('smsPhone').value.trim();
+            const message = document.getElementById('smsMessage').value.trim();
+            const type = document.getElementById('smsType').value;
+            
+            if (!phone || !message) {
+                showToast('Please fill in all required fields', 'error');
+                return;
+            }
+            
+            if (message.length > 160) {
+                showToast('Message exceeds 160 character limit', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/sms', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        to: phone,
+                        message: message,
+                        type: type
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showToast('SMS sent successfully!', 'success');
+                    document.querySelector('.modal-overlay').remove();
+                } else {
+                    throw new Error(result.details || result.error);
+                }
+            } catch (error) {
+                console.error('SMS Error:', error);
+                showToast('Failed to send SMS: ' + error.message, 'error');
+            }
+        }
+        
+        function showSMSPreferencesModal() {
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay';
+            modal.innerHTML = `
+                <div class="modal-dialog" style="max-width: 600px;">
+                    <div class="modal-header">
+                        <h2>📱 SMS Notification Preferences</h2>
+                        <button onclick="this.closest('.modal-overlay').remove();" class="close-btn">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="form-label">Phone Number</label>
+                            <input type="tel" id="smsPhonePrefs" class="form-input" placeholder="+1 (555) 123-4567" required>
+                            <small style="color: var(--gray-600);">Include country code (e.g., +1 for US)</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="smsEnabledPrefs" checked> Enable SMS notifications
+                            </label>
+                        </div>
+                        
+                        <div id="smsNotificationTypes" style="margin-top: 1.5rem;">
+                            <h4 style="margin-bottom: 1rem;">Notification Types</h4>
+                            
+                            <div class="form-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" data-type="work_order_created" checked> New work orders created
+                                </label>
+                                <select class="form-select" data-select="work_order_created" style="width: 150px; margin-left: 1rem;">
+                                    <option value="notification">📢 Notification</option>
+                                    <option value="standard">Standard</option>
+                                    <option value="urgent">🚨 Urgent</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" data-type="work_order_status_changed" checked> Work order status changes
+                                </label>
+                                <select class="form-select" data-select="work_order_status_changed" style="width: 150px; margin-left: 1rem;">
+                                    <option value="standard" selected>Standard</option>
+                                    <option value="notification">📢 Notification</option>
+                                    <option value="urgent">🚨 Urgent</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" data-type="work_order_completed" checked> Work orders completed
+                                </label>
+                                <select class="form-select" data-select="work_order_completed" style="width: 150px; margin-left: 1rem;">
+                                    <option value="standard" selected>Standard</option>
+                                    <option value="notification">📢 Notification</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" data-type="work_order_urgent" checked> Urgent work orders
+                                </label>
+                                <select class="form-select" data-select="work_order_urgent" style="width: 150px; margin-left: 1rem;">
+                                    <option value="urgent" selected>🚨 Urgent</option>
+                                    <option value="notification">📢 Notification</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" data-type="work_order_due_reminder" checked> Due date reminders
+                                </label>
+                                <select class="form-select" data-select="work_order_due_reminder" style="width: 150px; margin-left: 1rem;">
+                                    <option value="reminder" selected>⏰ Reminder</option>
+                                    <option value="standard">Standard</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" data-type="payment_received"> Payment confirmations
+                                </label>
+                                <select class="form-select" data-select="payment_received" style="width: 150px; margin-left: 1rem;">
+                                    <option value="standard" selected>Standard</option>
+                                    <option value="notification">📢 Notification</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--gray-200);">
+                            <h4 style="margin-bottom: 1rem;">Quiet Hours</h4>
+                            <div class="form-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="quietHoursEnabled" checked> Enable quiet hours (no SMS during these times)
+                                </label>
+                            </div>
+                            <div style="display: flex; gap: 1rem; align-items: center;">
+                                <div>
+                                    <label class="form-label">From</label>
+                                    <input type="time" id="quietHoursStart" class="form-input" value="22:00" style="width: 120px;">
+                                </div>
+                                <div>
+                                    <label class="form-label">To</label>
+                                    <input type="time" id="quietHoursEnd" class="form-input" value="08:00" style="width: 120px;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button onclick="this.closest('.modal-overlay').remove();" class="btn btn-secondary">Cancel</button>
+                        <button onclick="saveSMSPreferences()" class="btn btn-primary">Save Preferences</button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            loadCurrentSMSPreferences();
+        }
+        
+        async function loadCurrentSMSPreferences() {
+            try {
+                const response = await fetch('/api/sms-preferences', {
+                    headers: {
+                        'user-id': 'current_user' // In real app, get from auth
+                    }
+                });
+                const result = await response.json();
+                
+                if (result.success && result.data) {
+                    const prefs = result.data;
+                    
+                    // Fill form with current preferences
+                    document.getElementById('smsPhonePrefs').value = prefs.phone_number || '';
+                    document.getElementById('smsEnabledPrefs').checked = prefs.enabled !== false;
+                    
+                    // Set notification type preferences
+                    Object.entries(prefs.notifications || {}).forEach(([type, settings]) => {
+                        const checkbox = document.querySelector(`[data-type="${type}"]`);
+                        const select = document.querySelector(`[data-select="${type}"]`);
+                        
+                        if (checkbox) checkbox.checked = settings.enabled;
+                        if (select) select.value = settings.type;
+                    });
+                    
+                    // Set quiet hours
+                    if (prefs.quiet_hours) {
+                        document.getElementById('quietHoursEnabled').checked = prefs.quiet_hours.enabled !== false;
+                        document.getElementById('quietHoursStart').value = prefs.quiet_hours.start || '22:00';
+                        document.getElementById('quietHoursEnd').value = prefs.quiet_hours.end || '08:00';
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading SMS preferences:', error);
+            }
+        }
+        
+        async function saveSMSPreferences() {
+            const phoneNumber = document.getElementById('smsPhonePrefs').value.trim();
+            const enabled = document.getElementById('smsEnabledPrefs').checked;
+            
+            if (enabled && !phoneNumber) {
+                showToast('Please enter a phone number to enable SMS notifications', 'error');
+                return;
+            }
+            
+            // Gather notification preferences
+            const notifications = {};
+            document.querySelectorAll('[data-type]').forEach(checkbox => {
+                const type = checkbox.dataset.type;
+                const select = document.querySelector(`[data-select="${type}"]`);
+                
+                notifications[type] = {
+                    enabled: checkbox.checked,
+                    type: select ? select.value : 'standard'
+                };
+            });
+            
+            const preferences = {
+                phone_number: phoneNumber,
+                enabled: enabled,
+                notifications: notifications,
+                quiet_hours: {
+                    enabled: document.getElementById('quietHoursEnabled').checked,
+                    start: document.getElementById('quietHoursStart').value,
+                    end: document.getElementById('quietHoursEnd').value
+                }
+            };
+            
+            try {
+                const response = await fetch('/api/sms-preferences', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'user-id': 'current_user' // In real app, get from auth
+                    },
+                    body: JSON.stringify(preferences)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showToast('SMS preferences saved successfully!', 'success');
+                    document.querySelector('.modal-overlay').remove();
+                    
+                    // Update the SMS preferences section
+                    updateSMSPreferencesDisplay(preferences);
+                } else {
+                    throw new Error(result.details || result.error);
+                }
+            } catch (error) {
+                console.error('Error saving SMS preferences:', error);
+                showToast('Failed to save SMS preferences: ' + error.message, 'error');
+            }
+        }
+        
+        function updateSMSPreferencesDisplay(preferences) {
+            const section = document.getElementById('smsPreferencesSection');
+            if (section && preferences.enabled && preferences.phone_number) {
+                const enabledCount = Object.values(preferences.notifications).filter(n => n.enabled).length;
+                section.innerHTML = `
+                    <div style="padding: 1rem; background: var(--success-light); border: 1px solid var(--success); border-radius: 8px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <div style="font-weight: 600; color: var(--success-dark);">✅ SMS Notifications Enabled</div>
+                                <div style="font-size: 0.875rem; color: var(--gray-600); margin-top: 0.25rem;">
+                                    Phone: ${preferences.phone_number} • ${enabledCount} notification types enabled
+                                </div>
+                            </div>
+                            <button class="btn btn-secondary btn-sm" onclick="showSMSPreferencesModal()">Edit</button>
+                        </div>
+                    </div>
+                `;
+            }
         }
         
         function updatePermissions() {

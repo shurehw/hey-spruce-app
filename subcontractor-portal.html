@@ -1231,6 +1231,7 @@
                                     <div style="display: flex; gap: 0.5rem;">
                                         <button style="padding: 0.5rem; background: none; border: 1px solid var(--gray-300); border-radius: 6px; cursor: pointer;">📞</button>
                                         <button style="padding: 0.5rem; background: none; border: 1px solid var(--gray-300); border-radius: 6px; cursor: pointer;">📹</button>
+                                        <button onclick="showSMSModal()" style="padding: 0.5rem; background: none; border: 1px solid var(--gray-300); border-radius: 6px; cursor: pointer;" title="Send SMS">📱</button>
                                         <button style="padding: 0.5rem; background: none; border: 1px solid var(--gray-300); border-radius: 6px; cursor: pointer;">ℹ️</button>
                                     </div>
                                 </div>
@@ -4126,6 +4127,136 @@
                 messagesContainer.insertAdjacentHTML('beforeend', receivedHtml);
                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
             }, 2000);
+        }
+        
+        function showSMSModal() {
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay';
+            modal.innerHTML = `
+                <div class="modal-dialog">
+                    <div class="modal-header">
+                        <h2>Send SMS Message</h2>
+                        <button onclick="this.closest('.modal-overlay').remove();" class="close-btn">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="form-label">Phone Number</label>
+                            <input type="tel" id="smsPhone" class="form-input" placeholder="(555) 123-4567" 
+                                   value="+1234567890" required>
+                            <small style="color: var(--gray-600);">Include country code (e.g., +1 for US)</small>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Message Type</label>
+                            <select id="smsType" class="form-select">
+                                <option value="standard">Standard</option>
+                                <option value="urgent">🚨 Urgent</option>
+                                <option value="reminder">⏰ Reminder</option>
+                                <option value="notification">📢 Notification</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Message</label>
+                            <textarea id="smsMessage" class="form-textarea" placeholder="Enter your SMS message..." 
+                                      maxlength="160" required></textarea>
+                            <div style="display: flex; justify-content: between; align-items: center; margin-top: 0.5rem;">
+                                <small style="color: var(--gray-600);">SMS messages are limited to 160 characters</small>
+                                <small id="charCount" style="color: var(--gray-600);">0/160</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button onclick="this.closest('.modal-overlay').remove();" class="btn btn-secondary">Cancel</button>
+                        <button onclick="sendSMS()" class="btn btn-primary">Send SMS</button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // Add character counter
+            const textarea = modal.querySelector('#smsMessage');
+            const charCount = modal.querySelector('#charCount');
+            
+            textarea.addEventListener('input', function() {
+                const count = this.value.length;
+                charCount.textContent = count + '/160';
+                charCount.style.color = count > 160 ? 'var(--danger)' : 'var(--gray-600)';
+            });
+        }
+        
+        async function sendSMS() {
+            const phone = document.getElementById('smsPhone').value.trim();
+            const message = document.getElementById('smsMessage').value.trim();
+            const type = document.getElementById('smsType').value;
+            
+            if (!phone || !message) {
+                showToast('Please fill in all required fields', 'error');
+                return;
+            }
+            
+            if (message.length > 160) {
+                showToast('Message exceeds 160 character limit', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/sms', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        to: phone,
+                        message: message,
+                        type: type
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showToast('SMS sent successfully!', 'success');
+                    document.querySelector('.modal-overlay').remove();
+                } else {
+                    throw new Error(result.details || result.error);
+                }
+            } catch (error) {
+                console.error('SMS Error:', error);
+                showToast('Failed to send SMS: ' + error.message, 'error');
+            }
+        }
+        
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            const colors = {
+                success: '#10b981',
+                error: '#ef4444',
+                warning: '#f59e0b',
+                info: '#3b82f6'
+            };
+            
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 1rem;
+                right: 1rem;
+                background: white;
+                border-left: 4px solid ${colors[type]};
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                padding: 1rem 1.5rem;
+                border-radius: 6px;
+                z-index: 10000;
+                max-width: 300px;
+            `;
+            
+            toast.innerHTML = `
+                <div style="color: var(--gray-700);">${message}</div>
+            `;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
         }
         
         // View switching functions

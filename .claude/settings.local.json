@@ -159,7 +159,9 @@
       "Read(//c/Users/JacobShure/OneDrive - Hwood Group/Pictures/Screenshots/**)",
       "Bash(npm run build:*)",
       "Bash(npm run:*)",
-      "WebFetch(domain:heyspruceapp-h3bka4aa3-shureprint.vercel.app)"
+      "WebFetch(domain:heyspruceapp-h3bka4aa3-shureprint.vercel.app)",
+      "Bash(git remote add:*)",
+      "Bash(git remote set-url:*)"
     ],
     "deny": [],
     "ask": [],
